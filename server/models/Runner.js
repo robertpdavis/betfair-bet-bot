@@ -1,6 +1,10 @@
 const { Schema, model } = require('mongoose');
 
 const runnerSchema = new Schema({
+  systemId: {
+    type: Number,
+    required: true,
+  },
   marketId: {
     type: String,
     required: true,
@@ -25,10 +29,6 @@ const runnerSchema = new Schema({
   exTradedVolume: String,
   matchesByStrategy: String,
   form: String,
-  systemId: {
-    type: Number,
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -1,6 +1,10 @@
 const { Schema, model } = require('mongoose');
 
 const marketSchema = new Schema({
+  systemId: {
+    type: Number,
+    required: true,
+  },
   marketId: {
     type: Date,
     required: true,
@@ -49,10 +53,6 @@ const marketSchema = new Schema({
   crossMatching: Boolean,
   runnersVoidable: Boolean,
   version: String,
-  systemId: {
-    type: Number,
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,
