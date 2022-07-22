@@ -2,14 +2,12 @@ const { Schema, model } = require('mongoose');
 
 const marketSchema = new Schema({
   systemId: {
-    type: Number,
+    type: String,
     required: true,
   },
   marketId: {
-    type: Date,
-    required: true,
-    unique: true,
-    trim: true,
+    type: String,
+    required: true
   },
   marketName: String,
   eventId: String,

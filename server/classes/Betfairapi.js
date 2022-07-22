@@ -19,148 +19,161 @@ class Betfairapi {
   }
 
   async login(apiSettings) {
-    //TO DO: Check if session active
-    let appKey = "";
+    try {
+      //TO DO: Check if session active
+      let appKey = "";
 
-    //Check if loggin in with live or test key
-    if (apiSettings) {
-      if (apiSettings['apiMode'] === 'Live') {
-        appKey = apiSettings['apiKeyLive'];
-      } else if (apiSettings['apiMode'] === 'Test') {
-        appKey = apiSettings['apiKeyTest'];
+      const certfile = path.join(__dirname, '../classes/certs/client-2048.crt');
+      const keyfile = path.join(__dirname, '../classes/certs/client-2048.key');
+
+      //Check if loggin in with live or test key
+      if (apiSettings) {
+        if (apiSettings.apiMode === 'Live') {
+          appKey = apiSettings.apiKeyLive;
+        } else if (apiSettings.apiMode === 'Test') {
+          appKey = apiSettings.apiKeyTest;
+        } else {
+          //ERROR
+          return [false, "No API key"];
+        }
       } else {
         //ERROR
-        return [False, "NO_API_KEY"];
+        return [false, "API settings not provided."];
       }
-    } else {
-      //ERROR
-      return [False, "API_SETTINGS_MISSING"];
-    }
 
-    //Setup req header and body details
-    const data = `username=${apiSettings['userName']}&password=${apiSettings['passWord']}`;
-    const headers = {
-      'Content-type': 'application/x-www-form-urlencoded',
-      'X-Application': appKey,
-      'Accept': 'application/json'
-    }
-    //Setup SSL certs required by Betfair for login
-    const httpsAgent = new https.Agent({
-      rejectUnauthorized: false,
-      cert: fs.readFileSync('./classes/certs/client-2048.crt'),
-      key: fs.readFileSync('./classes/certs/client-2048.key'),
-    });
-
-    const res = await axios(
-      {
-        method: 'post',
-        url: this.apiEndPoints.login,
-        data: data,
-        headers: headers,
-        httpsAgent: httpsAgent
+      //Setup req header and body details
+      const data = `username=${apiSettings.apiUsername}&password=${apiSettings.apiPassword}`;
+      const headers = {
+        'Content-type': 'application/x-www-form-urlencoded',
+        'X-Application': appKey,
+        'Accept': 'application/json'
       }
-    );
+      //Setup SSL certs required by Betfair for login
+      const httpsAgent = new https.Agent({
+        rejectUnauthorized: false,
+        cert: fs.readFileSync(certfile),
+        key: fs.readFileSync(keyfile),
+      });
 
-    if (res.status !== 200) {
-      console.log('Betfair login connection error.');
-      return [false, 'Betfair login connection error.'];
-    }
+      const res = await axios(
+        {
+          method: 'post',
+          url: this.apiEndPoints.login,
+          data: data,
+          headers: headers,
+          httpsAgent: httpsAgent
+        }
+      );
 
-    if (res.data.loginStatus === 'SUCCESS') {
-      this.sessionId = res.data.sessionToken
-      this.apiKey = appKey;
-      return [true, res.data.sessionToken];
-    } else {
-      console.log('Betfair login error:', res.data.loginStatus);
-      return [false, res.data.loginStatus];
+      if (res.status !== 200) {
+        console.log('Betfair login connection error.');
+        return [false, 'Betfair login connection error.'];
+      }
+
+      if (res.data.loginStatus === 'SUCCESS') {
+        return [true, res.data.sessionToken];
+      } else {
+        console.log('Betfair login error:', res.data.loginStatus);
+        return [false, res.data.loginStatus];
+      }
+    } catch (e) {
+      return [false, e];
     }
   }
 
   async keepAlive(apiSettings) {
-    let appKey = "";
-    let session = "";
+    try {
+      let appKey = "";
+      let session = "";
 
-    //Check if doing keepAlive for live or test key
-    if (apiSettings) {
-      if (apiSettings['apiMode'] === 'Live') {
-        appKey = apiSettings['apiKeyLive'];
-        session = apiSettings['liveSessionId'];
-      } else if (apiSettings['apiMode'] === 'Test') {
-        appKey = apiSettings['apiKeyTest'];
-        session = apiSettings['testSessionId'];
+      //Check if doing keepAlive for live or test key
+      if (apiSettings) {
+        if (apiSettings['apiMode'] === 'Live') {
+          appKey = apiSettings['apiKeyLive'];
+          session = apiSettings['liveSessionId'];
+        } else if (apiSettings['apiMode'] === 'Test') {
+          appKey = apiSettings['apiKeyTest'];
+          session = apiSettings['testSessionId'];
+        } else {
+          //ERROR
+          return [False, "NO_API_KEY"];
+        }
       } else {
         //ERROR
-        return [False, "NO_API_KEY"];
+        return [False, "API_SETTINGS_MISSING"];
       }
-    } else {
-      //ERROR
-      return [False, "API_SETTINGS_MISSING"];
-    }
 
-    //Setup req header details
-    const headers = {
-      'Accept': 'application/json',
-      'X-Authentication': session,
-      'X-Application': appKey,
-    }
-
-    const res = await axios(
-      {
-        method: 'get',
-        url: this.apiEndPoints.keepAlive,
-        headers: headers,
+      //Setup req header details
+      const headers = {
+        'Accept': 'application/json',
+        'X-Authentication': session,
+        'X-Application': appKey,
       }
-    );
 
-    if (res.status !== 'SUCCESS') {
-      console.log('Betfair connection error.');
-      return [false, res.error];
-    } else {
-      return [true, res.status];
+      const res = await axios(
+        {
+          method: 'get',
+          url: this.apiEndPoints.keepAlive,
+          headers: headers,
+        }
+      );
+
+      if (res.status !== 'SUCCESS') {
+        console.log('Betfair connection error.');
+        return [false, res.error];
+      } else {
+        return [true, res.status];
+      }
+    } catch (e) {
+      return [false, e];
     }
   }
 
   async logout(apiSettings) {
-    let appKey = "";
-    let session = "";
+    try {
+      let appKey = "";
+      let session = "";
 
-    //Check if doing keepAlive for live or test key
-    if (apiSettings) {
-      if (apiSettings['apiMode'] === 'Live') {
-        appKey = apiSettings['apiKeyLive'];
-        session = apiSettings['liveSessionId'];
-      } else if (apiSettings['apiMode'] === 'Test') {
-        appKey = apiSettings['apiKeyTest'];
-        session = apiSettings['testSessionId'];
+      //Check if doing keepAlive for live or test key
+      if (apiSettings) {
+        if (apiSettings['apiMode'] === 'Live') {
+          appKey = apiSettings['apiKeyLive'];
+          session = apiSettings['liveSessionId'];
+        } else if (apiSettings['apiMode'] === 'Test') {
+          appKey = apiSettings['apiKeyTest'];
+          session = apiSettings['testSessionId'];
+        } else {
+          //ERROR
+          return [False, "NO_API_KEY"];
+        }
       } else {
         //ERROR
-        return [False, "NO_API_KEY"];
+        return [False, "API_SETTINGS_MISSING"];
       }
-    } else {
-      //ERROR
-      return [False, "API_SETTINGS_MISSING"];
-    }
 
-    //Setup req header details
-    const headers = {
-      'Accept': 'application/json',
-      'X-Authentication': session,
-      'X-Application': appKey,
-    }
-
-    const res = await axios(
-      {
-        method: 'get',
-        url: this.apiEndPoints.logout,
-        headers: headers,
+      //Setup req header details
+      const headers = {
+        'Accept': 'application/json',
+        'X-Authentication': session,
+        'X-Application': appKey,
       }
-    );
 
-    if (res.status !== 'SUCCESS') {
-      console.log('Betfair connection error.');
-      return [false, res.error];
-    } else {
-      return [true, res.status];
+      const res = await axios(
+        {
+          method: 'get',
+          url: this.apiEndPoints.logout,
+          headers: headers,
+        }
+      );
+
+      if (res.status !== 'SUCCESS') {
+        console.log('Betfair connection error.');
+        return [false, res.error];
+      } else {
+        return [true, res.status];
+      }
+    } catch (e) {
+      return [false, e];
     }
   }
 
@@ -170,6 +183,11 @@ class Betfairapi {
     const params = '{"filter":{}}';
 
     const res = await this.BettingAPIRequest(apiOp, params);
+
+    //Get result from response
+    if (res[0]) {
+      res[1] = res[1].result
+    }
 
     return res;
   }
@@ -195,7 +213,7 @@ class Betfairapi {
     const res = await this.BettingAPIRequest(apiOp, params);
 
     if (res[0]) {
-      res[1] = res[1][0].result;
+      res[1] = res[1].result;
     }
 
     return res;
@@ -206,7 +224,7 @@ class Betfairapi {
     const res = await this.BettingAPIRequest(apiOp, params);
 
     if (res[0]) {
-      res[1] = res[1][0].result;
+      res[1] = res[1].result;
     }
 
     return res;
@@ -217,7 +235,7 @@ class Betfairapi {
     const res = await this.BettingAPIRequest(apiOp, params);
 
     if (res[0]) {
-      res[1] = res[1];
+      res[1] = res[1].result;;
     }
 
     return res;
@@ -228,7 +246,9 @@ class Betfairapi {
     const apiOp = 'listRunnerBook';
     const res = await this.BettingAPIRequest(apiOp, params);
 
-    return res;
+    if (res[0]) {
+      res[1] = res[1].result;;
+    }
   }
 
   async placeBet(params) {
@@ -236,46 +256,58 @@ class Betfairapi {
     const apiOp = 'placeOrders';
     const res = await this.BettingAPIRequest(apiOp, params);
 
-    return res;
+    if (res[0]) {
+      res[1] = res[1].result;;
+    }
 
   }
 
   async BettingAPIRequest(operation, params) {
-
-    //Data string for betfair jsonrpc request. Made up of API operation and associated required parameters
-    const jsonRPCReq = '[{"jsonrpc":"2.0","method":"SportsAPING/v1.0/' + operation + '", "params": ' + params + ', "id": 1}]';
-    //Betfair betting API URL
-    const url = this.apiEndPoints.bettingAPi;
-    //Setup request headers which requires API key and session
-    const headers = {
-      'Content-type': 'application/json',
-      'X-Application': this.apiKey,
-      'Accept': 'application/json',
-      'X-Authentication': this.sessionId
-    }
-
-    const res = await axios(
-      {
-        method: 'post',
-        url: url,
-        data: jsonRPCReq,
-        headers: headers,
+    try {
+      //Data string for betfair jsonrpc request. Made up of API operation and associated required parameters
+      const jsonRPCReq = '[{"jsonrpc":"2.0","method":"SportsAPING/v1.0/' + operation + '", "params": ' + params + ', "id": 1}]';
+      //Betfair betting API URL
+      const url = this.apiEndPoints.bettingAPi;
+      //Setup request headers which requires API key and session
+      const headers = {
+        'Content-type': 'application/json',
+        'X-Application': this.apiKey,
+        'Accept': 'application/json',
+        'X-Authentication': this.sessionId
       }
-    );
 
-    //Manage error return
-    if (res.error != null) {
-      //Detailed error message
-      if (Object.keys(res.error).length > 2) {
-        return [false, JSON.stringify(res.error.data.APINGException, null, DEFAULT_JSON_FORMAT)];
+      const res = await axios(
+        {
+          method: 'post',
+          url: url,
+          data: jsonRPCReq,
+          headers: headers,
+        }
+      );
+
+      //Get the data from the response
+      const resData = res.data[0]
+
+      // console.log("Params:", params);
+      // console.log("Response:", resData);
+
+
+      //Manage error return
+      if (resData.error != null) {
+        //Detailed error message
+        if (Object.keys(resData.error).length > 2) {
+          return [false, JSON.stringify(resData.error.data.APINGException)];
+        } else {
+          //No details
+          return [false, "Betting API Request error"];
+        }
+
       } else {
-        //No details
-        return [false, "Betting API Request error"];
+        //Retunr the data
+        return [true, res.data[0]];
       }
-
-    } else {
-      //Retunr the data
-      return [true, res.data];
+    } catch (e) {
+      return [false, e];
     }
   }
 }

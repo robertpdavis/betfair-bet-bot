@@ -38,6 +38,7 @@ db.once('open', async () => {
     const apiSettings = {
       userId: userId,
       apiKeyTest: ' 7Vidp5zSfcCNyzfl',
+      testSessionId: '',
       apiUsername: 'robertpdavis@optusnet.com.au',
       apiPassword: 'Augu!972',
       certfile: './classes/certs/client-2048.crt',

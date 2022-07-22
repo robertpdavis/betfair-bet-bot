@@ -9,6 +9,11 @@ const systemSchema = new Schema({
     type: Number,
     required: true
   },
+  isActive: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   title: {
     type: String,
     required: true

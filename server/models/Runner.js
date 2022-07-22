@@ -2,14 +2,17 @@ const { Schema, model } = require('mongoose');
 
 const runnerSchema = new Schema({
   systemId: {
-    type: Number,
+    type: String,
     required: true,
   },
   marketId: {
     type: String,
     required: true,
   },
-  selectionId: Number,
+  selectionId: {
+    type: String,
+    required: true,
+  },
   runnerName: String,
   handicap: Number,
   sortPriority: Number,
@@ -19,11 +22,11 @@ const runnerSchema = new Schema({
   lastPriceTraded: Number,
   totalMatched: Number,
   removalDate: Date,
-  spNearPrice: Number,
-  spFarPrice: Number,
+  spNearPrice: String,
+  spFarPrice: String,
   spBackStakeTaken: String,
   spLayLiabilityTaken: String,
-  actualSP: Number,
+  actualSP: String,
   exAvailableToBack: String,
   exAvailableToLay: String,
   exTradedVolume: String,

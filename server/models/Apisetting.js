@@ -62,6 +62,10 @@ const apiSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  apiStatus: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
