@@ -14,7 +14,8 @@ class Betfairapi {
       'login': 'https://identitysso-cert.betfair.com/api/certlogin',
       'keepAlive': 'https://identitysso.betfair.com.au/api/keepAlive',
       'logout': 'https://identitysso.betfair.com/api/logout',
-      'bettingAPi': 'https://api.betfair.com/exchange/betting/json-rpc/v1'
+      'bettingAPi': 'https://api.betfair.com/exchange/betting/json-rpc/v1',
+      'accountAPi': 'https://api.betfair.com/exchange/account/json-rpc/v1'
     }
   }
 
@@ -66,14 +67,12 @@ class Betfairapi {
       );
 
       if (res.status !== 200) {
-        console.log('Betfair login connection error.');
         return [false, 'Betfair login connection error.'];
       }
 
       if (res.data.loginStatus === 'SUCCESS') {
         return [true, res.data.sessionToken];
       } else {
-        console.log('Betfair login error:', res.data.loginStatus);
         return [false, res.data.loginStatus];
       }
     } catch (e) {
@@ -118,8 +117,7 @@ class Betfairapi {
         }
       );
 
-      if (res.status !== 'SUCCESS') {
-        console.log('Betfair connection error.');
+      if (res.data.status !== 'SUCCESS') {
         return [false, res.error];
       } else {
         return [true, res.status];
@@ -167,7 +165,6 @@ class Betfairapi {
       );
 
       if (res.status !== 'SUCCESS') {
-        console.log('Betfair connection error.');
         return [false, res.error];
       } else {
         return [true, res.status];
@@ -303,7 +300,7 @@ class Betfairapi {
         }
 
       } else {
-        //Retunr the data
+        //Return the data
         return [true, res.data[0]];
       }
     } catch (e) {

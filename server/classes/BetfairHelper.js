@@ -145,7 +145,7 @@ class BetfairHelper {
       };
 
       const finishTime = new Date().getTime();
-      console.log(finishTime - startTime);
+      console.log("Event update time:" + finishTime - startTime);
       return [true, ''];
 
     } catch (e) {
@@ -374,6 +374,7 @@ class BetfairHelper {
   //Betfair API login
   async apiLogin(userId) {
     try {
+
       //Get the user API settings
       const apiSettings = await Apisetting.findOne({ userId: userId });
       if (!apiSettings) { return [false, "No API settings found for this user"] };
@@ -398,6 +399,8 @@ class BetfairHelper {
             { runValidators: true, new: true }
           );
         }
+
+        return [true, 'Success']
       } else {
         //API login error
         return res;
@@ -407,11 +410,93 @@ class BetfairHelper {
     }
   }
 
+  //Update the betfair API keep alive for a user
+  async apiKeepAlive(userId) {
+    //Get the customer API settings
+    try {
+
+      //Get the user API settings
+      const apiSettings = await Apisetting.findOne({ userId: userId });
+      if (!apiSettings) { return [false, "No API settings found for this user"] };
+
+      //If API not enabled, don't proceed any further.
+      if (!apiSettings.apiEnabled) {
+        return [false, "API disabled"];
+      }
+
+      const res = await this.api.keepAlive(apiSettings);
 
 
+      if (res[0]) {
 
+        //Update API status
+        const data = (apiSettings.apiMode === 'Test') ? { $set: { apiStatus: true } } : { $set: { apiStatus: true } }
+        const result = await Apisetting.findOneAndUpdate(
+          { userId: userId },
+          data,
+          { runValidators: true, new: true }
+        );
 
+        if (result) {
+          return [true, "Success"];
+        }
 
+      } else {
+
+        //Try to login
+        const res = await this.api.login(userId);
+
+        if (res[0]) {
+
+          return [true, "Success"]
+
+        } else {
+          //Update API status
+          const data = (apiSettings.apiMode === 'Test') ? { $set: { apiStatus: false } } : { $set: { apiStatus: false } }
+          const result = await Apisetting.findOneAndUpdate(
+            { userId: userId },
+            data,
+            { runValidators: true, new: true }
+          );
+
+          return [false, "Keepalive failed for user: " + userId];
+        }
+      }
+
+    } catch (e) {
+      return [false, e]
+    }
+  }
+
+  async apiLogout(userId) {
+
+    //Get the user API settings
+    const apiSettings = await Apisetting.findOne({ userId: userId });
+    if (!apiSettings) { return [false, "No API settings found for this user"] };
+
+    //If API not enabled, don't proceed any further.
+    if (!apiSettings.apiEnabled) {
+      return [false, "API disabled"];
+    }
+
+    const res = this.api.logout(apiSettings);
+
+    if (res[0]) {
+      //Update API status
+      const data = (apiSettings.apiMode === 'Test') ? { $set: { apiStatus: false } } : { $set: { apiStatus: false } }
+      const result = await Apisetting.findOneAndUpdate(
+        { userId: userId },
+        data,
+        { runValidators: true, new: true }
+      );
+
+      return [true, "API logged out"];
+
+    } else {
+
+      return [false, "API logout failed"];
+    }
+  }
 
   async clearMarketData(seconds = 86400) {//default -24 hours
 

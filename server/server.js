@@ -1,17 +1,9 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
-
-//-----------------------------------------------------------
-const BetfairTests = require('./classes/BetfairTests');
-const bfTests = new BetfairTests;
-
-const BetfairHelper = require('./classes/BetfairHelper');
-const bfHelper = new BetfairHelper;
-//-----------------------------------------------------------
-
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
+const { scheduler } = require('./utils/scheduler');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -48,20 +40,6 @@ const startApolloServer = async (typeDefs, resolvers) => {
 startApolloServer(typeDefs, resolvers);
 
 
-async function tests() {
-  // bfTests.login();
-  // bfTests.getAllEventTypes();
-  // bfTests.getEventTypeId('Horse Racing');
-  // bfTests.getEvents('7');
-  // bfTests.getMarkets('7');
-  // bfTests.getMarketBook('7');
-  // bfTests.getRunnerBook('1.201149951', '1240449');
-
-  // bfHelper.apiLogin('62d88c0c9e80cc3ef1a55243');
-  console.log(await bfHelper.setSession('62d88c0c9e80cc3ef1a55243'));
-  // console.log(await bfHelper.getEventTypes('62d88c0c9e80cc3ef1a55243'));
-  // console.log(await bfHelper.eventUpdate('62d88c0c9e80cc3ef1a55243'));
-  console.log(await bfHelper.marketBookUpdate('62d88c0c9e80cc3ef1a55248'));
-}
-
-tests();
+//Start the scheduler
+scheduler();
+console.log("do other stuff")
