@@ -1,7 +1,10 @@
 const { Schema, model } = require('mongoose');
 
 const resultSchema = new Schema({
-
+  systemId: {
+    type: String,
+    required: true,
+  },
   betId: String,
   customerRef: String,
   betPlaced: Date,
@@ -37,10 +40,6 @@ const resultSchema = new Schema({
   returned: Number,
   wallet: Number,
   closed: Date,
-  systemId: {
-    type: Number,
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -20,6 +20,7 @@ BetfairTests.js
 .env.production.local
 /certs
 /seeders
+seed.js
 
 npm-debug.log*
 yarn-debug.log*
