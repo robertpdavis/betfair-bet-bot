@@ -1,0 +1,20 @@
+[
+  {
+    "systemId": "1",
+    "title": "Back the Favourite Horse",
+    "description": "Tested",
+    "scenario": "1",
+    "stakingPlan": "1",
+    "racingBetType": "WIN",
+    "setWallet": "5000",
+    "eventTypeId": "7",
+    "marketBettingTypes": "ODDS",
+    "marketCountries": "AU",
+    "marketTypeCodes": "WIN,PLACE",
+    "sort": "FIRST_TO_START",
+    "maxResults": "1000",
+    "marketProjection": "['EVENT','EVENT_TYPE','MARKET_START_TIME','MARKET_DESCRIPTION','RUNNER_METADATA']",
+    "statusDesc": "User: System Start",
+    "ordering": "1"
+  }
+]
