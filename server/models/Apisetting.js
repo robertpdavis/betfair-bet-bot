@@ -1,5 +1,8 @@
 const { Schema, model } = require('mongoose');
-const bcrypt = require('bcrypt');
+require('dotenv').config();
+
+//For API password, key and ssl key encryption
+var cryptoJS = require("crypto-js");
 
 const apiSchema = new Schema({
   userId: {
@@ -104,18 +107,28 @@ const apiSchema = new Schema({
   },
 });
 
-// userSchema.pre('save', async function (next) {
-//   if (this.isNew || this.isModified('password')) {
-//     const saltRounds = 10;
-//     this.password = await bcrypt.hash(this.password, saltRounds);
-//   }
+apiSchema.pre('save', async function (next) {
+  if (this.isNew || this.isModified('apiPassword') || this.isModified('keyfile') || this.isModified('apiKeyTest') || this.isModified('apiKeyLive')) {
+    if (this.isNew) {
+      (this.apiPassword !== '') ? cryptoJS.AES.encrypt(this.apiPassword, process.env.ENCRYPT_SECRET).toString() : "";
+      (this.keyfile !== '') ? cryptoJS.AES.encrypt(this.keyfile, process.env.ENCRYPT_SECRET).toString() : "";
+      (this.apiKeyTest !== '') ? cryptoJS.AES.encrypt(this.apiKeyTest, process.env.ENCRYPT_SECRET).toString() : "";
+      (this.apiKeyLive !== '') ? cryptoJS.AES.encrypt(this.apiKeyLive, process.env.ENCRYPT_SECRET).toString() : "";
+    }
+    (this.isModified('apiPassword')) ? cryptoJS.AES.encrypt(this.apiPassword, process.env.ENCRYPT_SECRET).toString() : "";
+    (this.isModified('keyfile')) ? cryptoJS.AES.encrypt(this.keyfile, process.env.ENCRYPT_SECRET).toString() : "";
+    (this.isModified('apiKeyTest')) ? cryptoJS.AES.encrypt(this.apiKeyTest, process.env.ENCRYPT_SECRET).toString() : "";
+    (this.isModified('apiKeyLive')) ? cryptoJS.AES.encrypt(this.apiKeyLive, process.env.ENCRYPT_SECRET).toString() : "";
+  }
+  next();
+});
 
-//   next();
-// });
+//TO DO - check a
+function decrypt(apiPassword) {
 
-// userSchema.methods.isCorrectPassword = async function (password) {
-//   return bcrypt.compare(password, this.password);
-// };
+  const bytes = CryptoJS.AES.decrypt(apiPassword, 'secret key 123');
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
 
 const Apisettings = model('Apisettings', apiSchema);
 

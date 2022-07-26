@@ -50,7 +50,7 @@ class BetfairController {
       this.api.apiKey = apiKey;
       this.api.sessionId = session;
 
-      return [true];
+      return [true, 'Session set'];
 
     } catch (e) {
       return [false, e]
@@ -143,7 +143,7 @@ class BetfairController {
           )
 
           //Update the markets for each event and insert in DB
-          const marketupdate = await this.marketUpdate(event, system);
+          const marketupdate = await this.marketUpdate(eventUpdate, system);
 
         };
       };
@@ -158,99 +158,104 @@ class BetfairController {
   };
 
   async marketUpdate(event, system, marketId = "") {
-    try {
-      let params = '';
-      const APIfilter = buildFilter(system, this.config);
+    // try {
+    let params = '';
+    const APIfilter = buildFilter(system, this.config);
 
-      if (event.event.id !== '') {
-        params = '{"filter":{"eventIds":["' + event.event.id + '"], ' + APIfilter + '},"sort":"' + system["sort"] + '","maxResults":"' + system["maxResults"] + '","marketProjection":' + system["marketProjection"] + '}';
-        marketId = "";
-      }
-
-      if (marketId !== '') {
-        params = '{"filter":{"marketIds":["' + marketId + '"]},"sort": "' + system["sort"] + '","maxResults": "' + system["maxResults"] + '","marketProjection": ' + system["marketProjection"] + '}';
-      }
-
-      const res = await this.api.getMarkets(params);
-
-      //Check for API error
-      if (!res[0]) { return res };
-
-      //Get api data
-      const markets = res[1];
-
-      for (let index = 0; index < markets.length; index++) {
-        const market = markets[index];
-
-        //Fix market name for horse racing place markets
-        if (market.marketName == "To Be Placed") {
-
-          markets.forEach(item => {
-            if (item.description.marketTime === market.description.marketTime && item.marketName !== "To Be Placed") {
-              market.marketName = item.marketName;
-            }
-          });
-        }
-
-        let raceNumber = '';
-        let raceDistance = '';
-        let raceClass = '';
-
-        if (market.eventType.id === "7") {
-          const details = market.marketName.trim().split(' ');
-          raceNumber = details[0].slice(1, details[0].length);
-          raceDistance = details[1].slice(0, -1);
-          (details[3] !== '') ? details[2] += " " + details[3] : "";
-          raceClass = details[2];
-        }
-
-        let data = {
-          marketName: market.marketName,
-          eventId: event.event.id,
-          eventName: event.event.name,
-          marketStartTime: market.marketStartTime,
-          totalMatched: market.totalMatched,
-          competition: market.competition,
-          raceNumber: raceNumber,
-          raceDistance: raceDistance,
-          raceClass: raceClass,
-          persistenceEnabled: market.description.persistenceEnabled,
-          bspMarket: market.description.bspMarket,
-          marketTime: market.description.marketTime,
-          suspendTime: market.description.suspendTime,
-          settleTime: market.description.settleTime,
-          bettingType: market.description.bettingType,
-          turnInPlayEnabled: market.description.turnInPlayEnabled,
-          marketType: market.description.marketType,
-          regulator: market.description.regulator,
-          marketBaseRate: market.description.marketBaseRate,
-          discountAllowed: market.description.discountAllowed,
-          wallet: market.description.wallet,
-          rules: market.description.rules,
-          rulesHasDate: market.description.rulesHasDate,
-          eachWayDivisor: market.description.eachWayDivisor,
-          clarifications: market.description.clarifications,
-          lineRangeInfo: market.description.lineRangeInfo,
-          raceType: market.description.raceType,
-          priceLadderDescription: market.description.priceLadderDescription.type,
-        }
-
-        const marketUpdate = await Market.findOneAndUpdate(
-          { $and: [{ marketId: market.marketId }, { systemId: system._id.toString() }] },
-          { $set: data },
-          { runValidators: true, new: true, upsert: true }
-        )
-
-        //Update runners
-        const runnerUpdate = await this.runnerUpdate(market.runners, system, market.marketId);
-
-      }
-
-      return [true, ''];
-
-    } catch (e) {
-      return [false, e]
+    if (event.eventId !== '') {
+      params = '{"filter":{"eventIds":["' + event.eventId + '"], ' + APIfilter + '},"sort":"' + system["sort"] + '","maxResults":"' + system["maxResults"] + '","marketProjection":' + system["marketProjection"] + '}';
+      marketId = "";
     }
+
+    if (marketId !== '') {
+      params = '{"filter":{"marketIds":["' + marketId + '"]},"sort": "' + system["sort"] + '","maxResults": "' + system["maxResults"] + '","marketProjection": ' + system["marketProjection"] + '}';
+    }
+
+    const res = await this.api.getMarkets(params);
+
+    //Check for API error
+    if (!res[0]) { return res };
+
+    //Get api data
+    const markets = res[1];
+
+    for (let index = 0; index < markets.length; index++) {
+      const market = markets[index];
+
+      //Fix market name for horse racing place markets
+      if (market.marketName == "To Be Placed") {
+
+        markets.forEach(item => {
+          if (item.description.marketTime === market.description.marketTime && item.marketName !== "To Be Placed") {
+            market.marketName = item.marketName;
+          }
+        });
+      }
+
+      let raceNumber = '';
+      let raceDistance = '';
+      let raceClass = '';
+
+      if (market.eventType.id === "7") {
+        const details = market.marketName.trim().split(' ');
+        raceNumber = details[0].slice(1, details[0].length);
+        raceDistance = details[1].slice(0, -1);
+        (details[3] !== '') ? details[2] += " " + details[3] : "";
+        raceClass = details[2];
+      }
+
+      let data = {
+        marketName: market.marketName,
+        eventId: event.eventId,
+        eventName: event.eventName,
+        marketStartTime: market.marketStartTime,
+        totalMatched: market.totalMatched,
+        competition: market.competition,
+        raceNumber: raceNumber,
+        raceDistance: raceDistance,
+        raceClass: raceClass,
+        persistenceEnabled: market.description.persistenceEnabled,
+        bspMarket: market.description.bspMarket,
+        marketTime: market.description.marketTime,
+        suspendTime: market.description.suspendTime,
+        settleTime: market.description.settleTime,
+        bettingType: market.description.bettingType,
+        turnInPlayEnabled: market.description.turnInPlayEnabled,
+        marketType: market.description.marketType,
+        regulator: market.description.regulator,
+        marketBaseRate: market.description.marketBaseRate,
+        discountAllowed: market.description.discountAllowed,
+        wallet: market.description.wallet,
+        rules: market.description.rules,
+        rulesHasDate: market.description.rulesHasDate,
+        eachWayDivisor: market.description.eachWayDivisor,
+        clarifications: market.description.clarifications,
+        lineRangeInfo: market.description.lineRangeInfo,
+        raceType: market.description.raceType,
+        priceLadderDescription: market.description.priceLadderDescription.type,
+      }
+
+      const marketUpdate = await Market.findOneAndUpdate(
+        { $and: [{ marketId: market.marketId }, { systemId: system._id.toString() }] },
+        { $set: data },
+        { runValidators: true, new: true, upsert: true }
+      )
+
+      await Event.findOneAndUpdate(
+        { _id: event._id },
+        { $addToSet: { markets: marketUpdate._id } }
+      );
+
+      //Update runners
+      const runnerUpdate = await this.runnerUpdate(market.runners, system, market.marketId);
+
+    }
+
+    return [true, ''];
+
+    // } catch (e) {
+    //   return [false, e]
+    // }
   }
 
   //Runner Update By Market - grabs the runners for the market and inserts/updates into the database.
@@ -273,6 +278,12 @@ class BetfairController {
           { $set: data },
           { runValidators: true, new: true, upsert: true }
         )
+
+        await Market.findOneAndUpdate(
+          { marketId: marketId },
+          { $addToSet: { runners: runnerUpdate._id } }
+        );
+
       }
 
       return [true, ''];
@@ -377,14 +388,14 @@ class BetfairController {
     if (!systemId || systemId === "") return [false, "No system Id"];
 
     const betsPlaced = [];
-    let systemWallet = 0;
+    let wallet = 0;
 
     //Get system
     const system = await System.findById(systemId);
     if (!system) return [false, 'No system found for this id'];
 
     //Get user
-    const user = await User.findById(systemId.userId);
+    const user = await User.findById(system.userId);
     if (!user) return [false, 'No user found for this id'];
 
     //Select which wallet to use
@@ -414,9 +425,13 @@ class BetfairController {
     //Get markets in systems bet window
     let timeIn = new Date().toJSON()//From now
     let timeOut = new Date()
+    //--------override for testing
     system['timeSecsRace'] = 1800;
+    //----------------------------
     timeOut = new Date(timeOut.getTime() + (system['timeSecsRace'] * 1000)).toJSON();
     const markets = await Market.find({ $and: [{ systemId: systemId }, { marketTime: { $gte: timeIn, $lte: timeOut } }] });
+
+    if (markets.length === 0) return [false, "No markets found to bet on"]
 
     //Update the markets and get the market data
     const marketUpdate = await this.marketBookUpdate('', '', markets);
@@ -546,8 +561,8 @@ class BetfairController {
               const newBet = Result.create(data)
               //TO DO log if database update failed
 
-              const activeBets = await Result.find({ $and: [{ systemId: systemId }, { eventId: market.eventId }] });
-              !activeBets ? system['totalEvents'] = system['totalEvents'] + 1 : system['totalEvents'];
+              const activeBets = await Result.find({ $and: [{ systemId: systemId }, { eventId: marketData[0].eventId }] });
+              activeBets.length < 1 ? system['totalEvents'] = system['totalEvents'] + 1 : system['totalEvents'];
 
               system['totalBets'] = system['totalBets'] + 1;
               system['unsettledBets'] = system['unsettledBets'] + 1;
@@ -582,7 +597,7 @@ class BetfairController {
               }
 
               const userUpdate = await User.findByIdAndUpdate(
-                system[userId],
+                system['userId'],
                 { $set: data },
                 { runValidators: true, new: true }
               )
@@ -602,16 +617,19 @@ class BetfairController {
   async betUpdate(systemId) {
     if (!systemId || systemId === "") return [false, "No system Id"];
 
+    let wallet = 0;
+
     //Get active bets for system
     const activeBets = await Result.find({ $and: [{ systemId: systemId }, { $or: [{ betOutcome: null }, { betStatus: 'Open' }] }] });
-    if (!activeBets) return [true, 'No active bets for this system'];
+    if (activeBets.length === 0) return [true, 'No active bets for this system'];
+    console
 
     //Get system
     const system = await System.findById(systemId);
     if (!system) return [false, 'No system found for this id'];
 
     //Get user
-    const user = await User.findById(systemId.userId);
+    const user = await User.findById(system.userId);
     if (!user) return [false, 'No user found for this id'];
 
     //Select which wallet to use
@@ -658,8 +676,8 @@ class BetfairController {
             if (bet['betType'] === "Back") {
               (selectionStatus === "WINNER") ? bet['betOutcome'] = "Win" : bet['betOutcome'] = "Place";
               system['totalWinners'] = system['totalWinners'] + 1;
-              bet['profitLoss'] = (bet['sizeSettled'] * bet['priceMatched'] - bet['sizeSettled']);
-              bet['returned'] = bet['sizeSettled'] * bet['priceMatched'];
+              bet['profitLoss'] = bet['sizeSettled'] * bet['priceMatched'] / 100 - bet['sizeSettled'];
+              bet['returned'] = bet['sizeSettled'] * bet['priceMatched'] / 100;
               wallet = wallet + bet['returned'];
               bet['wallet'] = wallet;
               system['totalConsecWinners'] = system['totalConsecWinners'] + 1;
@@ -673,10 +691,13 @@ class BetfairController {
                 bet['wallet'] = bet['wallet'] - bet['commission'];
               }
 
+              system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
+
             } else {
               bet['betOutcome'] = "Lose";
               system['totalLosers'] = system['totalLosers'] + 1;
               bet['profitLoss'] = -bet['liability'];
+              system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
               bet['returned'] = 0;
               system['totalConsecLosers'] = system['totalConsecLosers'] + 1;
               system['totalConsecWinners'] = 0;
@@ -689,6 +710,7 @@ class BetfairController {
               bet['betOutcome'] = "Lose";
               system['totalLosers'] = system['totalLosers'] + 1;
               bet['profitLoss'] = -bet['liability'];
+              system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
               bet['returned'] = 0;
               system['totalConsecLosers'] = system['totalConsecLosers'] + 1;
               system['totalConsecWinners'] = 0;
@@ -698,6 +720,7 @@ class BetfairController {
               bet['betOutcome'] = "Win";
               system['totalWinners'] = system['totalWinners'] + 1;
               bet['profitLoss'] = bet['sizeSettled'];
+              system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
               bet['returned'] = (bet['sizeSettled'] + bet['liability']);
               wallet = wallet + bet['returned'];
               bet['wallet'] = wallet;
@@ -707,6 +730,7 @@ class BetfairController {
               bet['commission'] = Math.round(bet['commissionperc'] / 100 * bet['profitLoss']);
               if (system['includeCommission']) {
                 bet['profitLoss'] = bet['profitLoss'] - bet['commission'];
+                system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
                 wallet = wallet - bet['commission'];
                 bet['wallet'] = bet['wallet'] - bet['commission'];
               }
@@ -783,8 +807,8 @@ class BetfairController {
       }
 
       const userUpdate = await User.findByIdAndUpdate(
-        system[userId],
-        { $set: userData },
+        system['userId'],
+        { $set: user },
         { runValidators: true, new: true }
       )
       //TO DO log if database update failed

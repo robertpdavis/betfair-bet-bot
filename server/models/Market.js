@@ -51,6 +51,12 @@ const marketSchema = new Schema({
   crossMatching: Boolean,
   runnersVoidable: Boolean,
   version: String,
+  runners: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Runner',
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

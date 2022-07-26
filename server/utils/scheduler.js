@@ -24,6 +24,7 @@ async function scheduler() {
 
   //Run the controller every 5 seconds
   setInterval(controller, 5000);
+  console.log('Scheduler started....');
 
   async function controller() {
     //Adjust the timers for each action
@@ -76,11 +77,11 @@ async function tests() {
 
   // console.log(await bfController.apiLogin('62d88c0c9e80cc3ef1a55243'));
   // console.log(await bfController.apiLogout('62d88c0c9e80cc3ef1a55243'));
-  // console.log(await bfController.setSession('62d88c0c9e80cc3ef1a55243'));
+  console.log(await bfController.setSession('62d88c0c9e80cc3ef1a55243'));
   // console.log(await bfController.getEventTypes('62d88c0c9e80cc3ef1a55243'));
-  // console.log(await bfController.eventUpdate('62d88c0c9e80cc3ef1a55243'));
+  console.log(await bfController.eventUpdate('62d88c0c9e80cc3ef1a55243'));
   // console.log(await bfController.marketBookUpdate('', '1.201288449', ''));
-  console.log(await bfController.apiKeepAlive('62d88c0c9e80cc3ef1a55243'));
+  // console.log(await bfController.apiKeepAlive('62d88c0c9e80cc3ef1a55243'));
   // console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248'));
   // console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248'));
 

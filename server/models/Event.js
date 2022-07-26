@@ -17,6 +17,12 @@ const eventSchema = new Schema({
   venue: String,
   openDate: Date,
   marketCount: Number,
+  markets: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Market',
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

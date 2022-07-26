@@ -79,7 +79,6 @@ function systemStatsCheck(system) {
   sysStatus["maxLosers"] = (system['maxLosers'] !== 0) ? (system['totalLosers'] >= system['maxLosers']) ? true : false : false;
   sysStatus["consecWinners"] = (system['consecWinners'] !== 0) ? (system['totalConsecWinners'] >= system['consecWinners']) ? true : false : false;
   sysStatus["consecLosers"] = (system['consecLosers'] !== 0) ? (system['totalConsecLosers'] >= system['consecLosers']) ? true : false : false;
-  sysStatus["setWallet"] = (system['setWallet'] !== 0) ? (system['currentWallet'] < 0) ? true : false : false;
 
   for (const key in sysStatus) {
     if (Object.hasOwnProperty.call(sysStatus, key)) {
