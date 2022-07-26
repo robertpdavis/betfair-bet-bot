@@ -230,21 +230,6 @@ const systemSchema = new Schema({
     required: true,
     default: 0,
   },
-  currentWallet: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  maxWallet: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  minWallet: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
   maxBet: {
     type: Number,
     required: true,

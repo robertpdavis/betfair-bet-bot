@@ -165,10 +165,10 @@ class Betfairapi {
         }
       );
 
-      if (res.status !== 'SUCCESS') {
-        return [false, res.error];
+      if (res.data.status !== 'SUCCESS') {
+        return [false, res.data.error];
       } else {
-        return [true, res.status];
+        return [true, res.data.status];
       }
     } catch (e) {
       return [false, e];

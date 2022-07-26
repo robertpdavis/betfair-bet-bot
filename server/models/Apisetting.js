@@ -49,7 +49,7 @@ const apiSchema = new Schema({
   lastTestLogin: {
     type: Date,
   },
-  lastTesTKeepAlive: {
+  lastTestKeepAlive: {
     type: Date,
   },
   lastTestLogout: {
@@ -79,6 +79,18 @@ const apiSchema = new Schema({
   liveApiStatus: {
     type: Boolean,
     default: false,
+  },
+  lastTestStatus: {
+    type: Date,
+  },
+  lastLiveStatus: {
+    type: Date,
+  },
+  lastTestMessage: {
+    type: String,
+  },
+  lastLiveMessage: {
+    type: String,
   },
   createdAt: {
     type: Date,

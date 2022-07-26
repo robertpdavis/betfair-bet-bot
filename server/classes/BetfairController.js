@@ -21,6 +21,8 @@ class BetfairController {
     })
 
     this.config = configs;
+
+    return configs;
   }
 
   async setSession(userId) {
@@ -30,7 +32,7 @@ class BetfairController {
       if (!apiSettings) { return [false, "No API settings found for this user"] };
 
       //If API not enabled, don't proceed any further.
-      if (!apiSettings.apiEnabled) {
+      if ((apiSettings.apiMode === 'Test' && !apiSettings.testApiEnabled) || (apiSettings.apiMode === 'Live' && !apiSettings.liveApiEnabled)) {
         return [false, "API disabled"];
       }
 
@@ -203,35 +205,34 @@ class BetfairController {
         }
 
         let data = {
-          marketName: (!market.marketName) ? "" : market.marketName,
-          eventId: (!event.event.id) ? "" : event.event.id,
-          eventName: (!event.event.name) ? "" : event.event.name,
-          marketStartTime: (!market.marketStartTime) ? "" : market.marketStartTime,
-          totalMatched: (!market.totalMatched) ? "" : market.totalMatched,
-          competition: (!market.competition) ? "" : market.competition,
+          marketName: market.marketName,
+          eventId: event.event.id,
+          eventName: event.event.name,
+          marketStartTime: market.marketStartTime,
+          totalMatched: market.totalMatched,
+          competition: market.competition,
           raceNumber: raceNumber,
           raceDistance: raceDistance,
           raceClass: raceClass,
-          persistenceEnabled: (!market.description.persistenceEnabled) ? false : market.description.persistenceEnabled,
-          bspMarket: (!market.description.bspMarket) ? false : market.description.bspMarket,
-          marketTime: (!market.description.marketTime) ? "" : market.description.marketTime,
-          suspendTime: (!market.description.suspendTime) ? "" : market.description.suspendTime,
-          settleTime: (!market.description.settleTime) ? "" : market.description.settleTime,
-          bettingType: (!market.description.bettingType) ? "" : market.description.bettingType,
-          turnInPlayEnabled: (!market.description.turnInPlayEnabled) ? false : market.description.turnInPlayEnabled,
-          marketType: (!market.description.marketType) ? "" : market.description.marketType,
-          regulator: (!market.description.regulator) ? "" : market.description.regulator,
-          marketBaseRate: (!market.description.marketBaseRate) ? "" : market.description.marketBaseRate,
-          discountAllowed: (!market.description.discountAllowed) ? false : market.description.discountAllowed,
-          wallet: (!market.description.wallet) ? "" : market.description.wallet,
-          rules: (!market.description.rules) ? "" : market.description.rules,
-          rulesHasDate: (!market.description.rulesHasDate) ? false : market.description.rulesHasDate,
-          eachWayDivisor: (!market.description.eachWayDivisor) ? "" : market.description.eachWayDivisor,
-          clarifications: (!market.description.clarifications) ? "" : market.description.clarifications,
-          lineRangeInfo: (!market.description.lineRangeInfo) ? "" : market.description.lineRangeInfo,
-          raceType: (!market.description.raceType) ? "" : market.description.raceType,
-          priceLadderDescription: (!market.description.priceLadderDescription.type) ? "" : market.description.priceLadderDescription.type,
-
+          persistenceEnabled: market.description.persistenceEnabled,
+          bspMarket: market.description.bspMarket,
+          marketTime: market.description.marketTime,
+          suspendTime: market.description.suspendTime,
+          settleTime: market.description.settleTime,
+          bettingType: market.description.bettingType,
+          turnInPlayEnabled: market.description.turnInPlayEnabled,
+          marketType: market.description.marketType,
+          regulator: market.description.regulator,
+          marketBaseRate: market.description.marketBaseRate,
+          discountAllowed: market.description.discountAllowed,
+          wallet: market.description.wallet,
+          rules: market.description.rules,
+          rulesHasDate: market.description.rulesHasDate,
+          eachWayDivisor: market.description.eachWayDivisor,
+          clarifications: market.description.clarifications,
+          lineRangeInfo: market.description.lineRangeInfo,
+          raceType: market.description.raceType,
+          priceLadderDescription: market.description.priceLadderDescription.type,
         }
 
         const marketUpdate = await Market.findOneAndUpdate(
@@ -260,11 +261,11 @@ class BetfairController {
         const runner = runners[index];
 
         let data = {
-          runnerName: (!runner.runnerName) ? "" : runner.runnerName,
-          handicap: (!runner.handicap) ? "" : runner.handicap,
-          sortPriority: (!runner.sortPriority) ? "" : runner.sortPriority,
-          metadata: (!runner.metadata) ? "" : JSON.stringify(runner.metadata),
-          form: (!runner.metadata.FORM) ? "" : runner.metadata.FORM,
+          runnerName: runner.runnerName,
+          handicap: runner.handicap,
+          sortPriority: runner.sortPriority,
+          metadata: JSON.stringify(runner.metadata),
+          form: runner.metadata.FORM,
         }
 
         const runnerUpdate = await Runner.findOneAndUpdate(
@@ -341,21 +342,21 @@ class BetfairController {
           const runner = runners[index];
 
           let data = {
-            handicap: (runner.handicap) ? "" : runner.handicap,
-            selectionId: (!runner.selectionId) ? "" : runner.selectionId,
-            status: (!runner.status) ? "" : runner.status,
-            adjustmentFactor: (!runner.adjustmentFactor) ? "" : runner.adjustmentFactor,
-            totalMatched: (!runner.totalMatched) ? "" : runner.totalMatched,
-            removalDate: (!runner.removalDate) ? "" : runner.removalDate,
+            handicap: runner.handicap,
+            selectionId: runner.selectionId,
+            status: runner.status,
+            adjustmentFactor: runner.adjustmentFactor,
+            totalMatched: runner.totalMatched,
+            removalDate: runner.removalDate,
             // spNearPrice: (!runner.sp.nearPrice) ? "" : runner.sp.nearPrice.toJSON,
             // spFarPrice: (!runner.sp.farPrice) ? "" : runner.sp.farPrice,
             // spBackStakeTaken: (!runner.sp.backStakeTaken) ? "" : runner.sp.backStakeTaken,
             // spLayLiabilityTaken: (!runner.sp.layLiabilityTaken) ? "" : runner.sp.layLiabilityTaken,
             // actualSP: (!runner.sp.actualSP) ? "" : runner.sp.actualSP,
-            exAvailableToBack: (!runner.ex.availableToBack) ? "" : JSON.stringify(runner.ex.availableToBack),
-            exAvailableToLay: (!runner.ex.availableToLay) ? "" : JSON.stringify(runner.ex.availableToLay),
-            exTradedVolume: (!runner.ex.tradedVolume) ? "" : JSON.stringify(runner.ex.tradedVolume),
-            matchesByStrategy: (!runner.matchesByStrategy) ? "" : runner.matchesByStrategy,
+            exAvailableToBack: JSON.stringify(runner.ex.availableToBack),
+            exAvailableToLay: JSON.stringify(runner.ex.availableToLay),
+            exTradedVolume: JSON.stringify(runner.ex.tradedVolume),
+            matchesByStrategy: runner.matchesByStrategy,
           }
 
           const runnerUpdate = await Runner.updateMany(
@@ -376,14 +377,22 @@ class BetfairController {
     if (!systemId || systemId === "") return [false, "No system Id"];
 
     const betsPlaced = [];
-    const statusUpdate = [];
     let systemWallet = 0;
 
     //Get system
     const system = await System.findById(systemId);
     if (!system) return [false, 'No system found for this id'];
 
-    systemWallet = system['currentWallet'];
+    //Get user
+    const user = await User.findById(systemId.userId);
+    if (!user) return [false, 'No user found for this id'];
+
+    //Select which wallet to use
+    if (system['mode'] === "Live") {
+      wallet = user['wallet'];
+    } else {
+      wallet = user['virtualWallet'];
+    }
 
     //Do system prebet Stats Chk
     const sysStatus = systemStatsCheck(system);
@@ -471,7 +480,7 @@ class BetfairController {
             }
 
             //Check if setWallet and funds available
-            if (systemWallet < bet['liability']) {
+            if (wallet < bet['liability']) {
               //TO DO: ALERT NO FUNDS AVAILABLE
               return [false, 'No funds available to make bet']
             }
@@ -489,8 +498,8 @@ class BetfairController {
               betPlaced = true;
             }
 
-            systemWallet = systemWallet - bet['liability'];
-            bet['wallet'] = systemWallet;
+            wallet = wallet - bet['liability'];
+            bet['wallet'] = wallet;
 
             //Save in database if bet placed
             if (betPlaced) {
@@ -537,22 +546,18 @@ class BetfairController {
               const newBet = Result.create(data)
               //TO DO log if database update failed
 
-              statusUpdate['newMarkets'] = 1
               const activeBets = await Result.find({ $and: [{ systemId: systemId }, { eventId: market.eventId }] });
-              !activeBets ? statusUpdate['newEvents'] = 1 : statusUpdate['newEvents'] = 0;
+              !activeBets ? system['totalEvents'] = system['totalEvents'] + 1 : system['totalEvents'];
 
-              statusUpdate['newBets'] = statusUpdate['newBets'] + 1;
-              statusUpdate['newUnsettled'] = 1;
+              system['totalBets'] = system['totalBets'] + 1;
+              system['unsettledBets'] = system['unsettledBets'] + 1;
+              system['totalMarkets'] = system['totalMarkets'] + 1
 
               //Update system Status
-
               data = {
-                maxWallet: parseInt(system['maxWallet']) < systemWallet ? systemWallet : parseInt(system['maxWallet']),
-                minWallet: parseInt(system['minWallet']) > systemWallet ? systemWallet : parseInt(system['minWallet']),
-                totalBets: parseInt(system['totalBets']) + statusUpdate['newBets'],
-                totalEvents: parseInt(system['totalEvents']) + statusUpdate['newEvents'],
-                totalMarkets: parseInt(system['totalMarkets']) + statusUpdate['newBets'],
-                currentWallet: systemWallet
+                totalBets: parseInt(system['totalBets']),
+                totalEvents: parseInt(system['totalEvents']),
+                totalMarkets: parseInt(system['totalMarkets']),
               }
 
               const sysUpdate = await System.findByIdAndUpdate(
@@ -562,10 +567,29 @@ class BetfairController {
               )
               //TO DO log if database update failed
 
+              //Update user status
+              if (wallet !== '') {
+                if (system['mode'] === "Live") {
+                  user['wallet'] = wallet;
+                  ((user['maxWallet'] < wallet) ? user['maxWallet'] = wallet : "");
+                  ((user['minWallet'] > wallet) ? user['minWallet'] = wallet : "");
+
+                } else {
+                  user['virtualWallet'] = wallet;
+                  ((user['maxVirtualWallet'] < wallet) ? user['maxVirtualWallet'] = wallet : "");
+                  ((user['minVirtualWallet'] > wallet) ? user['minVirtualWallet'] = wallet : "");
+                }
+              }
+
+              const userUpdate = await User.findByIdAndUpdate(
+                system[userId],
+                { $set: data },
+                { runValidators: true, new: true }
+              )
+              //TO DO log if database update failed
 
               betsPlaced.push(bet);
 
-              statusUpdate.length = 0;
             }
           }
         }
@@ -586,7 +610,16 @@ class BetfairController {
     const system = await System.findById(systemId);
     if (!system) return [false, 'No system found for this id'];
 
-    let systemWallet = system['currentWallet'];
+    //Get user
+    const user = await User.findById(systemId.userId);
+    if (!user) return [false, 'No user found for this id'];
+
+    //Select which wallet to use
+    if (system['mode'] === "Live") {
+      wallet = user['wallet'];
+    } else {
+      wallet = user['virtualWallet'];
+    }
 
     for (let index = 0; index < activeBets.length; index++) {
       const bet = activeBets[index];
@@ -624,19 +657,19 @@ class BetfairController {
           if (selectionStatus === "WINNER" || selectionStatus === "PLACED") {
             if (bet['betType'] === "Back") {
               (selectionStatus === "WINNER") ? bet['betOutcome'] = "Win" : bet['betOutcome'] = "Place";
-              system['totalWinners'] = parseInt(system['totalWinners']) + 1;
+              system['totalWinners'] = system['totalWinners'] + 1;
               bet['profitLoss'] = (bet['sizeSettled'] * bet['priceMatched'] - bet['sizeSettled']);
               bet['returned'] = bet['sizeSettled'] * bet['priceMatched'];
-              systemWallet = systemWallet + bet['returned'];
-              bet['wallet'] = systemWallet;
-              system['totalConsecWinners'] = parseInt(system['totalConsecWinners']) + 1;
+              wallet = wallet + bet['returned'];
+              bet['wallet'] = wallet;
+              system['totalConsecWinners'] = system['totalConsecWinners'] + 1;
               system['totalConsecLosers'] = 0;
 
               bet['commission'] = Math.round(bet['commissionperc'] / 100 * bet['profitLoss']);
 
               if (system['includeCommission']) {
                 bet['profitLoss'] = bet['profitLoss'] - bet['commission'];
-                systemWallet = systemWallet - $bet['commission'];
+                wallet = wallet - bet['commission'];
                 bet['wallet'] = bet['wallet'] - bet['commission'];
               }
 
@@ -666,15 +699,15 @@ class BetfairController {
               system['totalWinners'] = system['totalWinners'] + 1;
               bet['profitLoss'] = bet['sizeSettled'];
               bet['returned'] = (bet['sizeSettled'] + bet['liability']);
-              systemWallet = systemWallet + bet['returned'];
-              bet['wallet'] = $systemWallet;
+              wallet = wallet + bet['returned'];
+              bet['wallet'] = wallet;
               system['totalConsecWinners'] = system['totalConsecWinners'] + 1;
               system['totalConsecLosers'] = 0;
 
               bet['commission'] = Math.round(bet['commissionperc'] / 100 * bet['profitLoss']);
               if (system['includeCommission']) {
                 bet['profitLoss'] = bet['profitLoss'] - bet['commission'];
-                systemWallet = systemWallet - bet['commission'];
+                wallet = wallet - bet['commission'];
                 bet['wallet'] = bet['wallet'] - bet['commission'];
               }
             }
@@ -684,8 +717,8 @@ class BetfairController {
           if (selectionStatus === "REMOVED" || selectionStatus === "REMOVED_VACANT") {
             bet['betOutcome'] = "Void";
             bet['returned'] = bet['liability'];
-            systemWallet = systemWallet + bet['returned'];
-            bet['wallet'] = $systemWallet;
+            wallet = wallet + bet['returned'];
+            bet['wallet'] = wallet;
             bet['profitLoss'] = 0;
           }
 
@@ -723,24 +756,35 @@ class BetfairController {
         { $set: bet },
         { runValidators: true, new: true }
       )
-
-
       //TO DO log if database update failed
-
-      //Update the systems status
-
-      if (systemWallet !== '') {
-        ((system['maxWallet'] < systemWallet) ? system['maxWallet'] = systemWallet : "");
-        ((system['minWallet'] > systemWallet) ? system['minWallet'] = systemWallet : "");
-      }
-
-      system['currentWallet'] = systemWallet;
 
       //Update system Status
 
       const sysUpdate = await System.findByIdAndUpdate(
         system['id'],
         { $set: system },
+        { runValidators: true, new: true }
+      )
+      //TO DO log if database update failed
+
+
+      //Update user status
+      if (wallet !== '') {
+        if (system['mode'] === "Live") {
+          user['wallet'] = wallet;
+          ((user['maxWallet'] < wallet) ? user['maxWallet'] = wallet : "");
+          ((user['minWallet'] > wallet) ? user['minWallet'] = wallet : "");
+
+        } else {
+          user['virtualWallet'] = wallet;
+          ((user['maxVirtualWallet'] < wallet) ? user['maxVirtualWallet'] = wallet : "");
+          ((user['minVirtualWallet'] > wallet) ? user['minVirtualWallet'] = wallet : "");
+        }
+      }
+
+      const userUpdate = await User.findByIdAndUpdate(
+        system[userId],
+        { $set: userData },
         { runValidators: true, new: true }
       )
       //TO DO log if database update failed
@@ -761,7 +805,7 @@ class BetfairController {
       if (!apiSettings) { return [false, "No API settings found for this user"] };
 
       //If API not enabled, don't proceed any further.
-      if (!apiSettings.apiEnabled) {
+      if ((apiSettings.apiMode === 'Test' && !apiSettings.testApiEnabled) || (apiSettings.apiMode === 'Live' && !apiSettings.liveApiEnabled)) {
         return [false, "API disabled"];
       }
 
@@ -773,7 +817,7 @@ class BetfairController {
           //Logged in and session returned
 
           //Save the session to the database and update API status
-          let data = (apiSettings.apiMode === 'Test') ? { $set: { testSessionId: res[1], apiStatus: true } } : { $set: { liveSessionId: res[1], apiStatus: true } }
+          let data = (apiSettings.apiMode === 'Test') ? { $set: { testSessionId: res[1], testApiStatus: true, lastTestStatus: new Date().toJSON(), lastTestLogin: new Date().toJSON(), lastTestMessage: 'Login Success' } } : { $set: { liveSessionId: res[1], liveApiStatus: true, lastLiveStatus: new Date().toJSON(), lastLiveLogin: new Date().toJSON(), lastLiveMessage: 'Login Sucess' } }
           let result = await Apisetting.findOneAndUpdate(
             { userId: userId },
             data,
@@ -801,7 +845,7 @@ class BetfairController {
       if (!apiSettings) { return [false, "No API settings found for this user"] };
 
       //If API not enabled, don't proceed any further.
-      if (!apiSettings.apiEnabled) {
+      if ((apiSettings.apiMode === 'Test' && !apiSettings.testApiEnabled) || (apiSettings.apiMode === 'Live' && !apiSettings.liveApiEnabled)) {
         return [false, "API disabled"];
       }
 
@@ -811,7 +855,7 @@ class BetfairController {
       if (res[0]) {
 
         //Update API status
-        let data = (apiSettings.apiMode === 'Test') ? { $set: { apiStatus: true } } : { $set: { apiStatus: true } }
+        let data = (apiSettings.apiMode === 'Test') ? { $set: { testApiStatus: true, lastTestKeepAlive: new Date().toJSON(), lastTestMessage: 'Keepalive Success' } } : { $set: { liveApiStatus: true, lastLiveKeepAlive: new Date().toJSON(), lastLiveMessage: 'Keepalive Sucess' } }
         const result = await Apisetting.findOneAndUpdate(
           { userId: userId },
           data,
@@ -829,18 +873,27 @@ class BetfairController {
 
         if (res[0]) {
 
+          //Save the session to the database and update API status
+          let data = (apiSettings.apiMode === 'Test') ? { $set: { testSessionId: res[1], testApiStatus: true, lastTestStatus: new Date().toJSON(), lastTestLogin: new Date().toJSON(), lastTestMessage: 'Login Sucess' } } : { $set: { liveSessionId: res[1], liveApiStatus: true, lastLiveStatus: new Date().toJSON(), lastLiveLogin: new Date().toJSON(), lastLiveMessage: 'Login Sucess' } }
+          let result = await Apisetting.findOneAndUpdate(
+            { userId: userId },
+            data,
+            { runValidators: true, new: true }
+          );
+
           return [true, "Success"]
 
         } else {
           //Update API status
-          let data = (apiSettings.apiMode === 'Test') ? { $set: { apiStatus: false } } : { $set: { apiStatus: false } }
+          let data = (apiSettings.apiMode === 'Test') ? { $set: { testSessionId: '', testApiStatus: false, lastTestStatus: new Date().toJSON(), lastTestMessage: 'Keepalive and attempted login failed' } } : { $set: { liveSessionId: '', liveApiStatus: false, lastLiveStatus: new Date().toJSON(), lastLiveMessage: 'Keepalive and attempted login failed' } }
+
           const result = await Apisetting.findOneAndUpdate(
             { userId: userId },
             data,
             { runValidators: true, new: true }
           );
 
-          return [false, "Keepalive failed for user: " + userId];
+          return [false, "Keepalive and attempted API login failed"];
         }
       }
 
@@ -856,15 +909,17 @@ class BetfairController {
     if (!apiSettings) { return [false, "No API settings found for this user"] };
 
     //If API not enabled, don't proceed any further.
-    if (!apiSettings.apiEnabled) {
-      return [false, "API disabled"];
+    if ((apiSettings.apiMode === 'Test' && apiSettings.testApiStatus !== true) || (apiSettings.apiMode === 'Live' && apiSettings.liveApiStatus !== true)) {
+      return [false, "Not logged into API"];
     }
 
-    const res = this.api.logout(apiSettings);
+
+    const res = await this.api.logout(apiSettings);
+
 
     if (res[0]) {
       //Update API status
-      let data = (apiSettings.apiMode === 'Test') ? { $set: { apiStatus: false } } : { $set: { apiStatus: false } }
+      let data = (apiSettings.apiMode === 'Test') ? { $set: { testSessionId: '', testApiStatus: false, lastTestStatus: new Date().toJSON(), lastTestLogout: new Date().toJSON(), lastTestMessage: 'Logout Sucess' } } : { $set: { liveSessionId: '', liveApiStatus: false, lastLiveStatus: new Date().toJSON(), lastLiveLogout: new Date().toJSON(), lastLiveMessage: 'Logout Sucess' } }
       const result = await Apisetting.findOneAndUpdate(
         { userId: userId },
         data,
@@ -875,7 +930,7 @@ class BetfairController {
 
     } else {
 
-      return [false, "API logout failed"];
+      return [false, "API logout failed:" + res[1]];
     }
   }
 

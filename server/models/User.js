@@ -19,6 +19,36 @@ const userSchema = new Schema({
     required: true,
     minlength: 8,
   },
+  wallet: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  virtualWallet: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  maxWallet: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  minWallet: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  maxVirtualWallet: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  minVirtualWallet: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
