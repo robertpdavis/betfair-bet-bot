@@ -41,5 +41,5 @@ startApolloServer(typeDefs, resolvers);
 
 
 //Start the scheduler
-scheduler();
-// tests();
+// scheduler();
+tests();

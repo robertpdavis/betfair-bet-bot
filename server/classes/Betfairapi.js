@@ -24,8 +24,9 @@ class Betfairapi {
       //TO DO: Check if session active
       let appKey = "";
 
-      const certfile = path.join(__dirname, '../classes/certs/client-2048.crt');
-      const keyfile = path.join(__dirname, '../classes/certs/client-2048.key');
+      //Convert string cert and key files into a byte buffer for sending to Betfair server
+      const certFile = Buffer.from(apiSettings.certfile, 'utf-8');
+      const keyFile = Buffer.from(apiSettings.keyfile, 'utf-8');
 
       //Check if loggin in with live or test key
       if (apiSettings) {
@@ -49,11 +50,11 @@ class Betfairapi {
         'X-Application': appKey,
         'Accept': 'application/json'
       }
-      //Setup SSL certs required by Betfair for login
+      //Setup SSL required by Betfair for login only
       const httpsAgent = new https.Agent({
         rejectUnauthorized: false,
-        cert: fs.readFileSync(certfile),
-        key: fs.readFileSync(keyfile),
+        cert: certFile,
+        key: keyFile,
       });
 
       const res = await axios(

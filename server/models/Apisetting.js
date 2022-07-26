@@ -46,23 +46,37 @@ const apiSchema = new Schema({
     type: String,
     required: false,
   },
-  lastLogin: {
+  lastTestLogin: {
     type: Date,
   },
-  lastKeepAlive: {
+  lastTesTKeepAlive: {
     type: Date,
   },
-  lastLogout: {
+  lastTestLogout: {
     type: Date,
   },
-  lastEventUpdate: {
-    type: Date,
-  },
-  apiEnabled: {
+  testApiEnabled: {
     type: Boolean,
     default: false,
   },
-  apiStatus: {
+  testApiStatus: {
+    type: Boolean,
+    default: false,
+  },
+  lastLiveLogin: {
+    type: Date,
+  },
+  lastLiveKeepAlive: {
+    type: Date,
+  },
+  lastLiveLogout: {
+    type: Date,
+  },
+  liveApiEnabled: {
+    type: Boolean,
+    default: false,
+  },
+  liveApiStatus: {
     type: Boolean,
     default: false,
   },
