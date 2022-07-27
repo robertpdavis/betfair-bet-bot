@@ -6,7 +6,7 @@ var cryptoJS = require("crypto-js");
 
 const apiSchema = new Schema({
   userId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   apiKeyTest: {

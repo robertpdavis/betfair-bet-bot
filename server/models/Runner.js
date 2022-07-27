@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const runnerSchema = new Schema({
   systemId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   marketId: {

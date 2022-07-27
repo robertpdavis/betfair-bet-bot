@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const systemSchema = new Schema({
   userId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true
   },
   systemId: {

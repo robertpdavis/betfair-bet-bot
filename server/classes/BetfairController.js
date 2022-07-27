@@ -58,7 +58,7 @@ class BetfairController {
   }
 
   //Get a list of event types and store in DB
-  async getEventTypes(userId) {
+  async getEventTypes() {
     try {
       const res = await this.api.getAllEventTypes();
       if (res[0]) {
@@ -133,11 +133,9 @@ class BetfairController {
             marketCount: event.marketCount
           };
 
-          const sysId = system._id.toString();
-
           //Update database
           const eventUpdate = await Event.findOneAndUpdate(
-            { $and: [{ eventId: event.event.id }, { systemId: system._id.toString() }] },
+            { $and: [{ eventId: event.event.id }, { systemId: system._id }] },
             { $set: data },
             { runValidators: true, new: true, upsert: true }
           )
@@ -236,7 +234,7 @@ class BetfairController {
       }
 
       const marketUpdate = await Market.findOneAndUpdate(
-        { $and: [{ marketId: market.marketId }, { systemId: system._id.toString() }] },
+        { $and: [{ marketId: market.marketId }, { systemId: system._id }] },
         { $set: data },
         { runValidators: true, new: true, upsert: true }
       )
@@ -274,7 +272,7 @@ class BetfairController {
         }
 
         const runnerUpdate = await Runner.findOneAndUpdate(
-          { $and: [{ marketId: marketId }, { selectionId: runner.selectionId }, { systemId: system._id.toString() }] },
+          { $and: [{ marketId: marketId }, { selectionId: runner.selectionId }, { systemId: system._id }] },
           { $set: data },
           { runValidators: true, new: true, upsert: true }
         )
@@ -480,7 +478,7 @@ class BetfairController {
             const bet = bets[index];
 
             //Reference to send to Betfair when placing the bet
-            bet['customerRef'] = system['userId'] + "_" + system['id'] + "_" + market['marketId'];
+            bet['customerRef'] = system['userId'].toString() + "_" + market['marketId'];
 
             bet['orderStatus'] = "Executible";
             bet['racingBetType'] = system['racingBetType'];
