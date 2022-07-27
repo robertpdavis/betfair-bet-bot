@@ -12,7 +12,7 @@ export const LOGIN_USER = gql`
   }
 `;
 
-export const ADD_USER = gql`
+export const CREATE_USER = gql`
   mutation addUser($username: String!, $email: String!, $password: String!) {
     addUser(username: $username, email: $email, password: $password) {
       token
@@ -24,41 +24,40 @@ export const ADD_USER = gql`
   }
 `;
 
-export const ADD_THOUGHT = gql`
-  mutation addThought($thoughtText: String!, $thoughtAuthor: String!) {
-    addThought(thoughtText: $thoughtText, thoughtAuthor: $thoughtAuthor) {
+export const UPDATE_API = gql`
+  mutation updateApi(
+    $apiKeyTest: String,
+    $testSessionId: String,
+    $apiKeyLive: String,
+    $liveSessionId: String,
+    $apiMode: String,
+    $apiUsername: String,
+    $apiPassword: String,
+    $certfile: String,
+    $keyfile: String,
+  ) {
+    updateApi(
+      apiKeyTest: $apiKeyTest,
+      testSessionId: $testSessionId,
+      apiKeyLive: $apiKeyLive,
+      liveSessionId: $liveSessionId,
+      apiMode: $apiMode,
+      apiUsername: $apiUsername,
+      apiPassword: $apiPassword,
+      certfile: $certfile,
+      keyfile: $keyfile,) 
+      {
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-      }
+      apiKeyTest
+      testSessionId
+      apiKeyLive
+      liveSessionId
+      apiMode
+      apiUsername
+      apiPassword
+      certfile
+      keyfile
     }
   }
 `;
 
-export const ADD_COMMENT = gql`
-  mutation addComment(
-    $thoughtId: ID!
-    $commentText: String!
-    $commentAuthor: String!
-  ) {
-    addComment(
-      thoughtId: $thoughtId
-      commentText: $commentText
-      commentAuthor: $commentAuthor
-    ) {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-        createdAt
-      }
-    }
-  }
-`;

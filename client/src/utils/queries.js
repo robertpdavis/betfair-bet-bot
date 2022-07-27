@@ -6,38 +6,484 @@ export const QUERY_USER = gql`
       _id
       username
       email
-      thoughts {
+      wallet
+      virtualWallet
+      maxWallet
+      minWallet
+      maxVirtualWallet
+      minVirtualWallet
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const QUERY_SYSTEMS = gql`
+  query getSystems ($userId: ID! ) {
+    systems(userId: $userId) {
+      _id
+      userId
+      systemId
+      isActive
+      title
+      description
+      isRacingEvent
+      scenario
+      stakingPlan
+      scenarioParams
+      stakingParams
+      mode
+      simType
+      betType
+      racingBetType
+      setWallet
+      raceNumbers
+      raceDistance
+      raceClass
+      matchInPlay
+      maxEvents
+      maxMarkets
+      minOdds
+      maxOdds
+      maxRunners
+      minRunners
+      maxBackLayRatio
+      maxLiability
+      maxBets
+      minBets
+      minMatched
+      maxBookBackBets
+      minBookLayBets
+      minPlaceWinners
+      maxPlaceWinners
+      stopLoss
+      stopProfit
+      maxLosers
+      maxWinners
+      consecLosers
+      consecWinners
+      betStartingPrice
+      unsettledLimit
+      includeCommission
+      timeSecsRace
+      nthFavourite
+      numFavourites
+      exclFavourite
+      totalEvents
+      totalMarkets
+      totalBets
+      profitLoss
+      totalLosers
+      totalWinners
+      totalConsecLosers
+      totalConsecWinners
+      unsettledBets
+      maxBet
+      textQuery
+      eventTypeId
+      competitionIds
+      marketIds
+      venues
+      bspOnly
+      turnInPlayEnabled
+      inPlayOnly
+      marketBettingTypes
+      marketCountries
+      marketTypeCodes
+      customTime
+      marketFromTime
+      marketToTime
+      withOrders
+      raceTypes
+      sort
+      maxResults
+      marketProjection
+      lastStarted
+      lastStopped
+      lastReset
+      statusDesc
+      ordering
+    }
+  }
+`;
+
+export const QUERY_SINGLE_SYSTEM = gql`
+  query getSingleSystem($systemId: ID!) {
+    system(id: $systemId) {
+      _id
+      userId
+      systemId
+      isActive
+      title
+      description
+      isRacingEvent
+      scenario
+      stakingPlan
+      scenarioParams
+      stakingParams
+      mode
+      simType
+      betType
+      racingBetType
+      setWallet
+      raceNumbers
+      raceDistance
+      raceClass
+      matchInPlay
+      maxEvents
+      maxMarkets
+      minOdds
+      maxOdds
+      maxRunners
+      minRunners
+      maxBackLayRatio
+      maxLiability
+      maxBets
+      minBets
+      minMatched
+      maxBookBackBets
+      minBookLayBets
+      minPlaceWinners
+      maxPlaceWinners
+      stopLoss
+      stopProfit
+      maxLosers
+      maxWinners
+      consecLosers
+      consecWinners
+      betStartingPrice
+      unsettledLimit
+      includeCommission
+      timeSecsRace
+      nthFavourite
+      numFavourites
+      exclFavourite
+      totalEvents
+      totalMarkets
+      totalBets
+      profitLoss
+      totalLosers
+      totalWinners
+      totalConsecLosers
+      totalConsecWinners
+      unsettledBets
+      maxBet
+      textQuery
+      eventTypeId
+      competitionIds
+      marketIds
+      venues
+      bspOnly
+      turnInPlayEnabled
+      inPlayOnly
+      marketBettingTypes
+      marketCountries
+      marketTypeCodes
+      customTime
+      marketFromTime
+      marketToTime
+      withOrders
+      raceTypes
+      sort
+      maxResults
+      marketProjection
+      lastStarted
+      lastStopped
+      lastReset
+      statusDesc
+      ordering
+    }
+  }
+`;
+
+export const QUERY_EVENTS = gql`
+  query getEvents ($systemId: ID! ) {
+    events(systemId: $systemId) {
+      _id
+      systemId
+    eventId
+    eventName
+    eventTypeId
+    countryCode
+    timezone
+    venue
+    openDate
+    marketCount
+    markets {
+      _id
+      systemId
+      marketId
+      marketName
+      eventId
+      eventName
+      marketStartTime
+      totalMatched
+      competition
+      raceNumber
+      raceDistance
+      raceClass
+      persistenceEnabled
+      bspMarket
+      marketTime
+      suspendTime
+      settleTime
+      bettingType
+      turnInPlayEnabled
+      marketType
+      regulator
+      marketBaseRate
+      discountAllowed
+      wallet
+      rules
+      rulesHasDate
+      eachWayDivisor
+      clarifications
+      lineRangeInfo
+      raceType
+      priceLadderDescription
+      isMarketDataDelayed
+      status
+      betDelay
+      bspReconciled
+      complete
+      inplay
+      numberOfWinners
+      numberOfRunners
+      numberOfActiveRunners
+      lastMatchTime
+      totalAvailable
+      crossMatching
+      runnersVoidable
+      version
+    }
+    }
+  }
+`;
+
+export const QUERY_SINGLE_MARKET = gql`
+  query getSingleMarket($marketId: ID!) {
+    market(id: $marketId) {
+      _id
+      systemId
+      marketId
+      marketName
+      eventId
+      eventName
+      marketStartTime
+      totalMatched
+      competition
+      raceNumber
+      raceDistance
+      raceClass
+      persistenceEnabled
+      bspMarket
+      marketTime
+      suspendTime
+      settleTime
+      bettingType
+      turnInPlayEnabled
+      marketType
+      regulator
+      marketBaseRate
+      discountAllowed
+      wallet
+      rules
+      rulesHasDate
+      eachWayDivisor
+      clarifications
+      lineRangeInfo
+      raceType
+      priceLadderDescription
+      isMarketDataDelayed
+      status
+      betDelay
+      bspReconciled
+      complete
+      inplay
+      numberOfWinners
+      numberOfRunners
+      numberOfActiveRunners
+      lastMatchTime
+      totalAvailable
+      crossMatching
+      runnersVoidable
+      version
+      runners {
         _id
-        thoughtText
-        createdAt
+        systemId
+        marketId
+        selectionId
+        runnerName
+        handicap
+        sortPriority
+        metadata
+        status
+        adjustmentFactor
+        lastPriceTraded
+        totalMatched
+        removalDate
+        spNearPrice
+        spFarPrice
+        spBackStakeTaken
+        spLayLiabilityTaken
+        actualSP
+        exAvailableToBack
+        exAvailableToLay
+        exTradedVolume
+        matchesByStrategy
+        form
       }
     }
   }
 `;
 
-export const QUERY_THOUGHTS = gql`
-  query getThoughts {
-    thoughts {
+export const QUERY_SINGLE_RUNNER = gql`
+  query getSingleRunner($runnerId: ID!) {
+    runner(id: $runnerId) {
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
+      systemId
+      marketId
+      selectionId
+      runnerName
+      handicap
+      sortPriority
+      metadata
+      status
+      adjustmentFactor
+      lastPriceTraded
+      totalMatched
+      removalDate
+      spNearPrice
+      spFarPrice
+      spBackStakeTaken
+      spLayLiabilityTaken
+      actualSP
+      exAvailableToBack
+      exAvailableToLay
+      exTradedVolume
+      matchesByStrategy
+      form
     }
   }
 `;
 
-export const QUERY_SINGLE_THOUGHT = gql`
-  query getSingleThought($thoughtId: ID!) {
-    thought(thoughtId: $thoughtId) {
+export const QUERY_RESULTS = gql`
+  query getResults ($systemId: ID! ) {
+    results(systemId: $systemId) {
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-        createdAt
-      }
+      systemId
+      betId
+      customerRef
+      betPlaced
+      eventId
+      eventName
+      marketId
+      marketName
+      selectionId
+      selectionName
+      orderType
+      orderStatus
+      betType
+      racingBetType
+      persistence
+      betOutcome
+      betStatus
+      reqPrice
+      priceMatched
+      priceReducedn
+      matchedDate
+      size
+      sizeMatched
+      sizeRemaining
+      sizeLapsed
+      sizeVoided
+      sizeCancelled
+      sizeSettled
+      settledDate
+      commissionperc
+      commission
+      liability
+      profitLoss
+      returned
+      wallet
+      closed
+    }
+  }
+`;
+
+export const QUERY_SINGLE_RESULT = gql`
+  query getSingleResult($resultId: ID!) {
+    result(id: $resultId) {
+      _id
+      _id
+      systemId
+      betId
+      customerRef
+      betPlaced
+      eventId
+      eventName
+      marketId
+      marketName
+      selectionId
+      selectionName
+      orderType
+      orderStatus
+      betType
+      racingBetType
+      persistence
+      betOutcome
+      betStatus
+      reqPrice
+      priceMatched
+      priceReducedn
+      matchedDate
+      size
+      sizeMatched
+      sizeRemaining
+      sizeLapsed
+      sizeVoided
+      sizeCancelled
+      sizeSettled
+      settledDate
+      commissionperc
+      commission
+      liability
+      profitLoss
+      returned
+      wallet
+      closed
+    }
+  }
+`;
+
+export const QUERY_SINGLE_API = gql`
+  query getSingleResult($userId: ID!) {
+    apisetting(userId: $userId) {
+      _id
+      userId
+      apiKeyTest
+      testSessionId
+      apiKeyLive
+      liveSessionId
+      apiMode
+      apiUsername
+      apiPassword
+      certfile
+      keyfile
+      lastTestLogin
+      lastTestKeepAlive
+      lastTestLogout
+      testApiEnabled
+      testApiStatus
+      lastLiveLogin
+      lastLiveKeepAlive
+      lastLiveLogout
+      liveApiEnabled
+      liveApiStatus
+      lastTestStatus
+      lastLiveStatus
+      lastTestMessage
+      lastLiveMessage
     }
   }
 `;
