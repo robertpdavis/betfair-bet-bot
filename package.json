@@ -1,7 +1,7 @@
 {
   "name": "betfair-bet-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Online web app providing automated betting systems for Betfair users.",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
@@ -11,8 +11,8 @@
     "build": "cd client && npm run build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Rob Davis",
+  "license": "MIT",
   "devDependencies": {
     "concurrently": "^5.3.0"
   }

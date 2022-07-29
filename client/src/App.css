@@ -1,38 +1,76 @@
-.App {
+:root {
+  /* Additional Colors */
+  --color-yellow-50: #ffdc86;
+  --color-yellow-400: #ffb80c;
+  --color-blue-classic-50: #8c969d;
+  --color-blue-classic-400: #263a48;
+  --color-blue-classic-600: #1c272f;
+  --color-blue-classic-800: #5e6d78;
+  --color-blue-550: #0285cc;
+  --color-blue-700: #75c2fd;
+  --color-pink-400: #fac9d1;
+  --color-pink-600: #f694aa;
+  --color-pink-800: #cabfc1;
+  --color-green-200: #4db375;
+  --color-green-400: #20a052;
+  --color-green-600: #1c8c47;
+  --color-orange-400: #ef853f;
+  --color-orange-600: #db7a39;
+  --color-red-400: #d54d4d;
+  --color-red-600: #bc4848;
+  --color-blue-grey-100: #f0f1f5;
+  --color-blue-grey-200: #e1e6ea;
+  --color-grey-100: #dcdcdc;
+  --color-grey-200: #c2c2c2;
+  --color-grey-400: #7f7f7f;
+  --color-grey-800: #626262;
+  --color-carbon-300: #525252;
+  --color-carbon-400: #424242;
+  --color-carbon-800: #303030;
+  --color-white: #fff;
+  --color-emerald-400: #51ad95;
+  --color-emerald-500: #519995;
+  --color-emerald-800: #3f7c79;
+
+  /* Color settings */
+  --background: #FFFFFF;
+  --header-background: var(--color-yellow-400);
+  --header-font: var(--color-blue-classic-400);
+  --text-font: #666666;
+  --label-background: #14ABB2;
+  --label-font: #FFFFFF;
+  --link-color: #FFFFFF;
+  --link-active: #14ABB2;
+  --mod-title-desc-color: #000000;
+}
+
+main {
+  min-height: 35rem;
+}
+
+header {
+  background-color: var(--header-background);
+  color: var(--header-font);
+  min-height: 4rem;
+}
+
+header h3 {
+  font-weight: bold;
+}
+
+.nav-link-padding {
+  padding-top: 0rem;
+  padding-bottom: 0rem;
+}
+
+footer {
   text-align: center;
+  background-color: var(--header-background);
+  color: var(--label-font);
+  min-height: 4rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.form-input {
+  display: block;
+  margin: 0.5rem 0rem;
 }

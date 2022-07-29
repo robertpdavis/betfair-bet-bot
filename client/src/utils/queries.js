@@ -6,6 +6,8 @@ export const QUERY_USER = gql`
       _id
       username
       email
+      firstName
+      lastName
       wallet
       virtualWallet
       maxWallet
@@ -457,7 +459,7 @@ export const QUERY_SINGLE_RESULT = gql`
 `;
 
 export const QUERY_SINGLE_API = gql`
-  query getSingleResult($userId: ID!) {
+  query getSingleApi($userId: ID!) {
     apisetting(userId: $userId) {
       _id
       userId

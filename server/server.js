@@ -40,5 +40,5 @@ const startApolloServer = async (typeDefs, resolvers) => {
 startApolloServer(typeDefs, resolvers);
 
 //Start the scheduler
-scheduler();
+// scheduler();
 // tests();

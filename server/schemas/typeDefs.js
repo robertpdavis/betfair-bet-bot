@@ -14,6 +14,8 @@ scalar Date
     username: String
     email: String
     password: String
+    firstName: String
+    lastName: String
     wallet: Int
     virtualWallet: Int
     maxWallet: Int
@@ -310,7 +312,7 @@ scalar Date
   }
 
   type Mutation {
-    createUser(username: String!, email: String!, password: String!): Auth
+    createUser(username: String!, email: String!, password: String!, firstName: String!, lastName: String!): Auth
     loginUser(username: String!, password: String!): Auth
     updateAPI(    
       apiKeyTest: String,
