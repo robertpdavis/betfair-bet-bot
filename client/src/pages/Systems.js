@@ -19,13 +19,18 @@ function Systems() {
 
   return (
     <main>
-      <div className="flex-row justify-center">
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <SystemTable systemData={data} />
-        )}
-      </div>
+      <section className="container">
+        <div className="pt-3 pb-3">
+          <h4>Betting Systems</h4>
+        </div>
+        <div className="row">
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <SystemTable systemData={data} />
+          )}
+        </div>
+      </section>
     </main>
   )
 

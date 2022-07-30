@@ -22,6 +22,7 @@ scalar Date
     minWallet: Int
     maxVirtualWallet: Int
     minVirtualWallet: Int
+    lastLogin: Date
   }
 
   type Event {
@@ -53,7 +54,7 @@ scalar Date
     eventId: String
     eventName: String
     marketStartTime: Date
-    totalMatched: Int
+    totalMatched: Float
     competition: String
     raceNumber: String
     raceDistance: String
@@ -72,7 +73,7 @@ scalar Date
     wallet: String
     rules: String
     rulesHasDate: Boolean
-    eachWayDivisor: Int
+    eachWayDivisor: Float
     clarifications: String
     lineRangeInfo: String
     raceType: String
@@ -87,7 +88,7 @@ scalar Date
     numberOfRunners: Int
     numberOfActiveRunners: Int
     lastMatchTime: Date
-    totalAvailable: Int
+    totalAvailable: Float
     crossMatching: Boolean
     runnersVoidable: Boolean
     version: String

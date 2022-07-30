@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Auth from '../../utils/auth';
-import { Navigate } from 'react-router-dom';
+import { Navigate, renderMatches } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../../App.css';
 
@@ -13,12 +13,6 @@ function Nav() {
     const logout = (event) => {
       event.preventDefault();
       Auth.logout();
-      return <Navigate to="/login"></Navigate>
-    };
-
-    const profile = (event) => {
-      event.preventDefault();
-      return <Navigate to="/profile"></Navigate>
     };
 
     return (
@@ -48,9 +42,9 @@ function Nav() {
               </ul>
             </div>
             <div className="d-inline">
-              <button className=" d-inline btn btn-sm btn-info me-2" onClick={profile}>
+              <Link className=" d-inline btn btn-sm btn-info me-2" to="/profile">
                 Profile
-              </button>
+              </Link>
               <button className=" d-inline btn btn-sm btn-secondary" onClick={logout}>
                 Logout
               </button>

@@ -35,17 +35,19 @@ async function scheduler() {
 
     if (timers.placeBets >= intervals.placeBets) {
       //Do place bets
-      console.log('Place bets:' + new Date().toJSON());
+      // console.log('Place bets:' + new Date().toJSON());
       await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248'));
+      // console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248'));
+      await bfController.placeBets('62d88c0c9e80cc3ef1a55248');
       timers.placeBets = 0
     }
 
     if (timers.betUpdate >= intervals.betUpdate) {
       //Do bet update
-      console.log('Bet update:' + new Date().toJSON());
+      // console.log('Bet update:' + new Date().toJSON());
       await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248'));
+      // console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248'));
+      await bfController.betUpdate('62d88c0c9e80cc3ef1a55248');
       timers.betUpdate = 0
     }
 

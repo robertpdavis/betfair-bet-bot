@@ -71,7 +71,7 @@ function App() {
                 element={<Signup />}
               />
               <Route
-                path="/profiles/:username"
+                path="/profile/"
                 element={<Profile />}
               />
               <Route
@@ -81,6 +81,10 @@ function App() {
               <Route
                 path="/system/:systemId"
                 element={<System />}
+              />
+              <Route
+                path="/events/:systemId"
+                element={<Events />}
               />
               <Route
                 path="/events"

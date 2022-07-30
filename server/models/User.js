@@ -57,6 +57,10 @@ const userSchema = new Schema({
     required: true,
     default: 0,
   },
+  lastLogin: {
+    type: Date,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -85,6 +89,7 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.isCorrectPassword = async function (password) {
+
   return bcrypt.compare(password, this.password);
 };
 

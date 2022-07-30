@@ -8,11 +8,6 @@ function SystemTable({ systemData }) {
   const columns = useMemo(
     () => [
       {
-        Header: "_id",
-        accessor: "_id",
-        isVisible: true
-      },
-      {
         Header: "Id",
         accessor: "systemId"
       },
@@ -69,15 +64,12 @@ function SystemTable({ systemData }) {
         totalMarkets: item.totalMarkets,
         totalBets: item.totalBets,
         unsettledBets: item.unsettledBets,
-        profitLoss: item.profitLoss,
+        profitLoss: item.profitLoss / 100,
         totalLosers: item.totalLosers,
       }
     )))
 
   const tableInstance = useTable({ columns, data })
-
-  console.log(tableInstance)
-
 
   const {
     getTableProps,
@@ -87,8 +79,10 @@ function SystemTable({ systemData }) {
     prepareRow,
   } = tableInstance
 
+
+
   return (
-    <table {...getTableProps()}>
+    <table className="table table-striped" {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -100,11 +94,21 @@ function SystemTable({ systemData }) {
       </thead>
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
+          let link = "/system/" + data[i]._id
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+              {row.cells.map((cell, c) => {
+                if (c === 1) {
+                  return <td {...cell.getCellProps()}><Link to={link}>{cell.render("Cell")}</Link></td>;
+                }
+                if (cell.value === 'Active') {
+                  return <td {...cell.getCellProps()}><span className="badge bg-success">{cell.render("Cell")}</span></td>;
+                } else if (cell.value === 'Disabled') {
+                  return <td {...cell.getCellProps()}><span className="badge bg-secondary">{cell.render("Cell")}</span></td>;
+                } else {
+                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                }
               })}
             </tr>
           );

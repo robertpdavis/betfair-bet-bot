@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const QUERY_USER = gql`
-  query user($username: String!) {
+  query getuser($username: String!) {
     user(username: $username) {
       _id
       username
@@ -14,8 +14,7 @@ export const QUERY_USER = gql`
       minWallet
       maxVirtualWallet
       minVirtualWallet
-      createdAt
-      updatedAt
+      lastLogin
     }
   }
 `;

@@ -54,6 +54,12 @@ const resolvers = {
         throw new AuthenticationError('Incorrect credentials');
       }
 
+      const updateUser = await User.findByIdAndUpdate(
+        user._id,
+        { $set: { lastLogin: new Date().toJSON() } },
+        { runValidators: true, new: true }
+      )
+
       const token = signToken(user);
       return { token, user };
     },
