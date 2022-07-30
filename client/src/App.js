@@ -95,6 +95,10 @@ function App() {
                 element={<Market />}
               />
               <Route
+                path="/results/:systemId"
+                element={<Results />}
+              />
+              <Route
                 path="/results"
                 element={<Results />}
               />

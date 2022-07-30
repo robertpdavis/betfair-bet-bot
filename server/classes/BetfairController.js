@@ -489,7 +489,7 @@ class BetfairController {
             if (system['betType'] === "Back") {
               bet['liability'] = bet['size'];
             } else {
-              bet['liability'] = ((bet['size'] * bet['reqPrice']) / 100 - bet['size']);
+              bet['liability'] = Math.round(((bet['size'] * bet['reqPrice']) / 100 - bet['size']));
             }
 
             //Check if setWallet and funds available
@@ -674,8 +674,8 @@ class BetfairController {
             if (bet['betType'] === "Back") {
               (selectionStatus === "WINNER") ? bet['betOutcome'] = "Win" : bet['betOutcome'] = "Place";
               system['totalWinners'] = system['totalWinners'] + 1;
-              bet['profitLoss'] = bet['sizeSettled'] * bet['priceMatched'] / 100 - bet['sizeSettled'];
-              bet['returned'] = bet['sizeSettled'] * bet['priceMatched'] / 100;
+              bet['profitLoss'] = Math.round(bet['sizeSettled'] * bet['priceMatched'] / 100 - bet['sizeSettled']);
+              bet['returned'] = Math.round(bet['sizeSettled'] * bet['priceMatched'] / 100);
               wallet = wallet + bet['returned'];
               bet['wallet'] = wallet;
               system['totalConsecWinners'] = system['totalConsecWinners'] + 1;

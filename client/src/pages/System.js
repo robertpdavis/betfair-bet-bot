@@ -12,7 +12,7 @@ const SingleSystem = () => {
 
   const { loading, data } = useQuery(QUERY_SINGLE_SYSTEM, {
     // pass URL parameter
-    variables: { systemId: systemId },
+    variables: { systemId },
   });
 
   const system = data?.system || {};
@@ -22,7 +22,7 @@ const SingleSystem = () => {
   }
   return (
     <div className="my-3">
-      System
+      {systemId}
     </div>
   );
 };

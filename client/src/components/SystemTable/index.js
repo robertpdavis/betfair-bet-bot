@@ -64,7 +64,7 @@ function SystemTable({ systemData }) {
         totalMarkets: item.totalMarkets,
         totalBets: item.totalBets,
         unsettledBets: item.unsettledBets,
-        profitLoss: item.profitLoss / 100,
+        profitLoss: (item.profitLoss / 100).toFixed(2),
         totalLosers: item.totalLosers,
       }
     )))
@@ -82,39 +82,41 @@ function SystemTable({ systemData }) {
 
 
   return (
-    <table className="table table-striped" {...getTableProps()}>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          let link = "/system/" + data[i]._id
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell, c) => {
-                if (c === 1) {
-                  return <td {...cell.getCellProps()}><Link to={link}>{cell.render("Cell")}</Link></td>;
-                }
-                if (cell.value === 'Active') {
-                  return <td {...cell.getCellProps()}><span className="badge bg-success">{cell.render("Cell")}</span></td>;
-                } else if (cell.value === 'Disabled') {
-                  return <td {...cell.getCellProps()}><span className="badge bg-secondary">{cell.render("Cell")}</span></td>;
-                } else {
-                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-                }
-              })}
+    <div className="table-responsive">
+      <table className="table table-striped table-sm text-center" {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            let link = "/system/" + data[i]._id
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, c) => {
+                  if (c === 1) {
+                    return <td {...cell.getCellProps()}><Link to={link}>{cell.render("Cell")}</Link></td>;
+                  }
+                  if (cell.value === 'Active') {
+                    return <td {...cell.getCellProps()}><span className="badge bg-success">{cell.render("Cell")}</span></td>;
+                  } else if (cell.value === 'Disabled') {
+                    return <td {...cell.getCellProps()}><span className="badge bg-secondary">{cell.render("Cell")}</span></td>;
+                  } else {
+                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                  }
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

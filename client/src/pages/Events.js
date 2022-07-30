@@ -44,7 +44,7 @@ function Events() {
             <div>Loading...</div>
           ) : (
             <>
-              <SystemLinks systemData={dataS} linkType='event' />
+              <SystemLinks systemData={dataS} linkType='events' />
               <div className="pb-3 pt-3">
                 <h6>Upcoming events for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
               </div>

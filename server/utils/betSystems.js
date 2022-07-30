@@ -64,13 +64,13 @@ function scn1_backthefav(system, marketData, runnerData, results, backPrices, la
     bets[betId] = {};
     bets[betId]['betType'] = "Back";
     bets[betId]['selectionId'] = backPrices[0][0];
-    bets[betId]['reqPrice'] = backPrices[0][1] * 100;
+    bets[betId]['reqPrice'] = Math.round(backPrices[0][1] * 100);
   } else {
     bets[betId] = {};
     bets[betId]['betType'] = "Lay";
 
     bets[betId]['selectionId'] = layPrices[0][0];
-    bets[betId]['reqPrice'] = layPrices[0][1] * 100;
+    bets[betId]['reqPrice'] = Math.round(layPrices[0][1] * 100);
   }
 
   //Get selection name TO DO: Can this be done better?

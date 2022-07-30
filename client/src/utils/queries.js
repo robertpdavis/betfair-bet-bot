@@ -391,7 +391,7 @@ export const QUERY_RESULTS = gql`
       betStatus
       reqPrice
       priceMatched
-      priceReducedn
+      priceReduced
       matchedDate
       size
       sizeMatched
