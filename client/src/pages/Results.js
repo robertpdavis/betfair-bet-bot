@@ -33,29 +33,25 @@ function Results() {
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
+  if (loadingS || loadingR) {
+    return <div>Loading...</div>;
+  }
   return (
     <main>
-      <section className="container">
-        <div className="pt-3 pb-3">
-          <h4>System Results</h4>
+      <section className="container my-2">
+        <div className="page-header">
+          System Results
         </div>
         <div className="row">
-          {loadingS || loadingR ? (
-            <div>Loading...</div>
-          ) : (
-            <>
-              <SystemLinks systemData={dataS} linkType='results' />
-              <div className="pb-3 pt-3">
-                <h6>Bets placed and results for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
-              </div>
-              <ResultTable resultData={dataR} />
-            </>
-          )}
+          <SystemLinks systemData={dataS} linkType='results' />
+          <div className="pb-3 pt-3">
+            <h6>Bets placed and results for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
+          </div>
+          <ResultTable resultData={dataR} />
         </div>
       </section>
     </main>
-  )
-
-}
+  );
+};
 
 export default Results;

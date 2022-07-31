@@ -74,3 +74,12 @@ footer {
   display: block;
   margin: 0.5rem 0rem;
 }
+
+.page-header {
+  background-color: var(--color-carbon-800);
+  color: Var(--color-grey-100);
+  font-weight: bold;
+  padding: 0.2rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: .2rem;
+}

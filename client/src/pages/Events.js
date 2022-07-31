@@ -5,9 +5,10 @@ import SystemLinks from '../components/SystemLinks';
 import { useQuery } from '@apollo/client';
 import { Navigate, useParams } from 'react-router-dom';
 import { QUERY_SYSTEMS, QUERY_EVENTS } from '../utils/queries';
+import '../App.css';
 
 
-function Events() {
+const Events = () => {
 
   let { systemId } = useParams();
 
@@ -33,24 +34,21 @@ function Events() {
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
+  if (loadingS || loadingE) {
+    return <div>Loading...</div>;
+  }
   return (
     <main>
-      <section className="container">
-        <div className="pt-3 pb-3">
-          <h4>System Events</h4>
+      <section className="container my-2">
+        <div className="page-header">
+          System Events
         </div>
         <div className="row">
-          {loadingS || loadingE ? (
-            <div>Loading...</div>
-          ) : (
-            <>
-              <SystemLinks systemData={dataS} linkType='events' />
-              <div className="pb-3 pt-3">
-                <h6>Upcoming events for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
-              </div>
-              <MarketTable eventData={dataE} />
-            </>
-          )}
+          <SystemLinks systemData={dataS} linkType='events' />
+          <div className="pb-3 pt-3">
+            <h6>Upcoming events for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
+          </div>
+          <MarketTable eventData={dataE} />
         </div>
       </section>
     </main>

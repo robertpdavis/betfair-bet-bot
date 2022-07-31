@@ -4,8 +4,9 @@ import SystemTable from '../components/SystemTable';
 import { useQuery } from '@apollo/client';
 import { Navigate } from 'react-router-dom';
 import { QUERY_SYSTEMS } from '../utils/queries';
+import '../App.css';
 
-function Systems() {
+const Systems = () => {
 
   const user = Auth.getProfile();
   const userId = user.data._id;
@@ -17,23 +18,21 @@ function Systems() {
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <main>
-      <section className="container">
-        <div className="pt-3 pb-3">
-          <h4>Betting Systems</h4>
+      <section className="container my-2">
+        <div className="page-header">
+          Betting Systems
         </div>
         <div className="row">
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            <SystemTable systemData={data} />
-          )}
+          <SystemTable systemData={data} />
         </div>
       </section>
     </main>
-  )
-
-}
+  );
+};
 
 export default Systems;

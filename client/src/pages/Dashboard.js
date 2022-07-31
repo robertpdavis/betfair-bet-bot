@@ -15,12 +15,19 @@ const Dashboard = () => {
   // const { loading, data } = useQuery(QUERY_THOUGHTS);
   // const thoughts = data?.thoughts || [];
 
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
   return (
     <main>
-      {Auth.loggedIn()}
-      <div className="flex-row justify-center">
-        Dashboard
-      </div>
+      <section className="container my-2">
+        <div className="page-header">
+          Dashboard
+        </div>
+        <div className="row">
+
+        </div>
+      </section>
     </main>
   );
 };

@@ -21,9 +21,16 @@ const SingleResult = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div className="my-3">
-      Result
-    </div>
+    <main>
+      <section className="container my-2">
+        <div className="page-header">
+          Result for ??
+        </div>
+        <div className="row">
+
+        </div>
+      </section>
+    </main>
   );
 };
 

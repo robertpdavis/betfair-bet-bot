@@ -13,10 +13,14 @@ const Support = () => {
 
   return (
     <main>
-      {Auth.loggedIn()}
-      <div className="flex-row justify-center">
-        Support
-      </div>
+      <section className="container my-2">
+        <div className="page-header">
+          Support
+        </div>
+        <div className="row">
+
+        </div>
+      </section>
     </main>
   );
 };

@@ -6,7 +6,7 @@ import { QUERY_USER } from '../utils/queries';
 
 import Auth from '../utils/auth';
 
-const Profile = (props) => {
+const Account = (props) => {
 
   const username = Auth.getProfile().data.username;
 
@@ -35,47 +35,47 @@ const Profile = (props) => {
 
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <main>
-      <section className="container">
-
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <form onSubmit={handleFormSubmit}>
-            <div className="mb-3 w-25">
-              <label htmlFor="firstName" className="form-label">First Name</label>
-              <input
-                className="form-control"
-                name="firstName"
-                type="text"
-                defaultValue={data.user.firstName}
-                readOnly
-              />
-            </div>
-            <div className="mb-3 w-25">
-              <label htmlFor="lastName" className="form-label">Last Name</label>
-              <input
-                className="form-control"
-                name="lastName"
-                type="text"
-                defaultValue={data.user.lastName}
-                readOnly
-              />
-            </div>
-            <button
-              className="btn btn-block btn-primary"
-              style={{ cursor: 'pointer' }}
-              type="submit"
-            >
-              Submit
-            </button>
-          </form>
-
-        )}
+      <section className="container my-2">
+        <div className="page-header">
+          My Account
+        </div>
+        <form onSubmit={handleFormSubmit}>
+          <div className="mb-3 w-25">
+            <label htmlFor="firstName" className="form-label">First Name</label>
+            <input
+              className="form-control"
+              name="firstName"
+              type="text"
+              defaultValue={data.user.firstName}
+              readOnly
+            />
+          </div>
+          <div className="mb-3 w-25">
+            <label htmlFor="lastName" className="form-label">Last Name</label>
+            <input
+              className="form-control"
+              name="lastName"
+              type="text"
+              defaultValue={data.user.lastName}
+              readOnly
+            />
+          </div>
+          <button
+            className="btn btn-block btn-primary"
+            style={{ cursor: 'pointer' }}
+            type="submit"
+          >
+            Submit
+          </button>
+        </form>
       </section>
-    </main>
+    </main >
   );
 };
 
-export default Profile;
+export default Account;
