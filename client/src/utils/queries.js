@@ -488,3 +488,13 @@ export const QUERY_SINGLE_API = gql`
     }
   }
 `;
+
+export const QUERY_EVENT_TYPES = gql`
+{
+    eventTypes{
+      _id
+      eventTypeId
+      name
+    }
+  }
+`;

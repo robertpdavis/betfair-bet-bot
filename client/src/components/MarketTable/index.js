@@ -17,10 +17,10 @@ function MarketTable({ eventData }) {
             {events.map((row, i) => {
               return (
                 <tr key={i}>
-                  <td className="text-start w-25">{events[i].eventName}</td>
+                  <td className="text-start w-25" key={0} >{events[i].eventName}</td>
                   {events[i].markets.map((market, m) => {
                     if (m % 2) {
-                      return (<td><Link to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
+                      return (<td key={m}><Link to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
                     }
                   }
                   )}

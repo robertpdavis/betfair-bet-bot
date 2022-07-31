@@ -33,6 +33,9 @@ const resolvers = {
     api: async (parent, { userId }) => {
       return Apisetting.findOne({ userId });
     },
+    eventTypes: async () => {
+      return await EventType.find();
+    },
   },
 
   Mutation: {

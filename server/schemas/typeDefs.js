@@ -310,6 +310,7 @@ scalar Date
     results(systemId: ID!): [Result]
     result(id: ID!): Result
     api(userId: ID!): Apisetting
+    eventTypes: EventType
   }
 
   type Mutation {

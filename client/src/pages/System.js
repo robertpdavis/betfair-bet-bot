@@ -1,28 +1,32 @@
 import React from 'react';
-
-// Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-
-import { QUERY_SINGLE_SYSTEM } from '../utils/queries';
+import { QUERY_SINGLE_SYSTEM, QUERY_EVENT_TYPES } from '../utils/queries';
+import SystemForm from '../components/SystemForm';
 
 const SingleSystem = () => {
   // Use `useParams()` to retrieve value of the route parameter `:profileId`
   const { systemId } = useParams();
 
-  const { loading, data } = useQuery(QUERY_SINGLE_SYSTEM, {
+  const { loading: loadingS, data: dataS } = useQuery(QUERY_SINGLE_SYSTEM, {
     // pass URL parameter
     variables: { systemId },
   });
 
-  const system = data?.system || {};
+  const { loading: loadingE, data: dataE } = useQuery(QUERY_EVENT_TYPES);
 
-  if (loading) {
+  const system = dataS?.system || {};
+
+  const eventTypes = dataE?.eventTypes || {};
+
+  if (loadingS || loadingE) {
     return <div>Loading...</div>;
   }
   return (
     <div className="my-3">
-      {systemId}
+      {system.title}
+      <SystemForm system={system} evenTypes={eventTypes} />
+
     </div>
   );
 };
