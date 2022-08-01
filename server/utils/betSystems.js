@@ -1,11 +1,16 @@
 const BetfairTests = require("../classes/BetfairTests");
 
 const bets = [];
+let scenario = "";
+let stakingPlan = "";
 
 function processBets(system, marketData, runnerData, results) {
 
   const backPrices = [];
   const layPrices = [];
+
+  scenario = system.scenario[0];
+  stakingPlan = system.stakingPlan[0];
 
   //Get the runner prices
   runnerData.forEach(runner => {
@@ -19,10 +24,10 @@ function processBets(system, marketData, runnerData, results) {
   layPrices.sort(function (a, b) { return a[1] - b[1]; });
 
   //Process scenario------------------------------------------------------------------
-  if (system['scenario'] !== '') {
-    switch (system['scenario']) {
+  if (scenario.scenarioId !== '') {
+    switch (scenario.scenarioId) {
       //Default - back the favourite
-      case '1':
+      case 1:
         scn1_backthefav(system, marketData, runnerData, results, backPrices, layPrices);
         break;
     }
@@ -32,10 +37,10 @@ function processBets(system, marketData, runnerData, results) {
 
 
   //Process staking plan--------------------------------------------------------------
-  if (system['stakingPlan'] !== '') {
-    switch (system['stakingPlan']) {
+  if (stakingPlan.stakingId !== '') {
+    switch (stakingPlan.stakingId) {
 
-      case '1':
+      case 1:
         stk1_fixedStake(system, marketData, runnerData, results, backPrices, layPrices);
 
         break;
@@ -53,8 +58,8 @@ function processBets(system, marketData, runnerData, results) {
 
 //Default - back to favourite (back/lay)
 function scn1_backthefav(system, marketData, runnerData, results, backPrices, layPrices) {
-  //Get the scenario parameters
-  const scenarioParams = JSON.parse(system['scenarioParams']);
+
+  const scenarioParams = JSON.parse(system.scenarioParams);
 
   let betId = 0;
 
@@ -87,7 +92,7 @@ function scn1_backthefav(system, marketData, runnerData, results, backPrices, la
 //Default- fixed stake
 function stk1_fixedStake(system, marketData, runnerData, results, backPrices, layPrices) {
   //Get the staking plan parameters
-  const stakingParams = JSON.parse(system['stakingParams']);
+  const stakingParams = JSON.parse(system.stakingParams);
 
   bets.forEach(bet => {
 

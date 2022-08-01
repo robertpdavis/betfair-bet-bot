@@ -11,8 +11,11 @@ function Results() {
 
   let { systemId } = useParams();
 
-  const user = Auth.getProfile();
-  const userId = user.data._id;
+  let userId = '';
+  if (Auth.loggedIn()) {
+    const user = Auth.getProfile();
+    userId = user.data._id;
+  }
 
   const { loading: loadingS, data: dataS } = useQuery(QUERY_SYSTEMS,
     {
@@ -29,7 +32,6 @@ function Results() {
     {
       variables: { systemId },
     });
-
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 

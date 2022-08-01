@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useTable } from "react-table";
-import { Link } from "react-router-dom";;
+import { Link } from "react-router-dom";
+import dateFormat from "../../utils/dateFormat";
 
 
 function ResultTable({ resultData }) {

@@ -8,11 +8,12 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Auth from './utils/auth';
 
 import Dashboard from './pages/Dashboard';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
-import Profile from './pages/Profile';
+import Account from './pages/Account';
 import Systems from './pages/Systems';
 import System from './pages/System';
 import Events from './pages/Events';
@@ -63,19 +64,19 @@ function App() {
                 element={<Dashboard />}
               />
               <Route
-                path="/login"
+                path="/login/"
                 element={<Login />}
               />
               <Route
-                path="/signup"
+                path="/signup/"
                 element={<Signup />}
               />
               <Route
-                path="/profile/"
-                element={<Profile />}
+                path="/account/"
+                element={<Account />}
               />
               <Route
-                path="/systems"
+                path="/systems/"
                 element={<Systems />}
               />
               <Route
@@ -87,7 +88,7 @@ function App() {
                 element={<Events />}
               />
               <Route
-                path="/events"
+                path="/events/"
                 element={<Events />}
               />
               <Route
@@ -99,7 +100,7 @@ function App() {
                 element={<Results />}
               />
               <Route
-                path="/results"
+                path="/results/"
                 element={<Results />}
               />
               <Route
@@ -107,16 +108,19 @@ function App() {
                 element={<Result />}
               />
               <Route
-                path="/api/:userId"
+                path="/api/"
                 element={<Api />}
               />
               <Route
                 path="/Support/"
                 element={<Support />}
               />
+              <Route
+                path="*"
+                element={<Dashboard />}
+              />
             </Routes>
           </div>
-          <Footer />
         </div>
       </Router>
     </ApolloProvider>

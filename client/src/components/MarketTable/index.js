@@ -7,8 +7,6 @@ function MarketTable({ eventData }) {
   const events = eventData.events;
   const rows = events.length;
 
-  console.log(events)
-
   if (rows > 0) {
     return (
       <div className="table-responsive">
@@ -20,7 +18,7 @@ function MarketTable({ eventData }) {
                   <td className="text-start w-25" key={0} >{events[i].eventName}</td>
                   {events[i].markets.map((market, m) => {
                     if (m % 2) {
-                      return (<td key={m}><Link to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
+                      return (<td key={m}><Link to={"/market/" + market.marketId}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
                     }
                   }
                   )}

@@ -8,7 +8,10 @@ import Auth from '../utils/auth';
 
 const Account = (props) => {
 
-  const username = Auth.getProfile().data.username;
+  let username = '';
+  if (Auth.loggedIn()) {
+    username = Auth.getProfile().data.username;
+  }
 
   const { loading, data } = useQuery(QUERY_USER,
     {
@@ -17,8 +20,6 @@ const Account = (props) => {
 
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
-
-
 
   // submit form
   const handleFormSubmit = async (event) => {

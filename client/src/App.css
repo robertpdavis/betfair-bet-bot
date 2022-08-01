@@ -83,3 +83,29 @@ footer {
   margin-bottom: 1rem;
   border-radius: .2rem;
 }
+
+.sub-header {
+  background-color: var(--color-grey-400);
+  color: Var(--color-yellow-400);
+  font-weight: bold;
+  padding: 0.1rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: .2rem;
+  width: 75%
+}
+
+.market-header {
+  background-color: var(--bs-body-bg);
+  color: var(--color-blue-classic-400);
+  font-weight: bold;
+  padding: 0.2rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: .2rem;
+  border-color: var(--color-grey-100);
+  border-style: solid;
+  border-width: 0.1rem;
+}
+
+.runner {
+  font-size: 0.8rem;
+}

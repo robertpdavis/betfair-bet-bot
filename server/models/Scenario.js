@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const scenarioSchema = new Schema({
+  scenarioId: Number,
   title: String,
   description: String,
   back: Boolean,

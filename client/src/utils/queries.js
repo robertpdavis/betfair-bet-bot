@@ -29,12 +29,27 @@ export const QUERY_SYSTEMS = gql`
       title
       description
       isRacingEvent
-      scenario
-      stakingPlan
+      scenario {
+        _id
+        title
+        description
+        back
+        lay
+        params
+        formName
+      }
+      stakingPlan {
+        _id
+        title
+        description
+        back
+        lay
+        params
+        formName
+      }
       scenarioParams
       stakingParams
       mode
-      simType
       betType
       racingBetType
       setWallet
@@ -118,12 +133,29 @@ export const QUERY_SINGLE_SYSTEM = gql`
       title
       description
       isRacingEvent
-      scenario
-      stakingPlan
+      scenario {
+        _id
+        scenarioId
+        title
+        description
+        back
+        lay
+        params
+        formName
+      }
+      stakingPlan {
+        _id
+        stakingId
+        title
+        description
+        back
+        lay
+        params
+        formName
+      }
       scenarioParams
       stakingParams
       mode
-      simType
       betType
       racingBetType
       setWallet
@@ -262,8 +294,8 @@ export const QUERY_EVENTS = gql`
 `;
 
 export const QUERY_SINGLE_MARKET = gql`
-  query getSingleMarket($marketId: ID!) {
-    market(id: $marketId) {
+  query getSingleMarket($marketId: String!, $type: String) {
+    market(marketId: $marketId, type: $type) {
       _id
       systemId
       marketId
@@ -436,7 +468,7 @@ export const QUERY_SINGLE_RESULT = gql`
       betStatus
       reqPrice
       priceMatched
-      priceReducedn
+      priceReduced
       matchedDate
       size
       sizeMatched

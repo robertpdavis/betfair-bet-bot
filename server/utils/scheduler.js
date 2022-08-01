@@ -26,6 +26,8 @@ async function scheduler() {
   setInterval(controller, 5000);
   console.log('Scheduler started....');
 
+  const showConsole = false;
+
   async function controller() {
     //Adjust the timers for each action
     timers.placeBets = parseInt(timers.placeBets) + 5
@@ -35,34 +37,34 @@ async function scheduler() {
 
     if (timers.placeBets >= intervals.placeBets) {
       //Do place bets
-      // console.log('Place bets:' + new Date().toJSON());
       await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      // console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248'));
-      await bfController.placeBets('62d88c0c9e80cc3ef1a55248');
+      showConsole ? console.log('Place bets:' + new Date().toJSON()) : '';
+      showConsole ? console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248')) :
+        await bfController.placeBets('62d88c0c9e80cc3ef1a55248');
       timers.placeBets = 0
     }
 
     if (timers.betUpdate >= intervals.betUpdate) {
       //Do bet update
-      // console.log('Bet update:' + new Date().toJSON());
       await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      // console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248'));
-      await bfController.betUpdate('62d88c0c9e80cc3ef1a55248');
+      showConsole ? console.log('Bet update:' + new Date().toJSON()) : '';
+      showConsole ? console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248')) :
+        await bfController.betUpdate('62d88c0c9e80cc3ef1a55248');
       timers.betUpdate = 0
     }
 
     if (timers.keepalive >= intervals.keepalive) {
       //Do keepalive update
-      console.log('Keepalive update:' + new Date().toJSON());
-      console.log(await bfController.apiKeepAlive('62d88c0c9e80cc3ef1a55243'));
+      showConsole ? console.log('Keepalive update:' + new Date().toJSON()) : '';
+      showConsole ? console.log(await bfController.apiKeepAlive('62d88c0c9e80cc3ef1a55243')) : '';
       timers.keepalive = 0;
     }
 
     if (timers.eventUpdate >= intervals.eventUpdate) {
       //Do eventUpdate update
-      console.log('Event update:' + new Date().toJSON());
       await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      console.log(await bfController.eventUpdate('62d88c0c9e80cc3ef1a55243'));
+      showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
+      showConsole ? console.log(await bfController.eventUpdate('62d88c0c9e80cc3ef1a55243')) : '';
       timers.eventUpdate = 0
     }
   }
@@ -81,11 +83,11 @@ async function tests() {
   // console.log(await bfController.apiLogout('62d88c0c9e80cc3ef1a55243'));
   console.log(await bfController.setSession('62d88c0c9e80cc3ef1a55243'));
   // console.log(await bfController.getEventTypes());
-  console.log(await bfController.eventUpdate('62d88c0c9e80cc3ef1a55243'));
+  // console.log(await bfController.eventUpdate('62d88c0c9e80cc3ef1a55243'));
   // console.log(await bfController.marketBookUpdate('', '1.201288449', ''));
   // console.log(await bfController.apiKeepAlive('62d88c0c9e80cc3ef1a55243'));
   // console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248'));
-  // console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248'));
+  console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248'));
 
 }
 

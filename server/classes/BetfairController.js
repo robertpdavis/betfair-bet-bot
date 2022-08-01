@@ -389,7 +389,7 @@ class BetfairController {
     let wallet = 0;
 
     //Get system
-    const system = await System.findById(systemId);
+    const system = await System.findById(systemId).populate('scenario').populate('stakingPlan');
     if (!system) return [false, 'No system found for this id'];
 
     //Get user

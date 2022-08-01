@@ -1,18 +1,23 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 
-const Footer = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+const ButtonToolbar = (props) => {
+
+  const [buttonState, setButtonState] = useState(props.buttons);
+
+
+  const handleButtonClick = (event) => {
+    event.preventDefault();
+    props.handleButtonClick(event.target.name);
+  }
+
   return (
-    <footer className="w-100 p-0.2 footer">
-      <div className="container text-center mb-5">
-        <h4>
-          Copyright 2022
-        </h4>
-      </div>
-    </footer>
+    <div>
+      {buttonState.map((button, i) => {
+        return <button key={i} type="button" className={button.class} name={button.name} onClick={handleButtonClick}>{button.title}</button>
+      })}
+      <hr></hr>
+    </div>
   );
 };
 
-export default Footer;
+export default ButtonToolbar;

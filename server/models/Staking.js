@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const stakingSchema = new Schema({
+  stakingId: Number,
   title: String,
   description: String,
   back: Boolean,

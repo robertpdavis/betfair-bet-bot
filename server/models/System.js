@@ -24,20 +24,21 @@ const systemSchema = new Schema({
     required: true,
     default: false
   },
-  scenario: String,
-  stakingPlan: String,
-  scenarioParams: String,
-  stakingParams: String,
-  mode: {
-    type: String,
-    required: true,
-    default: 'Simulated'
-  },
-  simType: {
-    type: String,
-    required: true,
-    default: 'API'
-  },
+  mode: String,
+  scenario: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Scenario',
+    }
+  ],
+  stakingPlan: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Staking',
+    }
+  ],
+  scenarioParams: Object,
+  stakingParams: Object,
   betType: {
     type: String,
     required: true,

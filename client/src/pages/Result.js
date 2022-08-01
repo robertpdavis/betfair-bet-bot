@@ -1,9 +1,7 @@
 import React from 'react';
-
-// Import the `useParams()` hook
+import ResultForm from '../components/ResultForm';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-
 import { QUERY_SINGLE_RESULT } from '../utils/queries';
 
 const SingleResult = () => {
@@ -17,6 +15,8 @@ const SingleResult = () => {
 
   const result = data?.result || {};
 
+  console.log(result)
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -24,9 +24,10 @@ const SingleResult = () => {
     <main>
       <section className="container my-2">
         <div className="page-header">
-          Result for ??
+          Bet Details & Result
         </div>
         <div className="row">
+          <ResultForm result={result} />
 
         </div>
       </section>

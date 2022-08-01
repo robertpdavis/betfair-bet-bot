@@ -105,9 +105,9 @@ scalar Date
     sortPriority: Int
     metadata: String
     status: String
-    adjustmentFactor: Int
-    lastPriceTraded: Int
-    totalMatched: Int
+    adjustmentFactor: Float
+    lastPriceTraded: Float
+    totalMatched: Float
     removalDate: Date
     spNearPrice: String
     spFarPrice: String
@@ -169,12 +169,11 @@ scalar Date
     title: String
     description: String
     isRacingEvent: Boolean
-    scenario: String
-    stakingPlan: String
+    scenario: [Scenario]!
+    stakingPlan: [Staking]!
     scenarioParams: String
     stakingParams: String
     mode: String
-    simType: String
     betType: String
     racingBetType: String
     setWallet: Int
@@ -248,6 +247,7 @@ scalar Date
 
   type Scenario {
     _id: ID
+    scenarioId: Int
     title: String
     description: String
     back: Boolean
@@ -258,6 +258,7 @@ scalar Date
 
   type Staking {
     _id: ID
+    stakingId: Int
     title: String
     description: String
     back: Boolean
@@ -305,11 +306,11 @@ scalar Date
     systems(userId: ID!): [System]
     system(id: ID!): System
     events(systemId: ID!): [Event]
-    market(id: ID!): Market
+    market(marketId: String!, type: String): Market
     runner(id: ID!): Runner
     results(systemId: ID!): [Result]
     result(id: ID!): Result
-    api(userId: ID!): Apisetting
+    apisetting(userId: ID!): Apisetting
     eventTypes: EventType
   }
 

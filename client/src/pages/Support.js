@@ -1,15 +1,18 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
+import { Navigate } from 'react-router-dom';
 
-// import ThoughtList from '../components/ThoughtList';
-// import ThoughtForm from '../components/ThoughtForm';
-
-// import { QUERY_THOUGHTS } from '../utils/queries';
 
 const Support = () => {
-  // const { loading, data } = useQuery(QUERY_THOUGHTS);
-  // const thoughts = data?.thoughts || [];
+
+  let userId = '';
+  if (Auth.loggedIn()) {
+    const user = Auth.getProfile();
+    userId = user.data._id;
+  }
+
+  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
   return (
     <main>
