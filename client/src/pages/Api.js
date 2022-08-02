@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Auth from "../utils/auth";
-// Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 
 import { QUERY_SINGLE_API } from '../utils/queries';
+import { TOGGLE_SYSTEM, RESET_SYSTEM, UPDATE_SYSTEM, COPY_SYSTEM } from '../utils/mutations';
 
 const SingleAPI = () => {
 
@@ -29,7 +29,7 @@ const SingleAPI = () => {
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
-  const handleChange = async (event) => {
+  const handleGenChange = async (event) => {
     const { name, value } = event.target;
 
     setFormState({
@@ -61,27 +61,28 @@ const SingleAPI = () => {
             <form>
               <div className="col-auto mb-3">
                 <label className="form-label" id="apiform_username-lbl" htmlFor="apiform_username" title="Username">Username</label>
-                <input className="form-control w-75" type="text" id="apiform_username" name="apiUsername" value={api.apiUsername} size="30" onChange={handleChange} />
+                <input className="form-control w-75" type="text" id="apiform_username" name="apiUsername" value={formState.apiUsername} defaultValue={api.apiUsername} size="30" onChange={handleGenChange} />
               </div>
               <div className="col-auto mb-3">
                 <label className="form-label" id="apiform_password-lbl" htmlFor="apiform_password" title="Password">Password</label>
-                <input className="form-control w-75" type="password" id="apiform_password" name="apiPassword" value={api.apiPassword} size="30" onChange={handleChange} />
+                <input className="form-control w-75" type="password" id="apiform_password" name="apiPassword" value={formState.apiPassword} defaultValue={api.apiPassword} size="30" onChange={handleGenChange} />
               </div>
               <div className="col-auto mb-3">
                 <label className="form-label" id="apiform_certfile-lbl" htmlFor="apiform_certfile" title="Certificate file">SSL Certificate</label>
-                <textarea className="form-control w-75" name="certfile" id="apiform_certfile" cols="50" rows="4" resize="none" value={api.certfile} onChange={handleChange} />
+                <textarea className="form-control w-75" name="certfile" id="apiform_certfile" cols="50" rows="4" resize="none" value={formState.certfile} defaultValue={api.certfile} onChange={handleGenChange} />
               </div>
               <div className="col-auto mb-3">
                 <label className="form-label" id="apiform_keyfile-lbl" htmlFor="apiform_keyfile" title="Key file">Key Certificate</label>
-                <textarea className="form-control w-75" name="keyfile" id="apiform_keyfile" cols="50" rows="4" value={api.keyfile} onChange={handleChange} />
+                <textarea className="form-control w-75" name="keyfile" id="apiform_keyfile" cols="50" rows="4" value={formState.keyfile} defaultValue={api.keyfile} onChange={handleGenChange} />
               </div>
               <div className="col-auto mb-3">
                 <label className="form-label" id="sysform_betType-lbl" htmlFor="sysform_betType" title="Back or Lay betting">API Mode</label>
-                <select className="form-control w-75" id="sysform_betType" name="betType" value={api.apiMode} onChange={handleChange}>
+                <select className="form-control w-75" id="sysform_betType" name="betType" value={formState.apiMode} defaultValue={api.apiMode} onChange={handleGenChange}>
                   <option value="test">Test</option>
                   <option value="live" disabled>Live</option>
                 </select>
               </div>
+              <button type="button" className="btn btn-sm btn-success" name="savegen" onClick={handleBtnClick}>Save</button>
             </form>
           </div>
           <div className="col-6">
@@ -115,7 +116,7 @@ const SingleAPI = () => {
                     <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastLiveMessage">Last Message:</label>
                   </div>
                   <div className="col-8 text-start">
-                    <input className="form-control-sm d-block" type="text" name="apiKeyLive" id="apiKeyLive" value={api.apiKeyLive} />
+                    <input className="form-control-sm d-block" type="text" name="apiKeyLive" id="apiKeyLive" disabled="true" value={formState.apiKeyLive} defaultValue={api.apiKeyLive} />
                     {api.liveApiEnabled ?
                       <input className="form-check-input ms-3 d-block" type="checkbox" name="liveApiEnabled" id="liveApiEnabled" checked />
                       :
@@ -135,19 +136,20 @@ const SingleAPI = () => {
                     !api.liveApiStatus ?
                       <>
                         <button className="btn btn-sm btn-secondary" name='livelogin' onClick={handleBtnClick}>Login</button>
-                        <button className="btn btn-sm btn-warning ms-3" name='livedisable'>Disable API</button>
+                        <button className="btn btn-sm btn-warning ms-3" name='livedisable' disabled="true">Disable API</button>
                       </>
                       :
                       <>
                         <button className="btn btn-sm btn-warning" name='livelogout' onClick={handleBtnClick}>Logout</button>
-                        <button className="btn btn-sm btn-warning ms-3" name='livedisable'>Disable API</button>
+                        <button className="btn btn-sm btn-warning ms-3" name='livedisable' disabled="true">Disable API</button>
                       </>
                     :
                     <>
-                      <button className="btn btn-sm btn-secondary" name='livelogin' disabled>Login</button>
-                      <button className="btn btn-sm btn-success ms-3" name='liveenable'>Enable API</button>
+                      <button className="btn btn-sm btn-secondary" name='livelogin' disabled="true">Login</button>
+                      <button className="btn btn-sm btn-success ms-3" name='liveenable' disabled="true">Enable API</button>
                     </>
                   }
+                  <button type="button" className="btn btn-sm btn-success ms-5" name="savelive" disabled="true" onClick={handleBtnClick}>Save</button>
                 </div>
               </div>
             </form>
@@ -181,7 +183,7 @@ const SingleAPI = () => {
                     <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastTestMessage">Last Message:</label>
                   </div>
                   <div className="col-8 text-start">
-                    <input className="form-control-sm d-block" type="text" name="apiKeyTest" id="apiKeyTest" value={api.apiKeyTest} />
+                    <input className="form-control-sm d-block" type="text" name="apiKeyTest" id="apiKeyTest" value={formState.apiKeyTest} defaultValue={api.apiKeyTest} />
                     {api.testApiEnabled ?
                       <input className="form-check-input ms-3 d-block" type="checkbox" name="testApiEnabled" id="testApiEnabled" checked />
                       :
@@ -214,6 +216,7 @@ const SingleAPI = () => {
                       <button className="btn btn-sm btn-success ms-3" name='testenable'>Enable API</button>
                     </>
                   }
+                  <button type="button" className="btn btn-sm btn-success ms-5" name="savetest" onClick={handleBtnClick}>Save</button>
                 </div>
               </div>
             </form>

@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import Auth from '../utils/auth';
 import SystemTable from '../components/SystemTable';
 import ButtonToolbar from '../components/ButtonToolbar';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { Navigate } from 'react-router-dom';
 import { QUERY_SYSTEMS } from '../utils/queries';
+import { CREATE_SYSTEM } from '../utils/mutations';
+import Alert from '../components/Alert';
 import '../App.css';
 
 const Systems = () => {
@@ -20,9 +22,8 @@ const Systems = () => {
       variables: { userId },
     });
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
-
-  const buttons =
+  //Inital button toolbar settings
+  const buttonSettings =
     [
       {
         name: 'new',
@@ -31,10 +32,39 @@ const Systems = () => {
       }
     ]
 
-  const handleButtonClick = (name) => {
+  //State to control button toolbar
+  const [buttonState, setBtnState] = useState(buttonSettings);
+  //State to control the alert banner
+  const [alertState, setAlertState] = useState({ show: false });
+
+  //New system mutation
+  const [createSystem, { error: errorC, data: dataC }] = useMutation(CREATE_SYSTEM);
+
+  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+
+  //Button functions
+  const handleBtnClick = async (event) => {
+
+    const { name } = event.target;
+
+    //Create new system mutation
+    if (name === 'new') {
+
+      setAlertState({ variant: 'success', message: 'Creating new system.....' });
+
+      const { systemData } = await createSystem({
+        variables: { userId, data },
+      });
+
+    }
 
     console.log(name)
   }
+
+  const handleAlertClick = async (option) => {
+    setAlertState({ show: false });
+  };
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -46,7 +76,10 @@ const Systems = () => {
           Betting Systems
         </div>
         <div className="row">
-          <ButtonToolbar buttons={buttons} handleClick={handleButtonClick} />
+          <Alert alertState={alertState} handleAlertClick={handleAlertClick} />
+        </div>
+        <div className="row">
+          <ButtonToolbar buttonState={buttonState} handleBtnClick={handleBtnClick} />
         </div>
         <div className="row">
           <SystemTable systemData={data} />

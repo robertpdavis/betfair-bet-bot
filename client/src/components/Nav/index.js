@@ -4,16 +4,16 @@ import { Navigate, renderMatches } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../../App.css';
 
-function Nav() {
+function Navigation() {
 
   const [currentPage, setCurrentPage] = useState('/');
 
   if (Auth.loggedIn()) {
 
-    const logout = (event) => {
-      event.preventDefault();
-      Auth.logout();
-    };
+    const handleNavClick = (event) => {
+
+      setCurrentPage(event.target.name);
+    }
 
     return (
       <section>
@@ -22,38 +22,30 @@ function Nav() {
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <Link to="/" className="nav-link pt-0 pb-0 active" aria-current="page">Dashboard</Link>
+                  <Link to="/" className={currentPage === '/' ? 'nav-link pt-0 pb-0 active' : 'nav-link pt-0 pb-0'} name="/" onClick={handleNavClick}>Dashboard</Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/systems" className="nav-link pt-0 pb-0">Systems</Link>
+                  <Link to="/systems" className={currentPage === '/systems' ? 'nav-link pt-0 pb-0 active' : 'nav-link pt-0 pb-0'} name="/systems" onClick={handleNavClick}>Systems</Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/events" className="nav-link pt-0 pb-0">Events</Link>
+                  <Link to="/events" className={currentPage === '/events' ? 'nav-link pt-0 pb-0 active' : 'nav-link pt-0 pb-0'} name="/events" onClick={handleNavClick}>Events</Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/results" className="nav-link pt-0 pb-0">Results</Link>
+                  <Link to="/results" className={currentPage === '/results' ? 'nav-link pt-0 pb-0 active' : 'nav-link pt-0 pb-0'} name="/results" onClick={handleNavClick}>Results</Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/api" className="nav-link pt-0 pb-0">API</Link>
+                  <Link to="/api" className={currentPage === '/api' ? 'nav-link pt-0 pb-0 active' : 'nav-link pt-0 pb-0'} name="/api" onClick={handleNavClick}>API</Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/support" className="nav-link pt-0 pb-0">Support</Link>
+                  <Link to="/support" className={currentPage === '/support' ? 'nav-link pt-0 pb-0 active' : 'nav-link pt-0 pb-0'} name="/support" onClick={handleNavClick}>Support</Link>
                 </li>
               </ul>
             </div>
-            <div className="d-inline">
-              <Link className=" d-inline btn btn-sm btn-info me-2" to="/profile">
-                Profile
-              </Link>
-              <button className=" d-inline btn btn-sm btn-secondary" onClick={logout}>
-                Logout
-              </button>
-            </div>
           </div>
         </nav>
-      </section>
+      </section >
     );
   }
 }
 
-export default Nav;
+export default Navigation;

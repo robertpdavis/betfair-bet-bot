@@ -301,6 +301,30 @@ scalar Date
     lastLiveMessage: String
   }
 
+  type ToggleSystem {
+    isActive: Boolean
+    lastStopped: Date 
+    lastStarted: Date 
+    statusDesc: String
+  }
+
+  type Response {
+    status: Boolean
+    msg: String
+  }
+
+  type ToggleApi {
+    api: String
+    ApiEnabled: Boolean
+    msg: String
+  }
+
+  type ToggleApiLogin {
+    api: String
+    ApiStatus: Boolean
+    msg: String
+  }
+
   type Query {
     user(username: String!): User
     systems(userId: ID!): [System]
@@ -317,17 +341,13 @@ scalar Date
   type Mutation {
     createUser(username: String!, email: String!, password: String!, firstName: String!, lastName: String!): Auth
     loginUser(username: String!, password: String!): Auth
-    updateAPI(    
-      apiKeyTest: String,
-      testSessionId: String,
-      apiKeyLive: String,
-      liveSessionId: String,
-      apiMode: String!,
-      apiUsername: String,
-      apiPassword: String,
-      certfile: String,
-      keyfile: String,
-    ): Apisetting
+    updateApi(userId: ID!, data: String!): Response
+    toggleApi(userId: ID!, api: String!, toggle: String!): ToggleApi
+    toggleApiLogin(userId: ID!, api: String!, toggle: String!): ToggleApiLogin
+    toggleSystem(systemId: ID!, toggle: String): ToggleSystem
+    updateSystem(systemId: ID!, data: String): Response
+    resetSystem(systemId: ID!): Response
+    copySystem(systemId: ID!): Response
   }
 `;
 

@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 
 const ButtonToolbar = (props) => {
 
-  const [buttonState, setButtonState] = useState(props.buttons);
-
+  const buttonState = props.buttonState;
 
   const handleButtonClick = (event) => {
     event.preventDefault();
-    props.handleButtonClick(event.target.name);
+    props.handleBtnClick(event);
   }
 
   return (
     <div>
       {buttonState.map((button, i) => {
-        return <button key={i} type="button" className={button.class} name={button.name} onClick={handleButtonClick}>{button.title}</button>
+        return <button key={i} type="button" className={button.class + ' ' + button.state} name={button.name} onClick={handleButtonClick}>{button.title}</button>
       })}
       <hr></hr>
     </div>

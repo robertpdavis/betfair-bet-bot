@@ -5,6 +5,7 @@ const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const { scheduler, tests } = require('./utils/scheduler');
 const { authMiddleware } = require('./utils/auth');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();

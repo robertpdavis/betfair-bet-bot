@@ -80,26 +80,28 @@ class BetfairController {
   Get the events/markets available for each active system based on the system filter
   criteria and save to DB
   */
-  async eventUpdate(userId = '', system = '') {
+  async eventUpdate(userId = '', systemId = '') {
     try {
       const startTime = new Date().getTime();
       //Clear data older then eventTimeOut  - 24 hours ago by default
       await this.clearMarketData(this.config.eventTimeOut);
 
       //Update events by userId
-      let systemList = '';
-      if (userId !== '' && system === '') {
+      let systemList = [];
+      if (userId !== '' && systemId === '') {
 
         //Get list of active systems for user
-        systemList = await System.find({ $or: [{ userId: userId }, { isActive: true }] })
+        systemList = await System.find({ $and: [{ userId: userId }, { isActive: true }] })
         if (!systemList) { return [false, "No active systems found."] };
 
         //Update events by system
-      } else if (system !== '' && userId === '') {
-        //Set systemList to system
-        systemList = [system];
+      } else if (systemId !== '' && userId === '') {
+        systemList[0] = await System.findById(systemId)
+        if (!systemList[0]) { return [false, "No active systems found."] };
+
         //Set userId from system
-        userId = system.userId;
+        userId = systemList[0].userId;
+
       } else {
         return (false, "User id or system input missing");
       }
@@ -114,7 +116,7 @@ class BetfairController {
 
         const res = await this.api.getEvents(params);
         //Check for API error
-        if (!res[0]) { return res };
+        if (res[0] === false) { return res };
 
         //Get api data
         const events = res[1];
@@ -147,7 +149,7 @@ class BetfairController {
       };
 
       const finishTime = new Date().getTime();
-      console.log("Event update time:" + (finishTime - startTime));
+
       return [true, ''];
 
     } catch (e) {
