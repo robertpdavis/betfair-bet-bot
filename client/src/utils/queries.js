@@ -20,8 +20,8 @@ export const QUERY_USER = gql`
 `;
 
 export const QUERY_SYSTEMS = gql`
-  query getSystems ($userId: ID! ) {
-    systems(userId: $userId) {
+  query getSystems ($userId: ID!, $isActive: Boolean,  $sortName: String, $sortType: Int) {
+    systems(userId: $userId, isActive: $isActive , sortName: $sortName, sortType:$sortType) {
       _id
       userId
       systemId
@@ -401,9 +401,10 @@ export const QUERY_SINGLE_RUNNER = gql`
 `;
 
 export const QUERY_RESULTS = gql`
-  query getResults ($systemId: ID! ) {
-    results(systemId: $systemId) {
+  query getResults ($systemId: ID, $userId: ID,) {
+    results(systemId: $systemId, userId: $userId) {
       _id
+      userId
       systemId
       betId
       customerRef

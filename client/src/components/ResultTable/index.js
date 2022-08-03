@@ -14,8 +14,8 @@ function ResultTable({ resultData }) {
   if (rows > 0) {
     return (
       <div className="table-responsive">
-        <table className="table table-sm text-center">
-          <thead>
+        <table className="table table-sm text-center dashboard-table">
+          <thead className="bg-dark text-white">
             <tr>
               <th>Bet Placed</th>
               <th>Event Name</th>

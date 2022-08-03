@@ -22,6 +22,18 @@ const Support = () => {
         </div>
         <div className="row">
 
+          <div className="sub-header">
+            Active System Status
+          </div>
+
+          <div className="sub-header">
+            Active System Status
+          </div>
+
+          <div className="sub-header">
+            Active System Status
+          </div>
+
         </div>
       </section>
     </main>

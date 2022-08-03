@@ -11,8 +11,18 @@ const resolvers = {
       }
       throw new AuthenticationError('Not logged in');
     },
-    systems: async (parent, { userId }) => {
-      return await System.find({ userId }).populate('scenario').populate('stakingPlan');
+    systems: async (parent, { userId, isActive, sortName, sortType }) => {
+      let qry = ''
+      if (isActive === true || isActive === false) {
+        qry = { userId: userId, isActive: isActive }
+      } else {
+        qry = { userId: userId }
+      }
+
+      const sort = {}
+      sort[sortName] = sortType;
+
+      return await System.find(qry).populate('scenario').populate('stakingPlan').sort(sort);
     },
     system: async (parent, args) => {
       return await System.findById(args.id).populate('scenario').populate('stakingPlan');
@@ -40,8 +50,8 @@ const resolvers = {
     runner: async (parent, args) => {
       return await Runner.findById(args.id);
     },
-    results: async (parent, { systemId }) => {
-      const params = systemId ? { systemId } : {};
+    results: async (parent, { systemId, userId }) => {
+      const params = systemId ? { systemId } : userId ? { userId } : {};
       return await Result.find(params).sort({ createdAt: -1 });
     },
     result: async (parent, args) => {
@@ -86,139 +96,216 @@ const resolvers = {
     updateApi: async (parent, args, context) => {
       try {
         if (context.user) {
-          //TO DO check if API enabled first
-
-          const data = args.data;
-
-          const api = await Apisetting.findOneAndUpdate(
-            { userId: context.user._id },
-            { $set: { data } },
-            { runValidators: true, new: true }
-          );
-
-          const status = true;
-          const msg = 'Success'
-
-          return { status, msg };
-        } else {
-          throw new AuthenticationError('Not logged in');
-        }
-      } catch (e) {
-        throw (e);
-      }
-    },
-    toggleApi: async (parent, args, context) => {
-      try {
-        if (context.user) {
-
-          const betfairController = new BetfairController;
 
           const userId = context.user._id;
-          const api = args.api;
-          const toggle = args.toggle;
-
-          let ApiEnabled = ''
-          let msg = ''
-
-          const data = '';
-          if (api === live) {
-            if (toggle === 'enable') {
-              data = { liveAPIEnabled: true, lastLiveMessage: 'User: API Enable' }
-            } else {
-              data = { liveAPIEnabled: false, lastLiveMessage: 'User: API Disable' }
-            }
-          } else {
-            if (toggle === 'disable') {
-              data = { testAPIEnabled: true, lastTestMessage: 'User: API Enable' }
-            } else {
-              data = { testAPIEnabled: false, lastTestMessage: 'User: API Disable' }
-            }
-          }
-
-          const apiUpdate = await Apisetting.findByIdAndUpdate(
-            userId,
-            { $set: { data } },
-            { runValidators: true, new: true }
-          );
-
-          if (apiUpdate) {
-            ApiEnabled = true;
-            msg = 'API enabled';
-          } else {
-            ApiEnabled = false;
-            msg = 'API enable failed';
-          }
-          return { api, ApiEnabled, msg };
-
-        } else {
-          throw new AuthenticationError('Not logged in');
-        }
-      } catch (e) {
-        throw (e);
-      }
-    },
-    toggleApiLogin: async (parent, args, context) => {
-      try {
-        if (context.user) {
-
-          const betfairController = new BetfairController;
-
-          const userId = context.user._id;
-          const api = args.api;
-          const toggle = args.toggle;
-
-          let result = '';
-          let data = '';
-          let apiStatus = '';
+          let status = '';
           let msg = '';
 
-          if (toggle === 'login') {
-
-            result = await betfairController.apiLogin(context.user._id);
-
-            if (result[0] === true) {
-              if (api === 'live') {
-                data = { liveAPIStatus: true, lastLiveLogin: new Date().toJSON(), lastLiveMessage: 'User: API Login Success' };
-              } else {
-                data = { testAPIStatus: true, lastTestLogin: new Date().toJSON(), testLiveMessage: 'User: API Login Success' };
-              }
-              apiStatus = true;
-              msg = 'API Login Success';
-
-            } else {
-              apiStatus = false;
-              msg = 'API Login failed';
-            }
-          } else if (toggle === 'logout') {
-
-            result = await betfairController.apiLogout(context.user._id);
-
-            if (result[0] === true) {
-              if (api === 'live') {
-                data = { liveAPIStatus: false, lastLiveLogin: new Date().toJSON(), lastLiveMessage: 'User: API Logout Success' };
-              } else {
-                data = { testAPIStatus: false, lastTestLogin: new Date().toJSON(), testLiveMessage: 'User: API Logout Success' };
-              }
-              apiStatus = true;
-              msg = 'API Logout Success';
-
-            } else {
-              apiStatus = false;
-              msg = 'API Logout failed';
-            }
+          //Check if any active systems for user first
+          const activeSystems = await System.find({ $and: [{ userId: userId }, { isActive: true }] });
+          if (activeSystems.length > 0) {
+            status = false;
+            msg = 'You have active systems. Please disable active systems before updating the api.';
+            return { status, msg };
           }
 
+          const result = await Apisetting.findOneAndUpdate(
+            { userId: context.user._id },
+            { $set: args },
+            { runValidators: true, new: true }
+          );
+
+          status = true;
+          msg = 'API update Success'
+
+          return { status, msg };
+
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+    enableApi: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+
+
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+    disableApi: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+
+
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+    testApi: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+          const betfairController = new BetfairController;
+
+          const userId = context.user._id;
+          const apiType = args.apiType;
+
+          let status = '';
+          let msg = '';
+
+          const result = await betfairController.apiKeepAlive(userId)
+
+          //If successful, update the database and status
           if (result[0] === true) {
-            const apiUpdate = await Apisetting.findByIdAndUpdate(
+            if (apiType === 'live') {
+              data = { liveAPIStatus: true, lastTestKeepAlive: new Date().toJSON(), lastLiveMessage: 'User: API Test Success' };
+            } else {
+              data = { testAPIStatus: true, lastTestKeepAlive: new Date().toJSON(), testLiveMessage: 'User: API Test Success' };
+            }
+
+            const updateResult = await Apisetting.findByIdAndUpdate(
               userId,
               { $set: { data } },
               { runValidators: true, new: true }
             );
 
-            return { api, apiStatus, msg }
+            status = true;
+            msg = apiType.toUpperCase() + ' API Test Success';
+
+            //If keepalive failed
           } else {
-            return { api, apiStatus, msg }
+
+            if (apiType === 'live') {
+              data = { liveAPIStatus: false, lastTestKeepAlive: new Date().toJSON(), lastLiveMessage: 'User: API Test Failed. Check API settings.' };
+            } else {
+              data = { testAPIStatus: false, lastTestKeepAlive: new Date().toJSON(), testLiveMessage: 'User: API Test Failed. Check API settings.' };
+            }
+
+            const updateResult = await Apisetting.findByIdAndUpdate(
+              userId,
+              { $set: { data } },
+              { runValidators: true, new: true }
+            );
+
+
+            status = false;
+            msg = apiType.toUpperCase() + ' API Test Failed. Check API settings.';
+
           }
+          return { status, msg };
+
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+    apiLogin: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+          const betfairController = new BetfairController;
+
+          const userId = context.user._id;
+          const apiType = args.apiType;
+
+          let data = '';
+          let status = '';
+          let msg = '';
+
+          const loginResult = await betfairController.apiLogin(context.user._id);
+
+          //If successful, update the database and status
+          if (loginResult[0] === true) {
+            if (apiType === 'live') {
+              data = { liveAPIStatus: true, lastLiveLogin: new Date().toJSON(), lastLiveMessage: 'User: API Login Success' };
+            } else {
+              data = { testAPIStatus: true, lastTestLogin: new Date().toJSON(), testLiveMessage: 'User: API Login Success' };
+            }
+
+            const updateResult = await Apisetting.findByIdAndUpdate(
+              userId,
+              { $set: { data } },
+              { runValidators: true, new: true }
+            );
+
+            status = true;
+            msg = apiType.toUpperCase() + ' API Login Success';
+
+
+          } else {
+            status = false;
+            msg = loginResult[1];
+          }
+
+          return { status, msg };
+
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+    apiLogout: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+          const betfairController = new BetfairController;
+
+          const userId = context.user._id;
+          const apiType = args.apiType;
+
+          let data = '';
+          let status = '';
+          let msg = '';
+
+          //Check if any active systems for user first
+          const activeSystems = await System.find({ $and: [{ userId: userId }, { isActive: true }] });
+          if (activeSystems.length > 0) {
+            status = false;
+            msg = 'You have active systems. Please disable active systems before logging out';
+            return { status, msg };
+          }
+
+          const loginResult = await betfairController.apiLogout(context.user._id);
+
+          //If successful, update the database and status
+          if (loginResult[0] === true) {
+            if (apiType === 'live') {
+              data = { liveAPIStatus: false, lastLiveLogout: new Date().toJSON(), lastLiveMessage: 'User: API Logout Success' };
+            } else {
+              data = { testAPIStatus: false, lastTestLogout: new Date().toJSON(), testLiveMessage: 'User: API Logout Success' };
+            }
+
+            const updateResult = await Apisetting.findByIdAndUpdate(
+              userId,
+              { $set: { data } },
+              { runValidators: true, new: true }
+            );
+
+            status = true;
+            msg = apiType.toUpperCase() + ' API Logout Success';
+
+          } else {
+            status = false;
+            msg = loginResult[1];
+          }
+
+          return { status, msg };
 
         } else {
           throw new AuthenticationError('Not logged in');

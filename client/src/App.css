@@ -94,6 +94,10 @@ footer {
   width: 75%
 }
 
+.sub-header.dashboard {
+  width: 100%
+}
+
 .market-header {
   background-color: var(--bs-body-bg);
   color: var(--color-blue-classic-400);
@@ -104,6 +108,10 @@ footer {
   border-color: var(--color-grey-100);
   border-style: solid;
   border-width: 0.1rem;
+}
+
+.dashboard-table {
+  font-size: 0.9rem;
 }
 
 .runner {

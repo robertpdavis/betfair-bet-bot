@@ -92,22 +92,23 @@ const SingleSystem = () => {
     buttonSettings[2].state = 'enabled';
   }
 
-  // Set the 
+  // Set the button status first and subsequent renders
   const [buttonState, setBtnState] = useState(buttonSettings);
-
   useEffect(() => {
     setBtnState(buttonSettings)
   }, [systemData])
 
+  //Check if user should be here, if not send to login
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
+  //Handle mutations
   const handleBtnClick = async (event) => {
     event.preventDefault();
-    const { name } = event.target;
+    const action = event.target.name;
 
     try {
 
-      switch (name) {
+      switch (action) {
         case 'startstop':
           let toggle = '';
           (event.target.textContent === 'Start System') ? toggle = 'start' : toggle = 'stop'
@@ -116,7 +117,7 @@ const SingleSystem = () => {
             setAlertState({ variant: 'success', message: 'Starting system...Updating system events...' });
           }
 
-          const { toggleData } = await toggleSystem({
+          const toggleData = await toggleSystem({
             variables: { systemId, toggle },
           });
 
@@ -133,18 +134,24 @@ const SingleSystem = () => {
             }
             setAlertState({ show: false });
             setBtnState(buttonState);
-
           }
+
+          break;
+
+        case 'copy':
+          const copyData = await copySystem({
+            variables: { systemId },
+          });
 
           break;
 
         case 'reset':
 
-          const { resetData } = await resetSystem({
+          const resetData = await resetSystem({
             variables: { systemId },
           });
 
-          if (dataR) {
+          if (resetData) {
 
             setAlertState({ variant: 'success', message: 'The stats have been reset for this system.' })
 

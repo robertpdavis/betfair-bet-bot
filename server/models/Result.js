@@ -5,6 +5,9 @@ const resultSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
+  userId: {
+    type: Schema.Types.ObjectId,
+  },
   betId: String,
   customerRef: String,
   betPlaced: Date,

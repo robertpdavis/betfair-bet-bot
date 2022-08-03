@@ -22,6 +22,10 @@ const Systems = () => {
       variables: { userId },
     });
 
+  const systemData = data?.systems || {};
+
+  console.log(systemData)
+
   //Inital button toolbar settings
   const buttonSettings =
     [
@@ -82,7 +86,13 @@ const Systems = () => {
           <ButtonToolbar buttonState={buttonState} handleBtnClick={handleBtnClick} />
         </div>
         <div className="row">
-          <SystemTable systemData={data} />
+          {systemData.length > 0 ?
+            <SystemTable systemData={systemData} />
+            :
+            <div>
+              <h4>You currently have no betting systems set up.</h4>
+            </div>
+          }
         </div>
       </section>
     </main>

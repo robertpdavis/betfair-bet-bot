@@ -25,29 +25,58 @@ export const CREATE_USER = gql`
 `;
 
 export const UPDATE_API = gql`
-  mutation updateApi($userId: ID!, $data: String!){
-    updateApi(userId: $userId, data: $data){
+  mutation updateApi($apiKeyTest: String, $testSessionId: String, $apiKeyLive: String, $liveSessionId: String, 
+    $apiUsername: String, $apiPassword: String, $certfile: String, $keyfile: String)
+    {
+    updateApi(apiKeyTest: $apiKeyTest, testSessionId: $testSessionId, apiKeyLive: $apiKeyLive, liveSessionId: $liveSessionId, 
+    apiUsername: $apiUsername, apiPassword: $apiPassword, certfile: $certfile, keyfile: $keyfile)
+    {
       status
       msg
     }
   }
 `;
 
-export const TOGGLE_API = gql`
-  mutation toggleApi($userId: ID!, , $api: String, $toggle: String!) {
-    toggleApi(userId: $userId, api: $api, toggle: $toggle) {
-      api
-      ApiEnabled
+export const ENABLE_API = gql`
+  mutation enableApi($userId: ID!, $apiType: String!) {
+    enableApi(userId: $userId, apiType: $apiType) {
+      status
       msg
     }
   }
 `;
 
-export const TOGGLE_API_LOGIN = gql`
-  mutation toggleApiLogin($systemId: ID!, $toggle: String!) {
-    toggleApiLogin(userId: $userId, api: $api, toggle: $toggle) {
-      api
-      ApiStatus
+export const DISABLE_API = gql`
+  mutation disableApi($userId: ID!, $apiType: String!) {
+    disableApi(userId: $userId, apiType: $apiType) {
+      status
+      msg
+    }
+  }
+`;
+
+export const TEST_API = gql`
+  mutation testApi($userId: ID!, $apiType: String!) {
+    testApi(userId: $userId, apiType: $apiType) {
+      status
+      msg
+    }
+  }
+`;
+
+export const API_LOGIN = gql`
+  mutation apiLogin($userId: ID!, $apiType: String!) {
+    apiLogin(userId: $userId, apiType: $apiType) {
+      status
+      msg
+    }
+  }
+`;
+
+export const API_LOGOUT = gql`
+  mutation apiLogout($userId: ID!, $apiType: String!) {
+    apiLogout(userId: $userId, apiType: $apiType) {
+      status
       msg
     }
   }

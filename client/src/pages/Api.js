@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Auth from "../utils/auth";
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-
+import { useQuery, useMutation } from '@apollo/client';
+import Alert from '../components/Alert';
 import { QUERY_SINGLE_API } from '../utils/queries';
-import { TOGGLE_SYSTEM, RESET_SYSTEM, UPDATE_SYSTEM, COPY_SYSTEM } from '../utils/mutations';
+import { UPDATE_API, ENABLE_API, DISABLE_API, TEST_API, API_LOGIN, API_LOGOUT } from '../utils/mutations';
 
 const SingleAPI = () => {
 
+  //Set initial states for the update, alerts and buttons
   const [formState, setFormState] = useState('');
+  const [alertState, setAlertState] = useState({ show: false });
+  //Mutations for updating the API settings, login and logout as well as enabling/disabling.
+  const [updateApi, { error: errorU, data: dataU, loading: loadingU }] = useMutation(UPDATE_API);
+  const [enableApi, { error: errorE, data: dataE, loading: loadingE }] = useMutation(ENABLE_API);
+  const [disableApi, { error: errorD, data: dataD, loading: loadingD }] = useMutation(DISABLE_API);
+  const [apiLogin, { error: errorL, data: dataL, loading: loadingL }] = useMutation(API_LOGIN);
+  const [apiLogout, { error: errorO, data: dataO, loading: loadingO }] = useMutation(API_LOGOUT);
+  const [testApi, { error: errorT, data: dataT, loading: loadingT }] = useMutation(TEST_API,);
+
+
 
   let userId = '';
 
@@ -18,18 +28,39 @@ const SingleAPI = () => {
     userId = user.data._id;
   }
 
-
-
+  //Get the api data from the server
   const { loading, data } = useQuery(QUERY_SINGLE_API, {
-    // pass URL parameter
     variables: { userId },
   });
 
   const api = data?.apisetting || {};
 
+
+  const buttonSettings =
+    [
+      {
+        state: 'disabled'
+      },
+      {
+        title: `${api.liveApiEnabled ? 'Disable API' : 'Enabled API'}`,
+        class: `${api.liveApiEnabled ? 'btn btn-sm btn-warning ms-3' : 'btn btn-sm btn-success ms-3'}`,
+      },
+      {
+        title: `${api.testApiEnabled ? 'Disable API' : 'Enabled API'}`,
+        class: `${api.testApiEnabled ? 'btn btn-sm btn-warning ms-3' : 'btn btn-sm btn-success ms-3'}`,
+      },
+    ]
+  const [buttonState, setBtnState] = useState('buttonSettings');
+  useEffect(() => {
+    setBtnState(buttonSettings)
+  }, [api])
+
+
+  //Now we can check if user should be here. If not, route to login.
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
-  const handleGenChange = async (event) => {
+  //Updating our formState when changes made
+  const handleChange = async (event) => {
     const { name, value } = event.target;
 
     setFormState({
@@ -37,11 +68,139 @@ const SingleAPI = () => {
       [name]: value,
     });
 
+    if (buttonState[0].state === 'disabled') {
+      buttonState[0].state = '';
+      setBtnState(buttonState);
+    }
+
   };
 
+  //Handle mutations
   const handleBtnClick = async (event) => {
-    const action = event.targetname;
+    const action = event.target.name;
 
+    console.log(action)
+
+    let apiType = ''
+    switch (action) {
+      case 'savesettings':
+
+        await updateApi({
+          variables: { ...formState },
+        });
+
+        (dataU && !loadingU) ?
+          setAlertState({ variant: 'success', message: dataU.updateApi.msg })
+          :
+          setAlertState({ variant: 'danger', message: dataU.updateApi.msg });
+
+        if (errorU) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorU.message }) };
+
+        break;
+
+      case 'livelogin':
+      case 'testlogin':
+
+        apiType = (action === 'livelogin') ? 'live' : '';
+        apiType = (action === 'testlogin') ? 'test' : '';
+
+        await apiLogin({
+          variables: { userId, apiType },
+        });
+
+        (dataL && !loadingL) ?
+          setAlertState({ variant: 'success', message: dataL.apiLogin.msg })
+          :
+          setAlertState({ variant: 'danger', message: dataL.apiLogin.msg });
+
+        if (errorL) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorL.message }) };
+
+        break;
+
+      case 'livelogout':
+      case 'testlogout':
+
+        apiType = (action === 'livelogout') ? 'live' : '';
+        apiType = (action === 'testlogout') ? 'test' : '';
+
+        await apiLogout({
+          variables: { userId, apiType },
+        });
+
+        (dataO && !loadingO) ?
+          setAlertState({ variant: 'success', message: dataO.apiLogout.msg })
+          :
+          setAlertState({ variant: 'danger', message: dataO.apiLogout.msg });
+
+        if (errorO) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorO.message }) };
+
+        break;
+
+      case 'livedisable':
+      case 'testdisable':
+
+        apiType = (action === 'livedisable') ? 'live' : '';
+        apiType = (action === 'testdisable') ? 'test' : '';
+
+        await disableApi({
+          variables: { userId, apiType },
+        });
+
+        (dataD && !loadingD) ?
+          setAlertState({ variant: 'success', message: dataD.disableAPI.msg })
+          :
+          setAlertState({ variant: 'danger', message: dataD.disableAPI.msg });
+
+        if (errorD) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorD.message }) };
+
+        break;
+      case 'liveenable':
+      case 'testenable':
+
+        apiType = (action === 'liveenable') ? 'live' : '';
+        apiType = (action === 'testenable') ? 'test' : '';
+
+        await enableApi({
+          variables: { userId, apiType },
+        });
+
+        (dataE && !loadingE) ?
+          setAlertState({ variant: 'success', message: dataE.enableAPI.msg })
+          :
+          setAlertState({ variant: 'danger', message: dataE.enableAPI.msg });
+
+        if (errorE) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorE.message }) };
+
+        break;
+
+      case 'livetest':
+      case 'testtest':
+
+        apiType = (action === 'livetest') ? 'live' : '';
+        apiType = (action === 'testtest') ? 'test' : '';
+
+        await testApi({
+          variables: { userId, apiType }
+        });
+
+        (dataT && !loadingT) ?
+          setAlertState({ variant: 'success', message: dataT.testApi.msg })
+          :
+          setAlertState({ variant: 'danger', message: dataT.testApi.msg });
+
+        if (errorT) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorT.message }) };
+
+        break;
+
+      default:
+
+        break;
+    }
+
+  };
+
+  const handleAlertClick = async (option) => {
+    setAlertState({ show: false });
   };
 
   if (loading) {
@@ -54,172 +213,145 @@ const SingleAPI = () => {
           Betfair API
         </div>
         <div className="row">
+          <Alert alertState={alertState} handleAlertClick={handleAlertClick} />
+        </div>
+        <div className="row">
           <div className="col-6">
             <div className="sub-header">
               General Settings
             </div>
-            <form>
-              <div className="col-auto mb-3">
-                <label className="form-label" id="apiform_username-lbl" htmlFor="apiform_username" title="Username">Username</label>
-                <input className="form-control w-75" type="text" id="apiform_username" name="apiUsername" value={formState.apiUsername} defaultValue={api.apiUsername} size="30" onChange={handleGenChange} />
-              </div>
-              <div className="col-auto mb-3">
-                <label className="form-label" id="apiform_password-lbl" htmlFor="apiform_password" title="Password">Password</label>
-                <input className="form-control w-75" type="password" id="apiform_password" name="apiPassword" value={formState.apiPassword} defaultValue={api.apiPassword} size="30" onChange={handleGenChange} />
-              </div>
-              <div className="col-auto mb-3">
-                <label className="form-label" id="apiform_certfile-lbl" htmlFor="apiform_certfile" title="Certificate file">SSL Certificate</label>
-                <textarea className="form-control w-75" name="certfile" id="apiform_certfile" cols="50" rows="4" resize="none" value={formState.certfile} defaultValue={api.certfile} onChange={handleGenChange} />
-              </div>
-              <div className="col-auto mb-3">
-                <label className="form-label" id="apiform_keyfile-lbl" htmlFor="apiform_keyfile" title="Key file">Key Certificate</label>
-                <textarea className="form-control w-75" name="keyfile" id="apiform_keyfile" cols="50" rows="4" value={formState.keyfile} defaultValue={api.keyfile} onChange={handleGenChange} />
-              </div>
-              <div className="col-auto mb-3">
-                <label className="form-label" id="sysform_betType-lbl" htmlFor="sysform_betType" title="Back or Lay betting">API Mode</label>
-                <select className="form-control w-75" id="sysform_betType" name="betType" value={formState.apiMode} defaultValue={api.apiMode} onChange={handleGenChange}>
-                  <option value="test">Test</option>
-                  <option value="live" disabled>Live</option>
-                </select>
-              </div>
-              <button type="button" className="btn btn-sm btn-success" name="savegen" onClick={handleBtnClick}>Save</button>
-            </form>
+
+            <div className="col-auto mb-3">
+              <label className="form-label" id="apiform_username-lbl" htmlFor="apiform_username" title="Username">Username</label>
+              <input className="form-control w-75" type="text" id="apiform_username" name="apiUsername" value={formState.apiUsername} defaultValue={api.apiUsername} size="30" onChange={handleChange} />
+            </div>
+            <div className="col-auto mb-3">
+              <label className="form-label" id="apiform_password-lbl" htmlFor="apiform_password" title="Password">Password</label>
+              <input className="form-control w-75" type="password" id="apiform_password" name="apiPassword" value={formState.apiPassword} defaultValue={api.apiPassword} size="30" onChange={handleChange} />
+            </div>
+            <div className="col-auto mb-3">
+              <label className="form-label" id="apiform_certfile-lbl" htmlFor="apiform_certfile" title="Certificate file">SSL Certificate</label>
+              <textarea className="form-control w-75" name="certfile" id="apiform_certfile" cols="50" rows="4" resize="none" value={formState.certfile} defaultValue={api.certfile} onChange={handleChange} />
+            </div>
+            <div className="col-auto mb-3">
+              <label className="form-label" id="apiform_keyfile-lbl" htmlFor="apiform_keyfile" title="Key file">Key Certificate</label>
+              <textarea className="form-control w-75" name="keyfile" id="apiform_keyfile" cols="50" rows="4" value={formState.keyfile} defaultValue={api.keyfile} onChange={handleChange} />
+            </div>
+            <div className="col-auto mb-3">
+              <label className="form-label" id="sysform_betType-lbl" htmlFor="sysform_betType" title="Back or Lay betting">API Mode</label>
+              <select className="form-control w-75" id="sysform_betType" name="betType" value={formState.apiMode} defaultValue={api.apiMode} onChange={handleChange}>
+                <option value="test">Test</option>
+                <option value="live" disabled>Live</option>
+              </select>
+            </div>
+            <button type="button" className={"btn btn-sm btn-success " + buttonState[0].state} name="savesettings" onClick={handleBtnClick}>Save Settings</button>
           </div>
           <div className="col-6">
             <div className="sub-header">
               Live API Settings
             </div>
-            <form>
-              <div className="card w-75 mb-3">
-                <div class="card-header">
-                  <h5 className="d-inline">API STATUS:
-                    {api.liveApiEnabled ?
-                      api.liveApiStatus ?
-                        <span className="badge bg-success ms-2">UP</span>
-                        :
-                        <span className="badge bg-danger ms-2">DOWN</span>
-                      :
-                      <span className="badge bg-secondary ms-2">DISABLED</span>
-                    }
-                  </h5>
-                  <div className='d-inline ms-2'>
-                    Last Update: {api.lastLiveStatus ? new Date(api.lastLiveStatus).toLocaleString() : ""}
-                  </div>
-                </div>
-                <div className="card-body row">
-                  <div className="col-4 text-end">
-                    <label className="form-label-sm mb-2" id="keytest-label" htmlFor="apiKeyLive">API Key:</label>
-                    <label className="form-label-sm" id="apienabled-label" htmlFor="liveApiEnabled">API Enabled:</label>
-                    <label className="form-label-sm" id="apikeepalive-label" htmlFor="lastLiveKeepAlive">Last Keepalive:</label>
-                    <label className="form-label-sm" id="apilastlogin-label" htmlFor="lastLiveLogin">Last Login:</label>
-                    <label className="form-label-sm" id="apilastlogout-label" htmlFor="lastLiveLogout">Last Logout:</label>
-                    <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastLiveMessage">Last Message:</label>
-                  </div>
-                  <div className="col-8 text-start">
-                    <input className="form-control-sm d-block" type="text" name="apiKeyLive" id="apiKeyLive" disabled="true" value={formState.apiKeyLive} defaultValue={api.apiKeyLive} />
-                    {api.liveApiEnabled ?
-                      <input className="form-check-input ms-3 d-block" type="checkbox" name="liveApiEnabled" id="liveApiEnabled" checked />
-                      :
-                      <input className="form-check-input ms-3 d-block" type="checkbox" name="liveApiEnabled" id="liveApiEnabled" />
-                    }
-                    {api.lastLiveKeepAlive ? new Date(api.lastLiveKeepAlive).toLocaleString() : ""}
-                    <br></br>
-                    {api.lastLiveLogin ? new Date(api.lastLiveLogin).toLocaleString() : ""}
-                    <br></br>
-                    {api.lastLiveLogout ? new Date(api.lastLiveLogout).toLocaleString() : ""}
-                    <br></br>
-                    {api.lastLiveMessage}
-                  </div>
-                </div>
-                <div class="card-footer">
+
+            <div className="card w-75 mb-3">
+              <div className="card-header">
+                <h5 className="d-inline">API STATUS:
                   {api.liveApiEnabled ?
-                    !api.liveApiStatus ?
-                      <>
-                        <button className="btn btn-sm btn-secondary" name='livelogin' onClick={handleBtnClick}>Login</button>
-                        <button className="btn btn-sm btn-warning ms-3" name='livedisable' disabled="true">Disable API</button>
-                      </>
+                    api.liveApiStatus ?
+                      <span className="badge bg-success ms-2">UP</span>
                       :
-                      <>
-                        <button className="btn btn-sm btn-warning" name='livelogout' onClick={handleBtnClick}>Logout</button>
-                        <button className="btn btn-sm btn-warning ms-3" name='livedisable' disabled="true">Disable API</button>
-                      </>
+                      <span className="badge bg-danger ms-2">DOWN</span>
                     :
-                    <>
-                      <button className="btn btn-sm btn-secondary" name='livelogin' disabled="true">Login</button>
-                      <button className="btn btn-sm btn-success ms-3" name='liveenable' disabled="true">Enable API</button>
-                    </>
+                    <span className="badge bg-secondary ms-2">DISABLED</span>
                   }
-                  <button type="button" className="btn btn-sm btn-success ms-5" name="savelive" disabled="true" onClick={handleBtnClick}>Save</button>
+                </h5>
+                <div className='d-inline ms-2'>
+                  Last Update: {api.lastLiveStatus ? new Date(api.lastLiveStatus).toLocaleString() : ""}
                 </div>
               </div>
-            </form>
+              <div className="card-body row">
+                <div className="col-4 text-end">
+                  <label className="form-label-sm mb-2" id="keytest-label" htmlFor="apiKeyLive">API Key:</label>
+                  <label className="form-label-sm" id="apienabled-label" htmlFor="liveApiEnabled">API Enabled:</label>
+                  <label className="form-label-sm" id="apikeepalive-label" htmlFor="lastLiveKeepAlive">Last Keepalive:</label>
+                  <label className="form-label-sm" id="apilastlogin-label" htmlFor="lastLiveLogin">Last Login:</label>
+                  <label className="form-label-sm" id="apilastlogout-label" htmlFor="lastLiveLogout">Last Logout:</label>
+                  <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastLiveMessage">Last Message:</label>
+                </div>
+                <div className="col-8 text-start">
+                  <input className="form-control-sm d-block" type="text" name="apiKeyLive" id="apiKeyLive" disabled value={formState.apiKeyLive} defaultValue={api.apiKeyLive} onChange={handleChange} />
+                  {api.liveApiEnabled ?
+                    <input className="form-check-input ms-3 d-block" type="checkbox" name="liveApiEnabled" id="liveApiEnabled" defaultChecked="true" />
+                    :
+                    <input className="form-check-input ms-3 d-block" type="checkbox" name="liveApiEnabled" id="liveApiEnabled" />
+                  }
+                  {api.lastLiveKeepAlive ? new Date(api.lastLiveKeepAlive).toLocaleString() : ""}
+                  <br></br>
+                  {api.lastLiveLogin ? new Date(api.lastLiveLogin).toLocaleString() : ""}
+                  <br></br>
+                  {api.lastLiveLogout ? new Date(api.lastLiveLogout).toLocaleString() : ""}
+                  <br></br>
+                  {api.lastLiveMessage}
+                </div>
+              </div>
+              <div className="card-footer">
+                <button className="btn btn-sm btn-success" name='livelogin' disabled onClick={handleBtnClick}>Login</button>
+                <button className="btn btn-sm btn-warning ms-3" name='livelogout' disabled onClick={handleBtnClick}>Logout</button>
+                <button className={buttonState[1].class} name='liveenable' disabled onClick={handleBtnClick}>{buttonState[1].title}</button>
+                <button className="btn btn-sm btn-secondary ms-3" name='livetest' disabled onClick={handleBtnClick}>Test API</button>
+              </div>
+            </div>
+
             <div className="sub-header">
               Test API Settings
             </div>
-            <form>
-              <div className="card w-75 mb-3">
-                <div class="card-header">
-                  <h5 className="d-inline">API STATUS:
-                    {api.testApiEnabled ?
-                      api.testApiStatus ?
-                        <span className="badge bg-success ms-2">UP</span>
-                        :
-                        <span className="badge bg-danger ms-2">DOWN</span>
-                      :
-                      <span className="badge bg-secondary ms-2">DISABLED</span>
-                    }
-                  </h5>
-                  <div className='d-inline ms-2'>
-                    Last Update: {new Date(api.lastTestStatus).toLocaleString()}
-                  </div>
-                </div>
-                <div className="card-body row">
-                  <div className="col-4 text-end">
-                    <label className="form-label-sm mb-2" id="keytest-label" htmlFor="apiKeyTest">API Key:</label>
-                    <label className="form-label-sm" id="apienabled-label" htmlFor="testApiEnabled">API Enabled:</label>
-                    <label className="form-label-sm" id="apikeepalive-label" htmlFor="lastTestKeepAlive">Last Keepalive:</label>
-                    <label className="form-label-sm" id="apilastlogin-label" htmlFor="lastTestLogin">Last Login:</label>
-                    <label className="form-label-sm" id="apilastlogout-label" htmlFor="lastTestLogout">Last Logout:</label>
-                    <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastTestMessage">Last Message:</label>
-                  </div>
-                  <div className="col-8 text-start">
-                    <input className="form-control-sm d-block" type="text" name="apiKeyTest" id="apiKeyTest" value={formState.apiKeyTest} defaultValue={api.apiKeyTest} />
-                    {api.testApiEnabled ?
-                      <input className="form-check-input ms-3 d-block" type="checkbox" name="testApiEnabled" id="testApiEnabled" checked />
-                      :
-                      <input className="form-check-input ms-3 d-block" type="checkbox" name="testApiEnabled" id="testApiEnabled" />
-                    }
-                    {api.lastTestKeepAlive ? new Date(api.lastTestKeepAlive).toLocaleString() : ""}
-                    <br></br>
-                    {api.lastTestLogin ? new Date(api.lastTestLogin).toLocaleString() : ""}
-                    <br></br>
-                    {api.lastTestLogout ? new Date(api.lastTestLogout).toLocaleString() : ""}
-                    <br></br>
-                    {api.lastTestMessage}
-                  </div>
-                </div>
-                <div class="card-footer">
+
+            <div className="card w-75 mb-3">
+              <div className="card-header">
+                <h5 className="d-inline">API STATUS:
                   {api.testApiEnabled ?
-                    !api.testApiStatus ?
-                      <>
-                        <button className="btn btn-sm btn-secondary" name='testlogin' onClick={handleBtnClick}>Login</button>
-                        <button className="btn btn-sm btn-warning ms-3" name='testdisable'>Disable API</button>
-                      </>
+                    api.testApiStatus ?
+                      <span className="badge bg-success ms-2">UP</span>
                       :
-                      <>
-                        <button className="btn btn-sm btn-warning" name='testlogout' onClick={handleBtnClick}>Logout</button>
-                        <button className="btn btn-sm btn-warning ms-3" name='testdisable'>Disable API</button>
-                      </>
+                      <span className="badge bg-danger ms-2">DOWN</span>
                     :
-                    <>
-                      <button className="btn btn-sm btn-secondary" name='testlogin' disabled>Login</button>
-                      <button className="btn btn-sm btn-success ms-3" name='testenable'>Enable API</button>
-                    </>
+                    <span className="badge bg-secondary ms-2">DISABLED</span>
                   }
-                  <button type="button" className="btn btn-sm btn-success ms-5" name="savetest" onClick={handleBtnClick}>Save</button>
+                </h5>
+                <div className='d-inline ms-2'>
+                  Last Update: {new Date(api.lastTestStatus).toLocaleString()}
                 </div>
               </div>
-            </form>
+              <div className="card-body row">
+                <div className="col-4 text-end">
+                  <label className="form-label-sm mb-2" id="keytest-label" htmlFor="apiKeyTest">API Key:</label>
+                  <label className="form-label-sm" id="apienabled-label" htmlFor="testApiEnabled">API Enabled:</label>
+                  <label className="form-label-sm" id="apikeepalive-label" htmlFor="lastTestKeepAlive">Last Keepalive:</label>
+                  <label className="form-label-sm" id="apilastlogin-label" htmlFor="lastTestLogin">Last Login:</label>
+                  <label className="form-label-sm" id="apilastlogout-label" htmlFor="lastTestLogout">Last Logout:</label>
+                  <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastTestMessage">Last Message:</label>
+                </div>
+                <div className="col-8 text-start">
+                  <input className="form-control-sm d-block" type="text" name="apiKeyTest" id="apiKeyTest" value={formState.apiKeyTest} defaultValue={api.apiKeyTest} onChange={handleChange} />
+                  {api.testApiEnabled ?
+                    <input className="form-check-input ms-3 d-block" type="checkbox" name="testApiEnabled" id="testApiEnabled" readOnly checked={true} />
+                    :
+                    <input className="form-check-input ms-3 d-block" type="checkbox" name="testApiEnabled" id="testApiEnabled" />
+                  }
+                  {api.lastTestKeepAlive ? new Date(api.lastTestKeepAlive).toLocaleString() : ""}
+                  <br></br>
+                  {api.lastTestLogin ? new Date(api.lastTestLogin).toLocaleString() : ""}
+                  <br></br>
+                  {api.lastTestLogout ? new Date(api.lastTestLogout).toLocaleString() : ""}
+                  <br></br>
+                  {api.lastTestMessage}
+                </div>
+              </div>
+              <div className="card-footer">
+                <button className="btn btn-sm btn-success ms-3" name='testlogin' onClick={handleBtnClick}>Login</button>
+                <button className="btn btn-sm btn-warning ms-3" name='testlogout' onClick={handleBtnClick}>Logout</button>
+                <button className={buttonState[2].class} name='testenable' >{buttonState[2].title}</button>
+                <button className="btn btn-sm btn-secondary ms-3" name='testtest' onClick={handleBtnClick}>Test API</button>
+              </div>
+            </div>
           </div>
         </div>
       </section >

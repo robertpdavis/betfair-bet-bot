@@ -520,6 +520,7 @@ class BetfairController {
             if (betPlaced) {
 
               let data = {
+                userId: user._id,
                 systemId: system['id'],
                 betId: bet['betId'],
                 customerRef: bet['customerRef'],

@@ -52,7 +52,7 @@ function SystemTable({ systemData }) {
   );
 
   const data = useMemo(
-    () => systemData.systems.map((item) => (
+    () => systemData.map((item) => (
       {
         _id: item._id,
         systemId: item.systemId,
@@ -79,11 +79,9 @@ function SystemTable({ systemData }) {
     prepareRow,
   } = tableInstance
 
-
-
   return (
     <div className="table-responsive">
-      <table className="table table-striped table-sm text-center" {...getTableProps()}>
+      <table className="table table-striped table-sm text-center dashboard-table" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>

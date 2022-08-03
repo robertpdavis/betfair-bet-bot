@@ -124,6 +124,7 @@ scalar Date
   type Result {
     _id: ID
     systemId: ID
+    userId: ID
     betId: String
     customerRef: String
     betPlaced: Date
@@ -313,26 +314,14 @@ scalar Date
     msg: String
   }
 
-  type ToggleApi {
-    api: String
-    ApiEnabled: Boolean
-    msg: String
-  }
-
-  type ToggleApiLogin {
-    api: String
-    ApiStatus: Boolean
-    msg: String
-  }
-
   type Query {
     user(username: String!): User
-    systems(userId: ID!): [System]
+    systems(userId: ID!, isActive: Boolean, sortName: String, sortType: Int): [System]
     system(id: ID!): System
     events(systemId: ID!): [Event]
     market(marketId: String!, type: String): Market
     runner(id: ID!): Runner
-    results(systemId: ID!): [Result]
+    results(systemId: ID, userId: ID): [Result]
     result(id: ID!): Result
     apisetting(userId: ID!): Apisetting
     eventTypes: EventType
@@ -341,9 +330,16 @@ scalar Date
   type Mutation {
     createUser(username: String!, email: String!, password: String!, firstName: String!, lastName: String!): Auth
     loginUser(username: String!, password: String!): Auth
-    updateApi(userId: ID!, data: String!): Response
-    toggleApi(userId: ID!, api: String!, toggle: String!): ToggleApi
-    toggleApiLogin(userId: ID!, api: String!, toggle: String!): ToggleApiLogin
+
+    updateApi(apiKeyTest: String, testSessionId: String, apiKeyLive: String, liveSessionId: String, 
+    apiUsername: String, apiPassword: String, certfile: String, keyfile: String ): Response
+
+
+    apiLogin(userId: ID!, apiType: String!): Response
+    apiLogout(userId: ID!, apiType: String!): Response
+    enableApi(userId: ID!, apiType: String!): Response
+    disableApi(userId: ID!, apiType: String!): Response
+    testApi(userId: ID!, apiType: String!): Response
     toggleSystem(systemId: ID!, toggle: String): ToggleSystem
     updateSystem(systemId: ID!, data: String): Response
     resetSystem(systemId: ID!): Response
