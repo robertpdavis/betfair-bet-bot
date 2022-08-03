@@ -22,9 +22,9 @@ function Results() {
       variables: { userId },
     });
 
-  if (systemId = '') {
+  if (systemId === '') {
     if (dataS) {
-      systemId = dataS.systems._id
+      systemId = dataS.systems[0]._id
     }
   }
 
@@ -32,6 +32,8 @@ function Results() {
     {
       variables: { systemId },
     });
+
+  console.log(systemId)
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
@@ -45,7 +47,7 @@ function Results() {
           System Results
         </div>
         <div className="row">
-          <SystemLinks systemData={dataS} linkType='results' />
+          <SystemLinks systemData={dataS} linkType='results' isActive='false' />
           <div className="pb-3 pt-3">
             <h6>Bets placed and results for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
           </div>

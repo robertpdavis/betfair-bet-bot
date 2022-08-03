@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
-import { QUERY_USER, QUERY_SYSTEMS, QUERY_RESULTS } from '../utils/queries';
+import { QUERY_USER, QUERY_SYSTEMS, QUERY_RESULTS, QUERY_SYSTEM_AG } from '../utils/queries';
 
 const Dashboard = () => {
 
@@ -37,6 +37,14 @@ const Dashboard = () => {
 
   const resultData = dataR?.results || {};
 
+  const { loading: loadingA, data: data } = useQuery(QUERY_SYSTEM_AG,
+    {
+      variables: { userId }
+    });
+
+  const agData = dataU?.systemAg || {};
+
+  console.log(agData);
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
@@ -56,7 +64,7 @@ const Dashboard = () => {
         </div>
 
         <div className="card mb-3">
-          <div className="card-body row">
+          <div className="card-body">
             <div>
               <h5>Current Virtual Wallet:</h5>
             </div>
@@ -95,7 +103,7 @@ const Dashboard = () => {
         </div>
 
         <div className="card mb-3">
-          <div className="card-body row">
+          <div className="card-body">
             <div className="table-responsive">
               <table className="table table-sm text-center dashboard-table">
                 <thead>
@@ -138,7 +146,7 @@ const Dashboard = () => {
         </div>
 
         <div className="card mb-3">
-          <div className="card-body row">
+          <div className="card-body">
             <div className="table-responsive">
               <table className="table table-sm text-center dashboard-table">
                 <thead>

@@ -47,7 +47,7 @@ const Events = () => {
           System Events
         </div>
         <div className="row">
-          <SystemLinks systemData={dataS} linkType='events' />
+          <SystemLinks systemData={dataS} linkType='events' isActive='true' />
           <div className="pb-3 pt-3">
             <h6>Upcoming events for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
           </div>

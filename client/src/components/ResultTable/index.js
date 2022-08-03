@@ -9,8 +9,6 @@ function ResultTable({ resultData }) {
   const results = resultData.results;
   const rows = results.length;
 
-  console.log(results)
-
   if (rows > 0) {
     return (
       <div className="table-responsive">

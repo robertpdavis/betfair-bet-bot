@@ -229,6 +229,15 @@ export const QUERY_SINGLE_SYSTEM = gql`
   }
 `;
 
+export const QUERY_SYSTEM_AG = gql`
+  query getSingleSystem($userId: ID!) {
+    systemAg(userId: $userId) {
+      _id
+      sum_events
+    }
+  }
+`;
+
 export const QUERY_EVENTS = gql`
   query getEvents ($systemId: ID! ) {
     events(systemId: $systemId) {

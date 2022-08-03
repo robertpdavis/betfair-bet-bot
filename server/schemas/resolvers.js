@@ -27,6 +27,24 @@ const resolvers = {
     system: async (parent, args) => {
       return await System.findById(args.id).populate('scenario').populate('stakingPlan');
     },
+    systemAg: async (parent, { userId }) => {
+      const systemAg = await System.aggregate(
+        [
+          { $match: { userId: userId } },
+          {
+            $group: {
+              // Group by null (no additional grouping by id)
+              _id: null,
+              // Sum of all prices
+              sum_events: { $sum: '$totalEvents' },
+            },
+          },
+        ],
+      )
+      console.log(userId)
+      console.log(systemAg)
+      return systemAg;
+    },
     events: async (parent, { systemId }) => {
       const params = systemId ? { systemId } : {};
       return await Event.find(params).populate('markets');

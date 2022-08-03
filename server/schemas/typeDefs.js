@@ -314,10 +314,16 @@ scalar Date
     msg: String
   }
 
+  type SysAg {
+    _id: ID
+    sum_events: Int
+  }
+
   type Query {
     user(username: String!): User
     systems(userId: ID!, isActive: Boolean, sortName: String, sortType: Int): [System]
     system(id: ID!): System
+    systemAg(userId: ID!): SysAg
     events(systemId: ID!): [Event]
     market(marketId: String!, type: String): Market
     runner(id: ID!): Runner

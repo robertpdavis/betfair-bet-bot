@@ -19,8 +19,6 @@ const SingleAPI = () => {
   const [apiLogout, { error: errorO, data: dataO, loading: loadingO }] = useMutation(API_LOGOUT);
   const [testApi, { error: errorT, data: dataT, loading: loadingT }] = useMutation(TEST_API,);
 
-
-
   let userId = '';
 
   if (Auth.loggedIn()) {
