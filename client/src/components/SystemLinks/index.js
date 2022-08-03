@@ -6,7 +6,8 @@ import '../../App.css';
 
 function SystemLinks({ systemData, linkType, isActive }) {
 
-  if (isActive) {
+  if (isActive === true) {
+    console.log('here', isActive)
     return (
       <div>
         {systemData.systems.map((item) => {
@@ -30,6 +31,7 @@ function SystemLinks({ systemData, linkType, isActive }) {
       </div>
     );
   } else {
+    console.log('there', isActive)
     return (
       <div>
         {systemData.systems.map((item) => {

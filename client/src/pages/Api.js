@@ -49,9 +49,9 @@ const SingleAPI = () => {
       },
     ]
   const [buttonState, setBtnState] = useState('buttonSettings');
-  useEffect(() => {
-    setBtnState(buttonSettings)
-  }, [api])
+  // useEffect(() => {
+  //   setBtnState(buttonSettings)
+  // }, [api])
 
 
   //Now we can check if user should be here. If not, route to login.
@@ -65,12 +65,6 @@ const SingleAPI = () => {
       ...formState,
       [name]: value,
     });
-
-    if (buttonState[0].state === 'disabled') {
-      buttonState[0].state = '';
-      setBtnState(buttonState);
-    }
-
   };
 
   //Handle mutations
@@ -242,7 +236,7 @@ const SingleAPI = () => {
                 <option value="live" disabled>Live</option>
               </select>
             </div>
-            <button type="button" className={"btn btn-sm btn-success " + buttonState[0].state} name="savesettings" onClick={handleBtnClick}>Save Settings</button>
+            <button type="button" className="btn btn-sm btn-success" name="savesettings" onClick={handleBtnClick}>Save Settings</button>
           </div>
           <div className="col-6">
             <div className="sub-header">
@@ -293,7 +287,7 @@ const SingleAPI = () => {
               <div className="card-footer">
                 <button className="btn btn-sm btn-success" name='livelogin' disabled onClick={handleBtnClick}>Login</button>
                 <button className="btn btn-sm btn-warning ms-3" name='livelogout' disabled onClick={handleBtnClick}>Logout</button>
-                <button className={buttonState[1].class} name='liveenable' disabled onClick={handleBtnClick}>{buttonState[1].title}</button>
+                <button className="btn btn-sm btn-warning ms-3" name='liveenable' disabled >Disable</button>
                 <button className="btn btn-sm btn-secondary ms-3" name='livetest' disabled onClick={handleBtnClick}>Test API</button>
               </div>
             </div>
@@ -346,7 +340,7 @@ const SingleAPI = () => {
               <div className="card-footer">
                 <button className="btn btn-sm btn-success ms-3" name='testlogin' onClick={handleBtnClick}>Login</button>
                 <button className="btn btn-sm btn-warning ms-3" name='testlogout' onClick={handleBtnClick}>Logout</button>
-                <button className={buttonState[2].class} name='testenable' >{buttonState[2].title}</button>
+                <button className="btn btn-sm btn-warning ms-3" name='testenable' disabled >Disable</button>
                 <button className="btn btn-sm btn-secondary ms-3" name='testtest' onClick={handleBtnClick}>Test API</button>
               </div>
             </div>

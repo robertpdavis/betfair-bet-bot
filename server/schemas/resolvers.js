@@ -235,6 +235,8 @@ const resolvers = {
       try {
         if (context.user) {
 
+
+
           const betfairController = new BetfairController;
 
           const userId = context.user._id;
@@ -245,6 +247,8 @@ const resolvers = {
           let msg = '';
 
           const loginResult = await betfairController.apiLogin(context.user._id);
+
+          console.log(loginResult)
 
           //If successful, update the database and status
           if (loginResult[0] === true) {

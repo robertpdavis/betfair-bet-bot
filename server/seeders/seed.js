@@ -54,6 +54,8 @@ db.once('open', async () => {
 
     await User.create(
       {
+        firstName: 'Rob',
+        lastName: 'Davis',
         username: 'twobob',
         email: 'robertpdavis@optusnet.com.au',
         password: 'Bootcamp123'
@@ -71,10 +73,15 @@ db.once('open', async () => {
       apiUsername: '',
       apiPassword: '',
       certfile: '',
-      keyfile: ''
+      keyfile: '',
+      testApiEnabled: 'true'
     }
 
     await Apisetting.create(apiSettings);
+
+    const markproj = ["EVENT", "EVENT_TYPE", "MARKET_START_TIME", "MARKET_DESCRIPTION", "RUNNER_METADATA"]
+    const markprojStr = JSON.stringify(markproj)
+
 
     sysSeeds[0]['userId'] = userId;
 
@@ -82,7 +89,7 @@ db.once('open', async () => {
 
     await System.findOneAndUpdate(
       { systemId: "1" },
-      { $set: { scenario: scen._id, scenarioParams: scenString, stakingPlan: stak._id, stakingParams: stakString } },
+      { $set: { scenario: scen[0]._id, scenarioParams: scenString, stakingPlan: stak[0]._id, stakingParams: stakString, marketProjection: markprojStr } },
       { runValidators: true, new: true }
     )
 

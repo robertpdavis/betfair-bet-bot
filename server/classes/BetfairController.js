@@ -141,7 +141,6 @@ class BetfairController {
             { $set: data },
             { runValidators: true, new: true, upsert: true }
           )
-
           //Update the markets for each event and insert in DB
           const marketupdate = await this.marketUpdate(eventUpdate, system);
 

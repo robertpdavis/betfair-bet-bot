@@ -37,8 +37,8 @@ const systemSchema = new Schema({
       ref: 'Staking',
     }
   ],
-  scenarioParams: Object,
-  stakingParams: Object,
+  scenarioParams: String,
+  stakingParams: String,
   betType: {
     type: String,
     required: true,
