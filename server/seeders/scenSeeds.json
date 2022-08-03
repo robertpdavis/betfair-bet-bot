@@ -5,6 +5,7 @@
     "back": "true",
     "lay": "true",
     "params": "",
-    "formName": "scn_backfav"
+    "formName": "scn_backfav",
+    "scenarioId": "1"
   }
 ]

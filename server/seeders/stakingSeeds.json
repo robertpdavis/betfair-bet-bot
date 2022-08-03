@@ -5,22 +5,7 @@
     "back": "true",
     "lay": "true",
     "params": "",
-    "formName": "pln_fixedstake"
-  },
-  {
-    "title": "% Of Bank (Back/Lay)",
-    "description": "Each stake is calculated from available bank based on % set",
-    "back": "true",
-    "lay": "true",
-    "params": "",
-    "formName": "pln_percbank"
-  },
-  {
-    "title": "Profit Target (Back/Lay)",
-    "description": "Each stake is calculated based on profit target set and selected bet odds.\r\nOptions for loss recovery or profit recovery.",
-    "back": "true",
-    "lay": "true",
-    "params": "",
-    "formName": "pln_proftarget"
+    "formName": "pln_fixedstake",
+    "stakingId": "1"
   }
 ]
