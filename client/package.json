@@ -1,6 +1,17 @@
 {
   "name": "betfair-bet-bot",
   "version": "1.0.0",
+  "description": "Online web app providing automated betting systems for Betfair users.",
+  "author": "Rob Davis",
+  "license": "MIT",
+  "homepage": "https://robertpdavis.github.io/betfair-bet-bot/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertpdavis/betfair-bet-bot"
+  },
+  "bugs": {
+    "url": "https://github.com/robertpdavis/betfair-bet-bot/issues"
+  },
   "proxy": "http://localhost:3001",
   "dependencies": {
     "@apollo/client": "^3.5.8",

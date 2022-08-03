@@ -9,8 +9,8 @@
     "seed": "node seeders/seed.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Rob Davis",
+  "license": "MIT",
   "dependencies": {
     "apollo-server-express": "^3.6.2",
     "axios": "^0.27.2",
