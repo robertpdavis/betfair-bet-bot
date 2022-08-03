@@ -1,4 +1,4 @@
-const BetfairTests = require("../classes/BetfairTests");
+
 
 const bets = [];
 let scenario = "";
