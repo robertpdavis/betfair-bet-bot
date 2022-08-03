@@ -2,7 +2,7 @@
 const BetfairController = require('../classes/BetfairController');
 const bfController = new BetfairController;
 
-const BetfairTests = require('../classes/BetfairTests');
+// const BetfairTests = require('../classes/BetfairTests');
 const bfTests = new BetfairTests;
 
 

@@ -4,7 +4,7 @@
   "description": "Online web app providing automated betting systems for Betfair users.",
   "author": "Rob Davis",
   "license": "MIT",
-  "homepage": "https://robertpdavis.github.io/betfair-bet-bot/",
+  "homepage": "https://betfair-betbot.herokuapp.com/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/robertpdavis/betfair-bet-bot"
