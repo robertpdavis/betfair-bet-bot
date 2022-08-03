@@ -98,7 +98,7 @@ function stk1_fixedStake(system, marketData, runnerData, results, backPrices, la
 
     bet['size'] = stakingParams.stake;
 
-    bet['orderType'] = stakingParams.ordertype;
+    bet['orderType'] = stakingParams.orderType;
     bet['persistence'] = stakingParams.persistancetype;
   });
 

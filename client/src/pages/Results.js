@@ -33,7 +33,6 @@ function Results() {
       variables: { systemId },
     });
 
-  console.log(systemId)
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 

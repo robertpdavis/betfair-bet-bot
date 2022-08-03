@@ -197,7 +197,7 @@ const SingleSystem = () => {
     <main>
       <section className="container my-2">
         <div className="page-header">
-          {'System: ' + systemData.systemId + " - " + systemState.title}
+          {'System: ' + systemData.systemId + " - " + systemData.title}
         </div>
         <div className="row">
           <Alert alertState={alertState} handleAlertClick={handleAlertClick} />

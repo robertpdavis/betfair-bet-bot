@@ -24,8 +24,6 @@ const Systems = () => {
 
   const systemData = data?.systems || {};
 
-  console.log(systemData)
-
   //Inital button toolbar settings
   const buttonSettings =
     [
