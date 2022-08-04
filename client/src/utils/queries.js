@@ -230,10 +230,16 @@ export const QUERY_SINGLE_SYSTEM = gql`
 `;
 
 export const QUERY_SYSTEM_AG = gql`
-  query getSingleSystem($userId: ID!) {
+  query  getSystemAg($userId: ID!) {
     systemAg(userId: $userId) {
       _id
       sum_events
+      sum_markets
+      sum_bets
+      sum_winners
+      sum_losers
+      sum_unsettled
+      sum_profitloss
     }
   }
 `;
@@ -457,7 +463,6 @@ export const QUERY_RESULTS = gql`
 export const QUERY_SINGLE_RESULT = gql`
   query getSingleResult($resultId: ID!) {
     result(id: $resultId) {
-      _id
       _id
       systemId
       betId

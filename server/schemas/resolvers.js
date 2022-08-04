@@ -30,20 +30,24 @@ const resolvers = {
     systemAg: async (parent, { userId }) => {
       const systemAg = await System.aggregate(
         [
-          { $match: { userId: userId } },
+          // { $match: { userId: userId } },
           {
             $group: {
               // Group by null (no additional grouping by id)
               _id: null,
               // Sum of all prices
               sum_events: { $sum: '$totalEvents' },
+              sum_markets: { $sum: '$totalMarkets' },
+              sum_bets: { $sum: '$totalBets' },
+              sum_winners: { $sum: '$totalWinners' },
+              sum_losers: { $sum: '$totalLosers' },
+              sum_unsettled: { $sum: '$unsettledBets' },
+              sum_profitloss: { $sum: '$profitLoss' }
             },
           },
         ],
       )
-      console.log(userId)
-      console.log(systemAg)
-      return systemAg;
+      return systemAg[0];
     },
     events: async (parent, { systemId }) => {
       const params = systemId ? { systemId } : {};

@@ -11,8 +11,8 @@ const SingleMarket = () => {
 
   const type = 'marketUpdate'
   const { loading, data } = useQuery(QUERY_SINGLE_MARKET, {
-
     variables: { marketId, type },
+    pollInterval: 5000,
   });
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };

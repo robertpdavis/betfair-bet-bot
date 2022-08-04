@@ -317,6 +317,12 @@ scalar Date
   type SysAg {
     _id: ID
     sum_events: Int
+    sum_markets: Int
+    sum_bets: Int
+    sum_winners: Int
+    sum_losers: Int
+    sum_unsettled: Int
+    sum_profitloss: Int
   }
 
   type Query {
@@ -337,10 +343,9 @@ scalar Date
     createUser(username: String!, email: String!, password: String!, firstName: String!, lastName: String!): Auth
     loginUser(username: String!, password: String!): Auth
 
+
     updateApi(apiKeyTest: String, testSessionId: String, apiKeyLive: String, liveSessionId: String, 
     apiUsername: String, apiPassword: String, certfile: String, keyfile: String ): Response
-
-
     apiLogin(userId: ID!, apiType: String!): Response
     apiLogout(userId: ID!, apiType: String!): Response
     enableApi(userId: ID!, apiType: String!): Response

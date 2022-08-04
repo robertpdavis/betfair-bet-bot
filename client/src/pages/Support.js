@@ -1,7 +1,6 @@
 import React from 'react';
-import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 
 
 const Support = () => {
@@ -21,37 +20,36 @@ const Support = () => {
           Support
         </div>
         <div className="row">
-
           <div className="sub-header w-75">
             New Users
           </div>
           <div className="card w-75 mb-3">
             <div className="card-body">
               <p>
-                Congratulations in starting your system bettings with us.!
+                Congratulations in starting your system betting with us.!
                 Before you can use the app, there are a few things you need to go first.
               </p>
               <ul>
                 <li>
-                  Open An Account with Betfair
+                  Open an account with Betfair
                 </li>
                 <li>
-                  Get your API keys. See here on how to do that.
+                  Get your API keys. See <a href="https://www.betfair.com.au/hub/how-to-access-the-betfair-api/" target="_blank" rel="noreferrer">here</a> on how to do that.
                 </li>
                 <li>
                   Set up a SSL certifcate / key for using when logging into Betfair. Betfair then uses this for the encrytions for all transactions.
-                  See here on how to do that.
+                  See <a href="https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Certificate+Generation+With+XCA" target="_blank" rel="noreferrer">here.</a>
                 </li>
               </ul>
-              <a href="https://www.betfair.com.au/hub/how-to-access-the-betfair-api/" target="_blank" rel="noreferrer">ddd</a>get app key and activate
+              <p>
+                It is highly recommended you read the Betfair API reference guide to get a good
+                understanding of how it works so you can set up your betting systems exactly how you want.
 
-              <a href="https://betfair-datascientists.github.io/api/GoldenRulesofAutomation/" target="_blank" rel="noreferrer">ddd</a> automation hub
-
-              <a href="https://www.betfair.com.au/hub/dev-program/ developer program" target="_blank" rel="noreferrer">ddd</a>
-
-              link to api ref
-
-              button to usage
+                Get a copy of the guide <a href="https://docs.developer.betfair.com/pages/viewpage.action?pageId=4392320">here.</a>
+              </p>
+              <p>
+                {/* <button className="btn btn sm btn-warning"><Link to='/Usage'>App User Guide</Link></button> */}
+              </p>
             </div>
           </div>
 
@@ -61,15 +59,16 @@ const Support = () => {
           <div className="card w-75 mb-3">
             <div className="card-body">
               <p>
-                It is highly recommended you read the Betfair API reference guide to get a good
-                understanding of how it works so you can set up your betting systems exactly how you want.
+                To understand the API in more detail, Betfair has set up a developer hub with extensive documentation on it.
               </p>
               <p>
-                Use the test API to try things out before going live and putting your money on the line.
-                The app does all the heavy lifting for you. You just need to configure it!
+                Click <a href="https://betfair-datascientists.github.io/api/GoldenRulesofAutomation/" target="_blank" rel="noreferrer">here</a> for Betfair's automation hub.
               </p>
               <p>
-                You can find the Betfair API reference guide here
+                Betfair also have a developer program that has a lot of useful information as well.
+              </p>
+              <p>
+                Click <a href="https://www.betfair.com.au/hub/dev-program/" target="_blank" rel="noreferrer">here</a> for Betfair's developer program.
               </p>
             </div>
           </div>
@@ -80,8 +79,9 @@ const Support = () => {
           <div className="card w-75 mb-3">
             <div className="card-body">
               <p>
-                It is highly recommended you read the Betfair API reference guide to get a good
-                understanding of how it works so you can set up your betting systems exactly how you want.
+                It is all good and well knowing how the API works and how you can use it to bet, but what about how to bet?
+
+                Befair has some great learning information <a href="https://www.betfair.com.au/hub/learning-home/">here</a>
               </p>
 
             </div>

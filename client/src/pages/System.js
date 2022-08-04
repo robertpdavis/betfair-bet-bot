@@ -36,21 +36,17 @@ const SingleSystem = () => {
 
   //System start/stop mutation
   const [toggleSystem, { error: errorT, data: dataT }] = useMutation(TOGGLE_SYSTEM);
-
   //Reset system stats mutation
   const [resetSystem, { error: errorR, data: dataR }] = useMutation(RESET_SYSTEM);
-
   //Update system from formState
   const [updateSystem, { error: errorU, data: dataU }] = useMutation(UPDATE_SYSTEM);
-
   //Update system from formState
   const [copySystem, { error: errorC, data: dataC }] = useMutation(COPY_SYSTEM);
-
   //Initial button toolbar settings
   const buttonSettings =
     [
       {
-        name: 'new',
+        name: 'save',
         title: 'Save',
         class: 'btn btn-sm btn-success me-3',
         state: 'disabled'

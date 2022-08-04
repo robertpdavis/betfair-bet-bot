@@ -31,6 +31,7 @@ function Results() {
   const { loading: loadingR, data: dataR } = useQuery(QUERY_RESULTS,
     {
       variables: { systemId },
+      pollInterval: 5000,
     });
 
 

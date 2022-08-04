@@ -23,6 +23,7 @@ import Results from './pages/Results';
 import Result from './pages/Result';
 import Api from './pages/Api';
 import Support from './pages/Support';
+import Usage from './pages/Usage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Nav from './components/Nav';
@@ -113,8 +114,12 @@ function App() {
                 element={<Api />}
               />
               <Route
-                path="/Support/"
+                path="/support/"
                 element={<Support />}
+              />
+              <Route
+                path="/usage/"
+                element={<Usage />}
               />
               <Route
                 path="*"

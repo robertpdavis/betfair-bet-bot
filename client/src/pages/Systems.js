@@ -81,9 +81,6 @@ const Systems = () => {
           <Alert alertState={alertState} handleAlertClick={handleAlertClick} />
         </div>
         <div className="row">
-          <ButtonToolbar buttonState={buttonState} handleBtnClick={handleBtnClick} />
-        </div>
-        <div className="row">
           {systemData.length > 0 ?
             <SystemTable systemData={systemData} />
             :

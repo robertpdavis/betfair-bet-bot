@@ -12,12 +12,33 @@ const SingleAPI = () => {
   const [formState, setFormState] = useState('');
   const [alertState, setAlertState] = useState({ show: false });
   //Mutations for updating the API settings, login and logout as well as enabling/disabling.
-  const [updateApi, { error: errorU, data: dataU, loading: loadingU }] = useMutation(UPDATE_API);
+  const [updateApi, { error: errorU, data: dataU, loading: loadingU }] = useMutation(UPDATE_API,
+    {
+      refetchQueries: [
+        'getSingleApi'
+      ],
+    });
+
   const [enableApi, { error: errorE, data: dataE, loading: loadingE }] = useMutation(ENABLE_API);
   const [disableApi, { error: errorD, data: dataD, loading: loadingD }] = useMutation(DISABLE_API);
-  const [apiLogin, { error: errorL, data: dataL, loading: loadingL }] = useMutation(API_LOGIN);
-  const [apiLogout, { error: errorO, data: dataO, loading: loadingO }] = useMutation(API_LOGOUT);
-  const [testApi, { error: errorT, data: dataT, loading: loadingT }] = useMutation(TEST_API,);
+  const [apiLogin, { error: errorL, data: dataL, loading: loadingL }] = useMutation(API_LOGIN,
+    {
+      refetchQueries: [
+        'getSingleApi'
+      ],
+    });;
+  const [apiLogout, { error: errorO, data: dataO, loading: loadingO }] = useMutation(API_LOGOUT,
+    {
+      refetchQueries: [
+        'getSingleApi'
+      ],
+    });;
+  const [testApi, { error: errorT, data: dataT, loading: loadingT }] = useMutation(TEST_API,
+    {
+      refetchQueries: [
+        'getSingleApi'
+      ],
+    });;
 
   let userId = '';
 
@@ -70,8 +91,6 @@ const SingleAPI = () => {
   //Handle mutations
   const handleBtnClick = async (event) => {
     const action = event.target.name;
-
-    console.log(action)
 
     let apiType = ''
     switch (action) {

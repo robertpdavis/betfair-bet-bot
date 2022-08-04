@@ -16,38 +16,37 @@ const Usage = () => {
 
   return (
     <main>
-      <section className="container my-2">
+      <section className="container">
         <div className="page-header">
           Support
         </div>
         <div className="row">
 
           <div className="sub-header w-75">
-            New Users
+            Dashboard
           </div>
           <div className="card w-75 mb-3">
             <div className="card-body">
               <p>
-                Congratulations in starting your system bettings with us.!
-                Before you can use the app, there are a few things you need to go first.
+                The Dashboard provides a summary of your current betting status along with details of all active betting systems and the last 4 bets placed.
               </p>
-              <ul>
-                <li>
-                  Open An Account with Betfair - you can do that <a href>here</a>
-                </li>
-              </ul>
-              https://www.betfair.com.au/hub/how-to-access-the-betfair-api/ get app key and activate
-
-              https://betfair-datascientists.github.io/api/GoldenRulesofAutomation/ automation hub
-
-              https://www.betfair.com.au/hub/dev-program/ developer program
-
-              link to api ref
             </div>
           </div>
 
           <div className="sub-header w-75">
-            Betfair API Links
+            Systems
+          </div>
+          <div className="card w-75 mb-3">
+            <div className="card-body">
+              <p>
+                Systems is where all the action happens. This page lists all your systems and status of each one. Clicking on the name of the system.
+              </p>
+
+            </div>
+          </div>
+
+          <div className="sub-header w-75">
+            Events
           </div>
           <div className="card w-75 mb-3">
             <div className="card-body">
@@ -55,18 +54,23 @@ const Usage = () => {
                 It is highly recommended you read the Betfair API reference guide to get a good
                 understanding of how it works so you can set up your betting systems exactly how you want.
               </p>
-              <p>
-                Use the test API to try things out before going live and putting your money on the line.
-                The app does all the heavy lifting for you. You just need to configure it!
-              </p>
-              <p>
-                You can find the Betfair API reference guide here
-              </p>
+
             </div>
           </div>
-
           <div className="sub-header w-75">
-            Betting on Betfair
+            Results
+          </div>
+          <div className="card w-75 mb-3">
+            <div className="card-body">
+              <p>
+                It is highly recommended you read the Betfair API reference guide to get a good
+                understanding of how it works so you can set up your betting systems exactly how you want.
+              </p>
+
+            </div>
+          </div>
+          <div className="sub-header w-75">
+            API
           </div>
           <div className="card w-75 mb-3">
             <div className="card-body">

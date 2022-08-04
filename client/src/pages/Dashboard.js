@@ -17,7 +17,7 @@ const Dashboard = () => {
 
   const { loading: loadingU, data: dataU } = useQuery(QUERY_USER,
     {
-      variables: { username }
+      variables: { username },
     });
 
   const userData = dataU?.user || {};
@@ -25,6 +25,7 @@ const Dashboard = () => {
   const { loading: loadingS, data: dataS } = useQuery(QUERY_SYSTEMS,
     {
       variables: { userId, isActive: true },
+      pollInterval: 5000,
     });
 
   const systemData = dataS?.systems || {};
@@ -33,18 +34,18 @@ const Dashboard = () => {
   const { loading: loadingR, data: dataR } = useQuery(QUERY_RESULTS,
     {
       variables: { userId: userId },
+      pollInterval: 5000,
     });
 
   const resultData = dataR?.results || {};
 
-  const { loading: loadingA, data: data } = useQuery(QUERY_SYSTEM_AG,
+  const { loading: loadingA, data: dataA } = useQuery(QUERY_SYSTEM_AG,
     {
-      variables: { userId }
+      variables: { userId },
+      pollInterval: 5000,
     });
 
-  const agData = dataU?.systemAg || {};
-
-  console.log(agData);
+  const agData = dataA?.systemAg || {};
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
@@ -66,7 +67,7 @@ const Dashboard = () => {
         <div className="card mb-3">
           <div className="card-body">
             <div>
-              <h5>Current Virtual Wallet: ${userData.virtualWallet}</h5>
+              <h5>Current Virtual Wallet: ${(userData.virtualWallet / 100).toFixed(2)}</h5>
             </div>
             <div className="table-responsive">
               <table className="table table-sm text-center">
@@ -83,15 +84,13 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{ }</td>
-                    <td>{ }</td>
-                    <td>{ }</td>
-                    <td>{ }</td>
-                    <td>{ }</td>
-                    <td>{ }</td>
-                    <td>{ }</td>
-                    <td>{ }</td>
-                    <td>{ }</td>
+                    <td>{agData.sum_events}</td>
+                    <td>{agData.sum_markets}</td>
+                    <td>{agData.sum_bets}</td>
+                    <td>{agData.sum_winners}</td>
+                    <td>{agData.sum_losers}</td>
+                    <td>{agData.sum_unsettled}</td>
+                    <td>{(agData.sum_profitloss / 100).toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>
