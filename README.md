@@ -25,6 +25,10 @@ Several scripts are set up in the root package.json to manage distribution build
 
 Running install will install all the required client and server dependancies. This is a React web app.
 
+Note: Two env vars are required to hold secrets for encrption:
+*JWT_SECRET
+*ENCRYPT_SECRET
+
 ### File structure of the application:
 ```md
 .
