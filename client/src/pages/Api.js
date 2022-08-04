@@ -41,7 +41,6 @@ const SingleAPI = () => {
     });;
 
   let userId = '';
-
   if (Auth.loggedIn()) {
     const user = Auth.getProfile();
     userId = user.data._id;
@@ -100,10 +99,10 @@ const SingleAPI = () => {
           variables: { ...formState },
         });
 
-        (dataU && !loadingU) ?
+        if (dataU && !loadingU) {
           setAlertState({ variant: 'success', message: dataU.updateApi.msg })
-          :
-          setAlertState({ variant: 'danger', message: dataU.updateApi.msg });
+        }
+
 
         if (errorU) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorU.message }) };
 
@@ -194,10 +193,9 @@ const SingleAPI = () => {
           variables: { userId, apiType }
         });
 
-        (dataT && !loadingT) ?
-          setAlertState({ variant: 'success', message: dataT.testApi.msg })
-          :
-          setAlertState({ variant: 'danger', message: dataT.testApi.msg });
+        if (dataT && !loadingT) {
+          setAlertState({ variant: 'success', message: 'Keepalive sent.' })
+        }
 
         if (errorT) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorT.message }) };
 

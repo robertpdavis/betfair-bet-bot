@@ -342,8 +342,9 @@ scalar Date
   type Mutation {
     createUser(username: String!, email: String!, password: String!, firstName: String!, lastName: String!): Auth
     loginUser(username: String!, password: String!): Auth
-
-
+    updateUser(username: String!, email: String!, password: String!, firstName: String!, lastName: String!
+    wallet: Int, virtualWallet: Int, maxWallet: Int, minWallet: Int, maxVirtualWallet: Int, minVirtualWallet: Int
+    ): Response
     updateApi(apiKeyTest: String, testSessionId: String, apiKeyLive: String, liveSessionId: String, 
     apiUsername: String, apiPassword: String, certfile: String, keyfile: String ): Response
     apiLogin(userId: ID!, apiType: String!): Response
@@ -352,7 +353,83 @@ scalar Date
     disableApi(userId: ID!, apiType: String!): Response
     testApi(userId: ID!, apiType: String!): Response
     toggleSystem(systemId: ID!, toggle: String): ToggleSystem
-    updateSystem(systemId: ID!, data: String): Response
+    updateSystem(
+    _id: ID!
+    title: String
+    description: String
+    isRacingEvent: Boolean
+    scenario: ID
+    stakingPlan: ID
+    scenarioParams: String
+    stakingParams: String
+    mode: String
+    betType: String
+    racingBetType: String
+    setWallet: Int
+    raceNumbers: String
+    raceDistance: String
+    raceClass: String
+    matchInPlay: Boolean
+    maxEvents: Int
+    maxMarkets: Int
+    minOdds:Int
+    maxOdds: Int
+    maxRunners: Int
+    minRunners: Int
+    maxBackLayRatio: Int
+    maxLiability: Int
+    maxBets: Int
+    minBets: Int
+    minMatched: Int
+    maxBookBackBets: Int
+    minBookLayBets: Int
+    minPlaceWinners: Int
+    maxPlaceWinners: Int
+    stopLoss: Int
+    stopProfit: Int
+    maxLosers: Int
+    maxWinners: Int
+    consecLosers: Int
+    consecWinners: Int
+    betStartingPrice: Boolean
+    unsettledLimit: Int
+    includeCommission: Boolean
+    timeSecsRace: Int
+    nthFavourite: Int
+    numFavourites: Int
+    exclFavourite: Int
+    totalEvents: Int
+    totalMarkets: Int
+    totalBets: Int
+    profitLoss: Int
+    totalLosers: Int
+    totalWinners: Int
+    totalConsecLosers: Int
+    totalConsecWinners: Int
+    unsettledBets: Int
+    maxBet: Int
+    textQuery: String
+    eventTypeId: String
+    competitionIds: String
+    marketIds: String
+    venues: String
+    bspOnly: Boolean
+    turnInPlayEnabled: Boolean
+    inPlayOnly: Boolean
+    marketBettingTypes: String
+    marketCountries: String
+    marketTypeCodes: String
+    customTime: Boolean
+    marketFromTime: Date
+    marketToTime: Date
+    withOrders: String
+    raceTypes: String
+    sort: String
+    maxResults: Int
+    marketProjection: String
+    statusDesc: String
+    ordering: Int
+    ): Response
     resetSystem(systemId: ID!): Response
     copySystem(systemId: ID!): Response
   }

@@ -73,7 +73,7 @@ const Dashboard = () => {
               <table className="table table-sm text-center">
                 <thead>
                   <tr>
-                    <th>Events Bed On</th>
+                    <th>Events Bet On</th>
                     <th>Markets Bet On</th>
                     <th>Total Bets Made</th>
                     <th>Total Winners</th>

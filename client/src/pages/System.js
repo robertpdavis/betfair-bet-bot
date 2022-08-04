@@ -134,6 +134,23 @@ const SingleSystem = () => {
 
           break;
 
+        case 'save':
+
+          formState['_id'] = systemId;
+
+          const updateData = await updateSystem({
+            variables: { ...formState },
+          });
+
+          if (updateData) {
+
+            setAlertState({ variant: 'success', message: 'The system was updated.' })
+
+          }
+
+
+          break;
+
         case 'copy':
           const copyData = await copySystem({
             variables: { systemId },

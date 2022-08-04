@@ -115,6 +115,32 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+    updateUser: async (parent, { args, context }) => {
+      try {
+        if (context.user) {
+
+          const userId = context.user._id;
+          let status = '';
+          let msg = '';
+
+          const updateUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: args },
+            { runValidators: true, new: true }
+          )
+
+          status = true;
+          msg = 'User update Success'
+
+          return { status, msg };
+
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
     updateApi: async (parent, args, context) => {
       try {
         if (context.user) {
@@ -396,11 +422,11 @@ const resolvers = {
       try {
         if (context.user) {
           //TO DO check if system active first
-          const systemId = args.systemId
+          const systemId = args._id
 
           const systemUpdate = await System.findByIdAndUpdate(
             systemId,
-            { $set: { args } },
+            { $set: args },
             { runValidators: true, new: true }
           );
 
