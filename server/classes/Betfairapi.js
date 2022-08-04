@@ -43,6 +43,7 @@ class Betfairapi {
         return [false, "API settings not provided."];
       }
 
+
       //Setup req header and body details
       const data = `username=${apiSettings.apiUsername}&password=${apiSettings.apiPassword}`;
       const headers = {
@@ -55,7 +56,11 @@ class Betfairapi {
         rejectUnauthorized: false,
         cert: certFile,
         key: keyFile,
-      });
+
+        // cert: fs.readFileSync(path.join(__dirname, '../classes/client-2048.crt')),
+        // key: fs.readFileSync(path.join(__dirname, '../classes/client-2048.key'))
+
+      })
 
       const res = await axios(
         {

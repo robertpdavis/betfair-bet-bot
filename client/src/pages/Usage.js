@@ -4,7 +4,7 @@ import Auth from '../utils/auth';
 import { Navigate } from 'react-router-dom';
 
 
-const Support = () => {
+const Usage = () => {
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -33,25 +33,16 @@ const Support = () => {
               </p>
               <ul>
                 <li>
-                  Open An Account with Betfair
-                </li>
-                <li>
-                  Get your API keys. See here on how to do that.
-                </li>
-                <li>
-                  Set up a SSL certifcate / key for using when logging into Betfair. Betfair then uses this for the encrytions for all transactions.
-                  See here on how to do that.
+                  Open An Account with Betfair - you can do that <a href>here</a>
                 </li>
               </ul>
-              <a href="https://www.betfair.com.au/hub/how-to-access-the-betfair-api/" target="_blank" rel="noreferrer">ddd</a>get app key and activate
+              https://www.betfair.com.au/hub/how-to-access-the-betfair-api/ get app key and activate
 
-              <a href="https://betfair-datascientists.github.io/api/GoldenRulesofAutomation/" target="_blank" rel="noreferrer">ddd</a> automation hub
+              https://betfair-datascientists.github.io/api/GoldenRulesofAutomation/ automation hub
 
-              <a href="https://www.betfair.com.au/hub/dev-program/ developer program" target="_blank" rel="noreferrer">ddd</a>
+              https://www.betfair.com.au/hub/dev-program/ developer program
 
               link to api ref
-
-              button to usage
             </div>
           </div>
 
@@ -92,4 +83,4 @@ const Support = () => {
   );
 };
 
-export default Support;
+export default Usage;

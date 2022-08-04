@@ -66,7 +66,7 @@ const Dashboard = () => {
         <div className="card mb-3">
           <div className="card-body">
             <div>
-              <h5>Current Virtual Wallet:</h5>
+              <h5>Current Virtual Wallet: ${userData.virtualWallet}</h5>
             </div>
             <div className="table-responsive">
               <table className="table table-sm text-center">
@@ -129,6 +129,7 @@ const Dashboard = () => {
                         <td>{row.isActive ? 'Active' : 'Disabled'}</td>
                         <td>{row.mode}</td>
                         <td>{row.betType}</td>
+                        <td>{row.totalEvents}</td>
                         <td>{row.totalMarkets}</td>
                         <td>{row.totalBets}</td>
                         <td>{row.unsettledBets}</td>

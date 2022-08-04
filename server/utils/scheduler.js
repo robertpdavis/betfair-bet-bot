@@ -1,9 +1,6 @@
-
 const BetfairController = require('../classes/BetfairController');
 const bfController = new BetfairController;
-
-// const BetfairTests = require('../classes/BetfairTests');
-// const bfTests = new BetfairTests;
+const { User, System } = require('../models');
 
 
 const intervals = {
@@ -26,7 +23,7 @@ async function scheduler() {
   setInterval(controller, 5000);
   console.log('Scheduler started....');
 
-  const showConsole = false;
+  const showConsole = true;
 
   async function controller() {
     //Adjust the timers for each action
@@ -37,19 +34,44 @@ async function scheduler() {
 
     if (timers.placeBets >= intervals.placeBets) {
       //Do place bets
-      await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      showConsole ? console.log('Place bets:' + new Date().toJSON()) : '';
-      showConsole ? console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248')) :
-        await bfController.placeBets('62d88c0c9e80cc3ef1a55248');
+
+      //Get all users
+      const users = await User.find({});
+      //Loop through
+      for (let ui = 0; ui < users.length; ui++) {
+        const user = users[ui];
+        //Get all systems for user
+        const systems = await System.find({ userId: (user._id).toString() });
+        //Loop through
+        for (let si = 0; si < systems.length; si++) {
+          const system = systems[si];
+          await bfController.setSession(user._id);
+          showConsole ? console.log('Place bets:' + new Date().toJSON()) : '';
+          showConsole ? console.log(await bfController.placeBets((system._id).toString())) :
+            await bfController.placeBets((system._id).toString());
+        }
+      }
       timers.placeBets = 0
     }
 
     if (timers.betUpdate >= intervals.betUpdate) {
       //Do bet update
-      await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      showConsole ? console.log('Bet update:' + new Date().toJSON()) : '';
-      showConsole ? console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248')) :
-        await bfController.betUpdate('62d88c0c9e80cc3ef1a55248');
+      //Get all users
+      const users = await User.find({});
+      //Loop through
+      for (let ui = 0; ui < users.length; ui++) {
+        const user = users[ui];
+        //Get all systems for user
+        const systems = await System.find({ userId: user._id });
+        //Loop through
+        for (let si = 0; si < systems.length; si++) {
+          const system = systems[si];
+          await bfController.setSession(user._id);
+          showConsole ? console.log('Bet update:' + new Date().toJSON()) : '';
+          showConsole ? console.log(await bfController.betUpdate(system._id)) :
+            await bfController.betUpdate(system._id);
+        }
+      }
       timers.betUpdate = 0
     }
 

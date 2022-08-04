@@ -17,6 +17,7 @@ import Account from './pages/Account';
 import Systems from './pages/Systems';
 import System from './pages/System';
 import Events from './pages/Events';
+import Event from './pages/Event';
 import Market from './pages/Market';
 import Results from './pages/Results';
 import Result from './pages/Result';
@@ -84,8 +85,8 @@ function App() {
                 element={<System />}
               />
               <Route
-                path="/events/:systemId"
-                element={<Events />}
+                path="/event/:systemId"
+                element={<Event />}
               />
               <Route
                 path="/events/"

@@ -2,8 +2,10 @@
   {
     "systemId": "1",
     "title": "Back the Favourite Horse",
-    "description": "Tested",
+    "description": "Put a back bet on the favourite horse in each race",
     "isRacingEvent": "true",
+    "betType": "Back",
+    "mode": "Simulated",
     "racingBetType": "WIN",
     "eventTypeId": "7",
     "marketBettingTypes": "ODDS",

@@ -8,9 +8,13 @@ import { QUERY_SYSTEMS, QUERY_EVENTS } from '../utils/queries';
 import '../App.css';
 
 
-const Events = () => {
+const Event = () => {
 
   let { systemId } = useParams();
+
+  if (!systemId) {
+
+  }
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -23,14 +27,12 @@ const Events = () => {
       variables: { userId },
     });
 
-  if (systemId === '') {
+  const { loading: loadingT, data: dataT } = useQuery(QUERY_SYSTEMS,
+    {
+      variables: { systemId },
+    });
 
-    if (!loadingS) {
-      systemId = dataS.systems[0]._id;
-    }
-  }
 
-  console.log(systemId)
 
   const { loading: loadingE, data: dataE } = useQuery(QUERY_EVENTS,
     {
@@ -53,8 +55,9 @@ const Events = () => {
         <div className="row">
           <SystemLinks systemData={dataS} linkType='event' isActive={true} />
           <div className="pb-3 pt-3">
-            <h6>Select system to view events.</h6>
+            <h6>Upcoming events for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
           </div>
+          <MarketTable eventData={dataE} />
         </div>
       </section>
     </main>
@@ -62,4 +65,4 @@ const Events = () => {
 
 }
 
-export default Events;
+export default Event;

@@ -70,7 +70,7 @@ db.once('open', async () => {
       userId: userId,
       apiKeyTest: '',
       testSessionId: '',
-      apiUsername: '',
+      apiUsername: 'robertpdavis@optusnet.com.au',
       apiPassword: '',
       certfile: '',
       keyfile: '',
@@ -84,14 +84,26 @@ db.once('open', async () => {
 
 
     sysSeeds[0]['userId'] = userId;
+    // sysSeeds[1]['userId'] = userId;
+    // sysSeeds[2]['userId'] = userId;
 
-    await System.create(sysSeeds[0]);
+    await System.create(sysSeeds);
 
     await System.findOneAndUpdate(
       { systemId: "1" },
       { $set: { scenario: scen[0]._id, scenarioParams: scenString, stakingPlan: stak[0]._id, stakingParams: stakString, marketProjection: markprojStr } },
       { runValidators: true, new: true }
     )
+    // await System.findOneAndUpdate(
+    //   { systemId: "2" },
+    //   { $set: { scenario: scen[0]._id, scenarioParams: scenString, stakingPlan: stak[0]._id, stakingParams: stakString, marketProjection: markprojStr } },
+    //   { runValidators: true, new: true }
+    // )
+    // await System.findOneAndUpdate(
+    //   { systemId: "3" },
+    //   { $set: { scenario: scen[0]._id, scenarioParams: scenString, stakingPlan: stak[0]._id, stakingParams: stakString, marketProjection: markprojStr } },
+    //   { runValidators: true, new: true }
+    // )
 
     console.log('all done!');
     process.exit(0);

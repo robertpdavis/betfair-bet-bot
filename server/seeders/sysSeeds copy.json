@@ -1,0 +1,52 @@
+[
+  {
+    "systemId": "1",
+    "title": "Back the Favourite Horse",
+    "description": "Put a back bet on the favourite horse in each race",
+    "isRacingEvent": "true",
+    "betType": "Back",
+    "mode": "Simulated",
+    "racingBetType": "WIN",
+    "eventTypeId": "7",
+    "marketBettingTypes": "ODDS",
+    "marketCountries": "AU",
+    "marketTypeCodes": "WIN,PLACE",
+    "sort": "FIRST_TO_START",
+    "maxResults": "1000",
+    "marketProjection": "['EVENT','EVENT_TYPE','MARKET_START_TIME','MARKET_DESCRIPTION','RUNNER_METADATA']",
+    "ordering": "1"
+  },
+  {
+    "systemId": "2",
+    "title": "Lay the Favourite Horse",
+    "description": "Put a lay bet on the favourite horse in each race",
+    "isRacingEvent": "true",
+    "betType": "Lay",
+    "mode": "Simulated",
+    "racingBetType": "WIN",
+    "eventTypeId": "7",
+    "marketBettingTypes": "ODDS",
+    "marketCountries": "AU",
+    "marketTypeCodes": "WIN,PLACE",
+    "sort": "FIRST_TO_START",
+    "maxResults": "1000",
+    "marketProjection": "['EVENT','EVENT_TYPE','MARKET_START_TIME','MARKET_DESCRIPTION','RUNNER_METADATA']",
+    "ordering": "2"
+  },
+  {
+    "systemId": "3",
+    "title": "Back the Favourite Team",
+    "description": "Put a back bet on the favourite soccer team",
+    "isRacingEvent": "false",
+    "betType": "Back",
+    "mode": "Simulated",
+    "eventTypeId": "1",
+    "marketBettingTypes": "ODDS",
+    "marketCountries": "AU",
+    "marketTypeCodes": "WIN",
+    "sort": "FIRST_TO_START",
+    "maxResults": "1000",
+    "marketProjection": "['EVENT','EVENT_TYPE','MARKET_START_TIME','MARKET_DESCRIPTION','RUNNER_METADATA']",
+    "ordering": "3"
+  }
+]

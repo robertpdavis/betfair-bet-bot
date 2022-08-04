@@ -21,7 +21,7 @@ const Header = () => {
               <h6 className="d-inline">Welcome {Auth.getProfile().data.firstName}!</h6>
               <h6 className="d-inline"> Betfair Funds</h6>
               <div className="d-inline float-end">
-                <button className=" d-inline btn btn-sm btn-info me-2 mb-3" onClick={logout}><Link to="/profile">
+                <button className=" d-inline btn btn-sm btn-info mb-2 me-3" onClick={logout}><Link to="/profile">
                   Profile
                 </Link>
                 </button>

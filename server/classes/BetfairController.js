@@ -388,7 +388,7 @@ class BetfairController {
 
     const betsPlaced = [];
     let wallet = 0;
-
+    console.log(systemId)
     //Get system
     const system = await System.findById(systemId).populate('scenario').populate('stakingPlan');
     if (!system) return [false, 'No system found for this id'];
@@ -598,7 +598,7 @@ class BetfairController {
 
               const userUpdate = await User.findByIdAndUpdate(
                 system['userId'],
-                { $set: data },
+                { $set: user },
                 { runValidators: true, new: true }
               )
               //TO DO log if database update failed
@@ -622,7 +622,7 @@ class BetfairController {
     //Get active bets for system
     const activeBets = await Result.find({ $and: [{ systemId: systemId }, { $or: [{ betOutcome: null }, { betStatus: 'Open' }] }] });
     if (activeBets.length === 0) return [true, 'No active bets for this system'];
-    console
+
 
     //Get system
     const system = await System.findById(systemId);
