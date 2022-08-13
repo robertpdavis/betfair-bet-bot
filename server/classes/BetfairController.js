@@ -81,180 +81,196 @@ class BetfairController {
   criteria and save to DB
   */
   async eventUpdate(userId = '', systemId = '') {
-    try {
-      const startTime = new Date().getTime();
-      //Clear data older then eventTimeOut  - 24 hours ago by default
-      await this.clearMarketData(this.config.eventTimeOut);
+    // try {
+    const startTime = new Date().getTime();
+    //Clear data older then eventTimeOut  - 24 hours ago by default
+    await this.clearMarketData(this.config.eventTimeOut);
 
-      //Update events by userId
-      let systemList = [];
-      if (userId !== '' && systemId === '') {
+    //Update events by userId
+    let systemList = [];
+    if (userId !== '' && systemId === '') {
 
-        //Get list of active systems for user
-        systemList = await System.find({ $and: [{ userId: userId }, { isActive: true }] })
-        if (!systemList) { return [false, "No active systems found."] };
+      //Get list of active systems for user
+      systemList = await System.find({ $and: [{ userId: userId }, { isActive: true }] })
+      if (!systemList) { return [false, "No active systems found."] };
 
-        //Update events by system
-      } else if (systemId !== '' && userId === '') {
-        systemList[0] = await System.findById(systemId)
-        if (!systemList[0]) { return [false, "No active systems found."] };
+      //Update events by system
+    } else if (systemId !== '' && userId === '') {
+      systemList[0] = await System.findById(systemId)
+      if (!systemList[0]) { return [false, "No active systems found."] };
 
-        //Set userId from system
-        userId = systemList[0].userId;
+      //Set userId from system
+      userId = systemList[0].userId;
 
-      } else {
-        return (false, "User id or system input missing");
-      }
+    } else {
+      return (false, "User id or system input missing");
+    }
 
-      //Loop through each system and update events and markets
-      for (let index = 0; index < systemList.length; index++) {
-        const system = systemList[index];
+    //Loop through each system and update events and markets
+    for (let index = 0; index < systemList.length; index++) {
+      const system = systemList[index];
 
-        const APIfilter = buildFilter(system, this.config);
+      const APIfilter = buildFilter(system, this.config);
 
-        const params = '{"filter":{' + APIfilter + '}}';
+      const params = '{"filter":{' + APIfilter + '}}';
 
-        const res = await this.api.getEvents(params);
-        //Check for API error
-        if (res[0] === false) { return res };
+      const res = await this.api.getEvents(params);
+      //Check for API error
+      if (res[0] === false) { return res };
 
-        //Get api data
-        const events = res[1];
+      //Get api data
+      const events = res[1];
 
-        for (let index = 0; index < events.length; index++) {
-          const event = events[index];
+      for (let index = 0; index < events.length; index++) {
+        const event = events[index];
 
-          //Build object for udating db
-          let data = {
-            eventName: event.event.name,
-            eventTypeId: system.eventTypeId,
-            countryCode: event.event.countryCode,
-            timezone: event.event.timezone,
-            venue: event.event.venue,
-            openDate: event.event.openDate,
-            marketCount: event.marketCount
-          };
-
-          //Update database
-          const eventUpdate = await Event.findOneAndUpdate(
-            { $and: [{ eventId: event.event.id }, { systemId: system._id }] },
-            { $set: data },
-            { runValidators: true, new: true, upsert: true }
-          )
-          //Update the markets for each event and insert in DB
-          const marketupdate = await this.marketUpdate(eventUpdate, system);
-
+        //Build object for udating db
+        let data = {
+          eventName: event.event.name,
+          eventTypeId: system.eventTypeId,
+          countryCode: event.event.countryCode,
+          timezone: event.event.timezone,
+          venue: event.event.venue,
+          openDate: event.event.openDate,
+          marketCount: event.marketCount
         };
+
+        //Update database
+        const eventUpdate = await Event.findOneAndUpdate(
+          { $and: [{ eventId: event.event.id }, { systemId: system._id }] },
+          { $set: data },
+          { runValidators: true, new: true, upsert: true }
+        )
+
+        if (!eventUpdate) { return [false, 'Event update failed - Sys Id:' + system._id + 'Event Id:' + event.event.id]; }
+
+        //Update the markets for each event and insert in DB
+        const marketupdate = await this.marketUpdate(eventUpdate, system);
+
+        if (marketupdate[0] === false) { return marketupdate }
       };
 
-      const finishTime = new Date().getTime();
-
-      return [true, ''];
-
-    } catch (e) {
-      return [false, e];
-    }
-  };
-
-  async marketUpdate(event, system, marketId = "") {
-    // try {
-    let params = '';
-    const APIfilter = buildFilter(system, this.config);
-
-    if (event.eventId !== '') {
-      params = '{"filter":{"eventIds":["' + event.eventId + '"], ' + APIfilter + '},"sort":"' + system["sort"] + '","maxResults":"' + system["maxResults"] + '","marketProjection":' + system["marketProjection"] + '}';
-      marketId = "";
-    }
-
-    if (marketId !== '') {
-      params = '{"filter":{"marketIds":["' + marketId + '"]},"sort": "' + system["sort"] + '","maxResults": "' + system["maxResults"] + '","marketProjection": ' + system["marketProjection"] + '}';
-    }
-
-    const res = await this.api.getMarkets(params);
-
-    //Check for API error
-    if (!res[0]) { return res };
-
-    //Get api data
-    const markets = res[1];
-
-    for (let index = 0; index < markets.length; index++) {
-      const market = markets[index];
-
-      //Fix market name for horse racing place markets
-      if (market.marketName == "To Be Placed") {
-
-        markets.forEach(item => {
-          if (item.description.marketTime === market.description.marketTime && item.marketName !== "To Be Placed") {
-            market.marketName = item.marketName;
-          }
-        });
-      }
-
-      let raceNumber = '';
-      let raceDistance = '';
-      let raceClass = '';
-
-      if (market.eventType.id === "7") {
-        const details = market.marketName.trim().split(' ');
-        raceNumber = details[0].slice(1, details[0].length);
-        raceDistance = details[1].slice(0, -1);
-        (details[3] !== '') ? details[2] += " " + details[3] : "";
-        raceClass = details[2];
-      }
-
-      let data = {
-        marketName: market.marketName,
-        eventId: event.eventId,
-        eventName: event.eventName,
-        marketStartTime: market.marketStartTime,
-        totalMatched: market.totalMatched,
-        competition: market.competition,
-        raceNumber: raceNumber,
-        raceDistance: raceDistance,
-        raceClass: raceClass,
-        persistenceEnabled: market.description.persistenceEnabled,
-        bspMarket: market.description.bspMarket,
-        marketTime: market.description.marketTime,
-        suspendTime: market.description.suspendTime,
-        settleTime: market.description.settleTime,
-        bettingType: market.description.bettingType,
-        turnInPlayEnabled: market.description.turnInPlayEnabled,
-        marketType: market.description.marketType,
-        regulator: market.description.regulator,
-        marketBaseRate: market.description.marketBaseRate,
-        discountAllowed: market.description.discountAllowed,
-        wallet: market.description.wallet,
-        rules: market.description.rules,
-        rulesHasDate: market.description.rulesHasDate,
-        eachWayDivisor: market.description.eachWayDivisor,
-        clarifications: market.description.clarifications,
-        lineRangeInfo: market.description.lineRangeInfo,
-        raceType: market.description.raceType,
-        priceLadderDescription: market.description.priceLadderDescription.type,
-      }
-
-      const marketUpdate = await Market.findOneAndUpdate(
-        { $and: [{ marketId: market.marketId }, { systemId: system._id }] },
-        { $set: data },
+      //Update system
+      const systemUpdate = await System.findByIdAndUpdate(
+        system._id,
+        { $set: { lastEventUpdate: new Date().toJSON() } },
         { runValidators: true, new: true, upsert: true }
       )
 
-      await Event.findOneAndUpdate(
-        { _id: event._id },
-        { $addToSet: { markets: marketUpdate._id } }
-      );
+    };
 
-      //Update runners
-      const runnerUpdate = await this.runnerUpdate(market.runners, system, market.marketId);
+    const finishTime = new Date().getTime();
 
-    }
-
-    return [true, ''];
+    return [true, 'Event update success - Sys Id:' + system._id + 'Time:' + finishTime - startTime];
 
     // } catch (e) {
-    //   return [false, e]
+    //   return [false, e];
     // }
+  };
+
+  async marketUpdate(event, system, marketId = "") {
+    try {
+      let params = '';
+      const APIfilter = buildFilter(system, this.config);
+
+      if (event.eventId !== '') {
+        params = '{"filter":{"eventIds":["' + event.eventId + '"], ' + APIfilter + '},"sort":"' + system["sort"] + '","maxResults":"' + system["maxResults"] + '","marketProjection":' + system["marketProjection"] + '}';
+        marketId = "";
+      }
+
+      if (marketId !== '') {
+        params = '{"filter":{"marketIds":["' + marketId + '"]},"sort": "' + system["sort"] + '","maxResults": "' + system["maxResults"] + '","marketProjection": ' + system["marketProjection"] + '}';
+      }
+
+      const res = await this.api.getMarkets(params);
+
+      //Check for API error
+      if (!res[0]) { return res };
+
+      //Get api data
+      const markets = res[1];
+
+      for (let index = 0; index < markets.length; index++) {
+        const market = markets[index];
+
+        //Fix market name for horse racing place markets
+        if (market.marketName == "To Be Placed") {
+
+          markets.forEach(item => {
+            if (item.description.marketTime === market.description.marketTime && item.marketName !== "To Be Placed") {
+              market.marketName = item.marketName;
+            }
+          });
+        }
+
+        let raceNumber = '';
+        let raceDistance = '';
+        let raceClass = '';
+
+        if (market.eventType.id === "7") {
+          const details = market.marketName.trim().split(' ');
+          raceNumber = details[0].slice(1, details[0].length);
+          raceDistance = details[1].slice(0, -1);
+          (details[3] !== '') ? details[2] += " " + details[3] : "";
+          raceClass = details[2];
+        }
+
+        let data = {
+          marketName: market.marketName,
+          eventId: event.eventId,
+          eventName: event.eventName,
+          marketStartTime: market.marketStartTime,
+          totalMatched: market.totalMatched,
+          competition: market.competition,
+          raceNumber: raceNumber,
+          raceDistance: raceDistance,
+          raceClass: raceClass,
+          persistenceEnabled: market.description.persistenceEnabled,
+          bspMarket: market.description.bspMarket,
+          marketTime: market.description.marketTime,
+          suspendTime: market.description.suspendTime,
+          settleTime: market.description.settleTime,
+          bettingType: market.description.bettingType,
+          turnInPlayEnabled: market.description.turnInPlayEnabled,
+          marketType: market.description.marketType,
+          regulator: market.description.regulator,
+          marketBaseRate: market.description.marketBaseRate,
+          discountAllowed: market.description.discountAllowed,
+          wallet: market.description.wallet,
+          rules: market.description.rules,
+          rulesHasDate: market.description.rulesHasDate,
+          eachWayDivisor: market.description.eachWayDivisor,
+          clarifications: market.description.clarifications,
+          lineRangeInfo: market.description.lineRangeInfo,
+          raceType: market.description.raceType,
+          priceLadderDescription: market.description.priceLadderDescription.type,
+        }
+
+        const marketUpdate = await Market.findOneAndUpdate(
+          { $and: [{ marketId: market.marketId }, { systemId: system._id }] },
+          { $set: data },
+          { runValidators: true, new: true, upsert: true }
+        )
+
+        if (!marketUpdate) { return [false, 'Market update failed - Sys Id:' + system._id + ' Market Id:' + market.marketId] };
+
+        await Event.findOneAndUpdate(
+          { _id: event._id },
+          { $addToSet: { markets: marketUpdate._id } }
+        );
+
+        //Update runners
+        const runnerUpdate = await this.runnerUpdate(market.runners, system, market.marketId);
+
+        if (runnerUpdate[0] === false) { return runnerUpdate }
+
+      }
+
+      return [true, 'Market update success - Sys Id:' + system._id];
+
+    } catch (e) {
+      return [false, e]
+    }
   }
 
   //Runner Update By Market - grabs the runners for the market and inserts/updates into the database.
@@ -278,6 +294,8 @@ class BetfairController {
           { runValidators: true, new: true, upsert: true }
         )
 
+        if (!runnerUpdate) { return [false, 'Runner update failed - Sys Id:' + system._id + ' Market Id:' + marketId + ' Selection Id:' + runner.selectionId] }
+
         await Market.findOneAndUpdate(
           { marketId: marketId },
           { $addToSet: { runners: runnerUpdate._id } }
@@ -285,7 +303,7 @@ class BetfairController {
 
       }
 
-      return [true, ''];
+      return [true, 'Runner update success - Sys Id:' + system._id + ' Market Id:' + marketId];
 
     } catch (e) {
       return [false, e]

@@ -393,7 +393,13 @@ const resolvers = {
               const lastStarted = system.lastStarted;
               const statusDesc = system.statusDesc;
 
+              //TO DO LOG
+              console.log('System started: ' + systemId + ' Time: ' + new Date().toJSON());
+
               return { isActive, lastStopped, lastStarted, statusDesc };
+            } else {
+              //TO DO LOG
+              console.log('System start failed. Time: ' + new Date().toJSON());
             }
           } else if (toggle === 'stop') {
             //Update the system status
@@ -408,6 +414,9 @@ const resolvers = {
             const lastStopped = system.lastStopped;
             const lastStarted = system.lastStarted;
             const statusDesc = system.statusDesc;
+
+            //TO DO LOG
+            console.log('System stopped: ' + systemId + ' Time: ' + new Date().toJSON());
 
             return { isActive, lastStopped, lastStarted, statusDesc };
           }

@@ -77,16 +77,29 @@ async function scheduler() {
 
     if (timers.keepalive >= intervals.keepalive) {
       //Do keepalive update
-      showConsole ? console.log('Keepalive update:' + new Date().toJSON()) : '';
-      showConsole ? console.log(await bfController.apiKeepAlive('62d88c0c9e80cc3ef1a55243')) : '';
+      //Get all users
+      const users = await User.find({});
+      for (let ui = 0; ui < users.length; ui++) {
+        const user = users[ui];
+        showConsole ? console.log('Keepalive update:' + new Date().toJSON()) : '';
+        showConsole ? console.log(await bfController.apiKeepAlive(user._id)) :
+          await bfController.apiKeepAlive(user._id);
+      }
       timers.keepalive = 0;
     }
 
     if (timers.eventUpdate >= intervals.eventUpdate) {
-      //Do eventUpdate update
-      await bfController.setSession('62d88c0c9e80cc3ef1a55243');
-      showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
-      showConsole ? console.log(await bfController.eventUpdate('62d88c0c9e80cc3ef1a55243')) : '';
+      //Do event update
+      //Get all users
+      const users = await User.find({});
+      //Loop through
+      for (let ui = 0; ui < users.length; ui++) {
+        const user = users[ui];
+        await bfController.setSession(user._id);
+        showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
+        showConsole ? console.log(await bfController.eventUpdate(user._id)) :
+          await bfController.eventUpdate(user._id);
+      }
       timers.eventUpdate = 0
     }
   }

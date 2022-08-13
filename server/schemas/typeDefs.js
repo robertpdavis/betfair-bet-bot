@@ -242,6 +242,9 @@ scalar Date
     lastStarted: Date
     lastStopped: Date
     lastReset: Date
+    lastEventUpdate: Date
+    lastBetMade: Date
+    lastBetUpdate: Date
     statusDesc: String
     ordering: Int
   }

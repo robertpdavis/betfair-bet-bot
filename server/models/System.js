@@ -14,6 +14,11 @@ const systemSchema = new Schema({
     required: true,
     default: false
   },
+  isArchived: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   title: {
     type: String,
     required: true
@@ -258,6 +263,9 @@ const systemSchema = new Schema({
   lastStarted: Date,
   lastStopped: Date,
   lastReset: Date,
+  lastEventUpdate: Date,
+  lastBetUpdate: Date,
+  lastBetMade: Date,
   statusDesc: String,
   ordering: Number,
   createdAt: {
