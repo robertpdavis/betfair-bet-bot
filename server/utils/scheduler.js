@@ -95,10 +95,16 @@ async function scheduler() {
       //Loop through
       for (let ui = 0; ui < users.length; ui++) {
         const user = users[ui];
-        await bfController.setSession(user._id);
-        showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
-        showConsole ? console.log(await bfController.eventUpdate(user._id)) :
-          await bfController.eventUpdate(user._id);
+        //Get all systems for user
+        const systems = await System.find({ $and: [{ userId: userId }, { isActive: true }] });
+        //Loop through
+        for (let si = 0; si < systems.length; si++) {
+          const system = systems[si];
+          await bfController.setSession(user._id);
+          showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
+          showConsole ? console.log(await bfController.eventUpdate(system._id)) :
+            await bfController.eventUpdate(system._id);
+        }
       }
       timers.eventUpdate = 0
     }

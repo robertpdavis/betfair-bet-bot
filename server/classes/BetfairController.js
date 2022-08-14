@@ -80,35 +80,17 @@ class BetfairController {
   Get the events/markets available for each active system based on the system filter
   criteria and save to DB
   */
-  async eventUpdate(userId = '', systemId = '') {
-    // try {
-    const startTime = new Date().getTime();
-    //Clear data older then eventTimeOut  - 24 hours ago by default
-    await this.clearMarketData(this.config.eventTimeOut);
+  async eventUpdate(systemId) {
+    try {
+      const startTime = new Date().getTime();
+      //Clear data older then eventTimeOut  - 24 hours ago by default
+      await this.clearMarketData(this.config.eventTimeOut);
 
-    //Update events by userId
-    let systemList = [];
-    if (userId !== '' && systemId === '') {
+      if (systemId === undefined || systemId === '') { return [false, 'No system Id provided.'] };
 
-      //Get list of active systems for user
-      systemList = await System.find({ $and: [{ userId: userId }, { isActive: true }] })
-      if (!systemList) { return [false, "No active systems found."] };
-
-      //Update events by system
-    } else if (systemId !== '' && userId === '') {
-      systemList[0] = await System.findById(systemId)
-      if (!systemList[0]) { return [false, "No active systems found."] };
-
-      //Set userId from system
-      userId = systemList[0].userId;
-
-    } else {
-      return (false, "User id or system input missing");
-    }
-
-    //Loop through each system and update events and markets
-    for (let index = 0; index < systemList.length; index++) {
-      const system = systemList[index];
+      //Get system details
+      const system = await System.findById(systemId);
+      if (!system) { return [false, "No details for system found. System Id:" + systemId] };
 
       const APIfilter = buildFilter(system, this.config);
 
@@ -157,15 +139,13 @@ class BetfairController {
         { runValidators: true, new: true, upsert: true }
       )
 
-    };
+      const finishTime = new Date().getTime();
 
-    const finishTime = new Date().getTime();
+      return [true, 'Event update success - Sys Id:' + system._id + 'Time:' + finishTime - startTime];
 
-    return [true, 'Event update success - Sys Id:' + system._id + 'Time:' + finishTime - startTime];
-
-    // } catch (e) {
-    //   return [false, e];
-    // }
+    } catch (e) {
+      return [false, e];
+    }
   };
 
   async marketUpdate(event, system, marketId = "") {

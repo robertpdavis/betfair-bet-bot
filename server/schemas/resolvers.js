@@ -378,7 +378,7 @@ const resolvers = {
           if (toggle === 'start') {
             //Update the events for the system
             const setSession = await betfairController.setSession(context.user._id);
-            const eventUpdate = await betfairController.eventUpdate('', systemId)
+            const eventUpdate = await betfairController.eventUpdate(systemId)
 
             //Update the system status
             if (eventUpdate[0]) {
