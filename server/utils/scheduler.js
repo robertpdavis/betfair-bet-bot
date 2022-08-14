@@ -41,7 +41,7 @@ async function scheduler() {
       for (let ui = 0; ui < users.length; ui++) {
         const user = users[ui];
         //Get all systems for user
-        const systems = await System.find({ userId: (user._id).toString() });
+        const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] });
         //Loop through
         for (let si = 0; si < systems.length; si++) {
           const system = systems[si];
