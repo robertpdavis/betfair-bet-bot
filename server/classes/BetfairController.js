@@ -386,7 +386,7 @@ class BetfairController {
 
     const betsPlaced = [];
     let wallet = 0;
-    console.log(systemId)
+
     //Get system
     const system = await System.findById(systemId).populate('scenario').populate('stakingPlan');
     if (!system) return [false, 'No system found for this id'];

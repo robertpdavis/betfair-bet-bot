@@ -37,18 +37,22 @@ async function scheduler() {
 
       //Get all users
       const users = await User.find({});
-      //Loop through
-      for (let ui = 0; ui < users.length; ui++) {
-        const user = users[ui];
-        //Get all systems for user
-        const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] });
+      if (users.length > 0) {
         //Loop through
-        for (let si = 0; si < systems.length; si++) {
-          const system = systems[si];
-          await bfController.setSession(user._id);
-          showConsole ? console.log('Place bets:' + new Date().toJSON()) : '';
-          showConsole ? console.log(await bfController.placeBets((system._id).toString())) :
-            await bfController.placeBets((system._id).toString());
+        for (let ui = 0; ui < users.length; ui++) {
+          const user = users[ui];
+          //Get all active systems for user
+          const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] });
+          if (systems.length > 0) {
+            //Loop through
+            for (let si = 0; si < systems.length; si++) {
+              const system = systems[si];
+              await bfController.setSession(user._id);
+              showConsole ? console.log('Place bets:' + new Date().toJSON()) : '';
+              showConsole ? console.log(await bfController.placeBets((system._id).toString())) :
+                await bfController.placeBets((system._id).toString());
+            }
+          }
         }
       }
       timers.placeBets = 0
@@ -58,18 +62,22 @@ async function scheduler() {
       //Do bet update
       //Get all users
       const users = await User.find({});
-      //Loop through
-      for (let ui = 0; ui < users.length; ui++) {
-        const user = users[ui];
-        //Get all systems for user
-        const systems = await System.find({ userId: user._id });
+      if (users.length > 0) {
         //Loop through
-        for (let si = 0; si < systems.length; si++) {
-          const system = systems[si];
-          await bfController.setSession(user._id);
-          showConsole ? console.log('Bet update:' + new Date().toJSON()) : '';
-          showConsole ? console.log(await bfController.betUpdate(system._id)) :
-            await bfController.betUpdate(system._id);
+        for (let ui = 0; ui < users.length; ui++) {
+          const user = users[ui];
+          //Get all systems for user
+          const systems = await System.find({ userId: user._id });
+          if (systems.length > 0) {
+            //Loop through
+            for (let si = 0; si < systems.length; si++) {
+              const system = systems[si];
+              await bfController.setSession(user._id);
+              showConsole ? console.log('Bet update:' + new Date().toJSON()) : '';
+              showConsole ? console.log(await bfController.betUpdate(system._id)) :
+                await bfController.betUpdate(system._id);
+            }
+          }
         }
       }
       timers.betUpdate = 0
@@ -79,11 +87,13 @@ async function scheduler() {
       //Do keepalive update
       //Get all users
       const users = await User.find({});
-      for (let ui = 0; ui < users.length; ui++) {
-        const user = users[ui];
-        showConsole ? console.log('Keepalive update:' + new Date().toJSON()) : '';
-        showConsole ? console.log(await bfController.apiKeepAlive(user._id)) :
-          await bfController.apiKeepAlive(user._id);
+      if (users.length > 0) {
+        for (let ui = 0; ui < users.length; ui++) {
+          const user = users[ui];
+          showConsole ? console.log('Keepalive update:' + new Date().toJSON()) : '';
+          showConsole ? console.log(await bfController.apiKeepAlive(user._id)) :
+            await bfController.apiKeepAlive(user._id);
+        }
       }
       timers.keepalive = 0;
     }
@@ -92,18 +102,22 @@ async function scheduler() {
       //Do event update
       //Get all users
       const users = await User.find({});
-      //Loop through
-      for (let ui = 0; ui < users.length; ui++) {
-        const user = users[ui];
-        //Get all systems for user
-        const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] });
+      if (users.length > 0) {
         //Loop through
-        for (let si = 0; si < systems.length; si++) {
-          const system = systems[si];
-          await bfController.setSession(user._id);
-          showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
-          showConsole ? console.log(await bfController.eventUpdate(system._id)) :
-            await bfController.eventUpdate(system._id);
+        for (let ui = 0; ui < users.length; ui++) {
+          const user = users[ui];
+          //Get all systems for user
+          const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] });
+          if (systems.length > 0) {
+            //Loop through
+            for (let si = 0; si < systems.length; si++) {
+              const system = systems[si];
+              await bfController.setSession(user._id);
+              showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
+              showConsole ? console.log(await bfController.eventUpdate(system._id)) :
+                await bfController.eventUpdate(system._id);
+            }
+          }
         }
       }
       timers.eventUpdate = 0
