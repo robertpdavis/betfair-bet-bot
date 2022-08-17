@@ -2,38 +2,42 @@ const BetfairController = require('../classes/BetfairController');
 const bfController = new BetfairController;
 const { User, System } = require('../models');
 
+//Set interval
+const interval = 1000; //Every second
 
+//In milliseconds
 const intervals = {
-  placeBets: 15,
-  betUpdate: 30,
-  keepalive: 3600,
-  eventUpdate: 14400
+  placeBets: 15000,//Every 15 seconds
+  betUpdate: 30000,//Every 30 seconds
+  keepalive: 3600000,//Every 1 hour
+  eventUpdate: 14400000//Every 4 hours
 }
 
+//Setup intial timers
 const timers = {
-  placeBets: 0,
-  betUpdate: 0,
-  keepalive: 0,
-  eventUpdate: 0
+  placeBets: Date.now() + intervals.placeBets,
+  betUpdate: Date.now() + intervals.betUpdate,
+  keepalive: Date.now() + intervals.keepalive,
+  eventUpdate: Date.now() + intervals.eventUpdate
 }
 
 async function scheduler() {
 
   //Run the controller every 5 seconds
-  setInterval(controller, 5000);
+  setInterval(controller, interval);
   console.log('Scheduler started....');
 
+  //For debugging
   const showConsole = true;
 
   async function controller() {
-    //Adjust the timers for each action
-    timers.placeBets = parseInt(timers.placeBets) + 5
-    timers.betUpdate = parseInt(timers.betUpdate) + 5
-    timers.keepalive = parseInt(timers.keepalive) + 5
-    timers.eventUpdate = parseInt(timers.eventUpdate) + 5
 
-    if (timers.placeBets >= intervals.placeBets) {
-      //Do place bets
+    const timeNow = Date.now();
+
+    //Place bets
+    if (timers.placeBets <= timeNow) {
+      //Reset timer
+      timers.placeBets = timeNow + intervals.placeBets;
 
       //Get all users
       const users = await User.find({});
@@ -42,24 +46,25 @@ async function scheduler() {
         for (let ui = 0; ui < users.length; ui++) {
           const user = users[ui];
           //Get all active systems for user
-          const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] });
+          const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] }).populate('scenario').populate('stakingPlan');
           if (systems.length > 0) {
+            await bfController.setSession(user._id);
             //Loop through
             for (let si = 0; si < systems.length; si++) {
               const system = systems[si];
-              await bfController.setSession(user._id);
               showConsole ? console.log('Place bets:' + new Date().toJSON()) : '';
-              showConsole ? console.log(await bfController.placeBets((system._id).toString())) :
-                await bfController.placeBets((system._id).toString());
+              showConsole ? console.log(await bfController.placeBets(user, system)) :
+                await bfController.placeBets(user, system);
             }
           }
         }
       }
-      timers.placeBets = 0
     }
 
-    if (timers.betUpdate >= intervals.betUpdate) {
-      //Do bet update
+    //Bet update
+    if (timers.betUpdate <= timeNow) {
+      //Reset timer
+      timers.betUpdate = timeNow + intervals.betUpdate;
       //Get all users
       const users = await User.find({});
       if (users.length > 0) {
@@ -67,24 +72,26 @@ async function scheduler() {
         for (let ui = 0; ui < users.length; ui++) {
           const user = users[ui];
           //Get all systems for user
-          const systems = await System.find({ userId: user._id });
+          const systems = await System.find({ userId: user._id }).populate('scenario').populate('stakingPlan');
           if (systems.length > 0) {
+            await bfController.setSession(user._id);
             //Loop through
             for (let si = 0; si < systems.length; si++) {
               const system = systems[si];
-              await bfController.setSession(user._id);
               showConsole ? console.log('Bet update:' + new Date().toJSON()) : '';
-              showConsole ? console.log(await bfController.betUpdate(system._id)) :
-                await bfController.betUpdate(system._id);
+              showConsole ? console.log(await bfController.betUpdate(user, system)) :
+                await bfController.betUpdate(user, system);
             }
           }
         }
       }
-      timers.betUpdate = 0
     }
 
-    if (timers.keepalive >= intervals.keepalive) {
-      //Do keepalive update
+    //Keepalive
+    if (timers.keepalive <= timeNow) {
+      //Reset timer
+      timers.keepalive = timeNow + intervals.keepalive;
+
       //Get all users
       const users = await User.find({});
       if (users.length > 0) {
@@ -95,11 +102,13 @@ async function scheduler() {
             await bfController.apiKeepAlive(user._id);
         }
       }
-      timers.keepalive = 0;
     }
 
-    if (timers.eventUpdate >= intervals.eventUpdate) {
-      //Do event update
+    //Event update
+    if (timers.eventUpdate <= timeNow) {
+      //Reset timer
+      timers.eventUpdate = timeNow + intervals.eventUpdate;
+
       //Get all users
       const users = await User.find({});
       if (users.length > 0) {
@@ -109,10 +118,10 @@ async function scheduler() {
           //Get all systems for user
           const systems = await System.find({ $and: [{ userId: user._id }, { isActive: true }] });
           if (systems.length > 0) {
+            await bfController.setSession(user._id);
             //Loop through
             for (let si = 0; si < systems.length; si++) {
               const system = systems[si];
-              await bfController.setSession(user._id);
               showConsole ? console.log('Event update:' + new Date().toJSON()) : '';
               showConsole ? console.log(await bfController.eventUpdate(system._id)) :
                 await bfController.eventUpdate(system._id);
@@ -120,7 +129,6 @@ async function scheduler() {
           }
         }
       }
-      timers.eventUpdate = 0
     }
   }
 }

@@ -63,25 +63,30 @@ function scn1_backthefav(system, marketData, runnerData, results, backPrices, la
 
   let betId = 0;
 
-  //Get the favorite selection and odds
-  if (system['betType'] === "Back") {
+  //Check if marketType matches racingBetType
+  if (marketData[0].marketType === system.racingBetType) {
 
-    bets[betId] = {};
-    bets[betId]['betType'] = "Back";
-    bets[betId]['selectionId'] = backPrices[0][0];
-    bets[betId]['reqPrice'] = Math.round(backPrices[0][1] * 100);
-  } else {
-    bets[betId] = {};
-    bets[betId]['betType'] = "Lay";
+    //Get the favorite selection and odds
+    if (system['betType'] === "Back") {
 
-    bets[betId]['selectionId'] = layPrices[0][0];
-    bets[betId]['reqPrice'] = Math.round(layPrices[0][1] * 100);
+      bets[betId] = {};
+      bets[betId]['betType'] = "Back";
+      bets[betId]['selectionId'] = backPrices[0][0];
+      bets[betId]['reqPrice'] = Math.round(backPrices[0][1] * 100);
+    } else {
+      bets[betId] = {};
+      bets[betId]['betType'] = "Lay";
+
+      bets[betId]['selectionId'] = layPrices[0][0];
+      bets[betId]['reqPrice'] = Math.round(layPrices[0][1] * 100);
+    }
+
+    //Get selection name TO DO: Can this be done better?
+    runnerData.forEach(runner => {
+      (runner['selectionId'] === bets[betId]['selectionId']) ? bets[betId]['selectionName'] = runner['runnerName'] : "";
+    });
+
   }
-
-  //Get selection name TO DO: Can this be done better?
-  runnerData.forEach(runner => {
-    (runner['selectionId'] === bets[betId]['selectionId']) ? bets[betId]['selectionName'] = runner['runnerName'] : "";
-  });
 
   return true;
 }
@@ -99,7 +104,7 @@ function stk1_fixedStake(system, marketData, runnerData, results, backPrices, la
     bet['size'] = stakingParams.stake;
 
     bet['orderType'] = stakingParams.orderType;
-    bet['persistence'] = stakingParams.persistancetype;
+    bet['persistence'] = stakingParams.persistance;
   });
 
   return true;

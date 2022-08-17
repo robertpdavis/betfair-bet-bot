@@ -374,26 +374,19 @@ class BetfairController {
           )
         }
       }
-
-      return [true, 'Market and runner book updated'];
     }
+
+    return [true, 'Market and runner book updated'];
   }
 
 
-  //Find markets to place bets on and place bets based on scenerio and staking plan
-  async placeBets(systemId) {
-    if (!systemId || systemId === "") return [false, "No system Id"];
+  //Find markets to place bets on and place bets based on scenerio and staking plan. Requires user and system object as input.
+  async placeBets(user, system) {
+    if (!system || system === "") return [false, "No system provided"];
+    if (!user || user === "") return [false, "No user provided"];
 
     const betsPlaced = [];
     let wallet = 0;
-
-    //Get system
-    const system = await System.findById(systemId).populate('scenario').populate('stakingPlan');
-    if (!system) return [false, 'No system found for this id'];
-
-    //Get user
-    const user = await User.findById(system.userId);
-    if (!user) return [false, 'No user found for this id'];
 
     //Select which wallet to use
     if (system['mode'] === "Live") {
@@ -426,22 +419,22 @@ class BetfairController {
     system['timeSecsRace'] = 1800;
     //----------------------------
     timeOut = new Date(timeOut.getTime() + (system['timeSecsRace'] * 1000)).toJSON();
-    const markets = await Market.find({ $and: [{ systemId: systemId }, { marketTime: { $gte: timeIn, $lte: timeOut } }] });
+    const markets = await Market.find({ $and: [{ systemId: system._id }, { marketTime: { $gte: timeIn, $lte: timeOut } }] });
 
-    if (markets.length === 0) return [false, "No markets found to bet on"]
+    if (markets.length === 0) return [true, "No markets found to bet on for system. System Id:" + system._id];
 
-    //Update the markets and get the market data
-    const marketUpdate = await this.marketBookUpdate('', '', markets);
-    if (marketUpdate[0] === false) return [false, "Failed to update marketbooks"];
+    //Loop through each market and assess if bet can be placed
+    for (let index = 0; index < markets.length; index++) {
+      const market = markets[index];
 
+      //Update the market and get the market data
+      const marketUpdate = await this.marketBookUpdate('', market.marketId);
+      if (marketUpdate[0] === false) return [false, "Failed to update marketbooks"];
 
-    if (markets) {
-      for (let index = 0; index < markets.length; index++) {
-        const market = markets[index];
+      //Check if bet already made on this market -----------------------------------------------------------------------------------------------
+      const activeBets = await Result.find({ $and: [{ systemId: system._id }, { marketId: market.marketId }, { betStatus: 'Open' }] });
 
-        //Check if bet already made on this market -----------------------------------------------------------------------------------------------
-        const activeBets = await Result.find({ $and: [{ systemId: systemId }, { marketId: market.marketId }, { betStatus: 'Open' }] });
-        if (activeBets.length !== 0) return [true, 'Bet already made on market: ' + market.marketName];
+      if (activeBets.length === 0) {
         //-----------------------------------------------------------------------------------------------------------------------------------------
 
         //Do system prebet market chk pre market update
@@ -453,9 +446,9 @@ class BetfairController {
           continue;
         }
 
-        const marketData = await Market.find({ $and: [{ systemId: systemId }, { marketId: market.marketId }] });
+        const marketData = await Market.find({ $and: [{ systemId: system._id }, { marketId: market.marketId }] });
         if (!marketData) return [false, "Failed to get market data"];
-        const runnerData = await Runner.find({ $and: [{ systemId: systemId }, { marketId: market.marketId }] });
+        const runnerData = await Runner.find({ $and: [{ systemId: system._id }, { marketId: market.marketId }] });
         if (!runnerData) return [false, "Failed to get runner data"];
 
         //Prcoess bet
@@ -467,7 +460,7 @@ class BetfairController {
           //Process bets------------------------------------------------------------------
 
           //Get all results since system last started for using in bet scenario
-          const results = await Result.find({ $and: [{ systemId: systemId }, { datePlaced: { $gte: system['lastStarted'] } }] });
+          const results = await Result.find({ $and: [{ systemId: system._id }, { datePlaced: { $gte: system['lastStarted'] } }] });
 
           //Place the bets
           const bets = processBets(system, marketData, runnerData, results)
@@ -559,8 +552,8 @@ class BetfairController {
               const newBet = Result.create(data)
               //TO DO log if database update failed
 
-              const activeBets = await Result.find({ $and: [{ systemId: systemId }, { eventId: marketData[0].eventId }] });
-              activeBets.length < 1 ? system['totalEvents'] = system['totalEvents'] + 1 : system['totalEvents'];
+              const eventBets = await Result.find({ $and: [{ systemId: system._id }, { eventId: marketData[0].eventId }] });
+              eventBets.length < 1 ? system['totalEvents'] = system['totalEvents'] + 1 : system['totalEvents'];
 
               system['totalBets'] = system['totalBets'] + 1;
               system['unsettledBets'] = system['unsettledBets'] + 1;
@@ -569,6 +562,7 @@ class BetfairController {
               //Update system Status
               data = {
                 totalBets: parseInt(system['totalBets']),
+                unsettledBets: parseInt(system['unsettledBets']),
                 totalEvents: parseInt(system['totalEvents']),
                 totalMarkets: parseInt(system['totalMarkets']),
               }
@@ -606,29 +600,23 @@ class BetfairController {
             }
           }
         }
+
       }
     }
 
     return [true, betsPlaced];
   }
 
-  async betUpdate(systemId) {
-    if (!systemId || systemId === "") return [false, "No system Id"];
+  //Checks and updates status of active bets. Requires user and system object as input.
+  async betUpdate(user, system) {
+    if (!system || system === "") return [false, "No system provided"];
+    if (!user || user === "") return [false, "No user provided"];
 
     let wallet = 0;
 
     //Get active bets for system
-    const activeBets = await Result.find({ $and: [{ systemId: systemId }, { $or: [{ betOutcome: null }, { betStatus: 'Open' }] }] });
-    if (activeBets.length === 0) return [true, 'No active bets for this system'];
-
-
-    //Get system
-    const system = await System.findById(systemId);
-    if (!system) return [false, 'No system found for this id'];
-
-    //Get user
-    const user = await User.findById(system.userId);
-    if (!user) return [false, 'No user found for this id'];
+    const activeBets = await Result.find({ $and: [{ systemId: system._id }, { $or: [{ betOutcome: null }, { betStatus: 'Open' }] }] });
+    if (activeBets.length === 0) return [true, 'No active bets for system. System Id:' + system._id];
 
     //Select which wallet to use
     if (system['mode'] === "Live") {
@@ -654,9 +642,9 @@ class BetfairController {
         const marketUpdate = this.marketBookUpdate("", bet['marketId'], "");
         if (marketUpdate[0] === false) return marketUpdate;
 
-        const marketData = await Market.findOne({ $and: [{ systemId: systemId }, { marketId: bet['marketId'] }] });
+        const marketData = await Market.findOne({ $and: [{ systemId: system._id }, { marketId: bet['marketId'] }] });
         if (!marketData) return [false, "Failed to get market data"];
-        const runnerData = await Runner.find({ $and: [{ systemId: systemId }, { marketId: bet['marketId'] }] });
+        const runnerData = await Runner.find({ $and: [{ systemId: system._id }, { marketId: bet['marketId'] }] });
         if (!runnerData) return [false, "Failed to get runner data"];
 
         //Get the bet runner selection status
@@ -747,6 +735,9 @@ class BetfairController {
           //Close bet
           bet['closed'] = new Date().toJSON;
           bet['betStatus'] = "Closed";
+
+          //Update unsettled bets
+          system['unsettledBets'] = system['unsettledBets'] - 1;
 
         } else {
           //Market still Open or suspended
