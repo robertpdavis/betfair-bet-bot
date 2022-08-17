@@ -20,6 +20,7 @@ const Systems = () => {
   const { loading, data } = useQuery(QUERY_SYSTEMS,
     {
       variables: { userId },
+      pollInterval: 5000,
     });
 
   const systemData = data?.systems || {};

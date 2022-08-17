@@ -17,9 +17,10 @@ import Account from './pages/Account';
 import Systems from './pages/Systems';
 import System from './pages/System';
 import Events from './pages/Events';
-import Event from './pages/Event';
+import EventList from './pages/EventList';
 import Market from './pages/Market';
 import Results from './pages/Results';
+import ResultList from './pages/ResultList';
 import Result from './pages/Result';
 import Api from './pages/Api';
 import Support from './pages/Support';
@@ -86,8 +87,8 @@ function App() {
                 element={<System />}
               />
               <Route
-                path="/event/:systemId"
-                element={<Event />}
+                path="/eventList/:systemId"
+                element={<EventList />}
               />
               <Route
                 path="/events/"
@@ -98,8 +99,8 @@ function App() {
                 element={<Market />}
               />
               <Route
-                path="/results/:systemId"
-                element={<Results />}
+                path="/resultList/:systemId"
+                element={<ResultList />}
               />
               <Route
                 path="/results/"

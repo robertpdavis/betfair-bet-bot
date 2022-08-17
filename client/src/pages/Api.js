@@ -90,17 +90,20 @@ const SingleAPI = () => {
   //Handle mutations
   const handleBtnClick = async (event) => {
     const action = event.target.name;
-
+    let response = "";
     let apiType = ''
+
     switch (action) {
       case 'savesettings':
 
-        await updateApi({
+        response = await updateApi({
           variables: { ...formState },
         });
 
-        if (dataU && !loadingU) {
-          setAlertState({ variant: 'success', message: dataU.updateApi.msg })
+        if (response.data.updateApi.status === true) {
+          setAlertState({ variant: 'success', message: 'Update success.' })
+        } else {
+          setAlertState({ variant: 'danger', message: 'Update failed. ' + response.data.updateApi.msg })
         }
 
 
@@ -114,14 +117,15 @@ const SingleAPI = () => {
         apiType = (action === 'livelogin') ? 'live' : '';
         apiType = (action === 'testlogin') ? 'test' : '';
 
-        await apiLogin({
+        response = await apiLogin({
           variables: { userId, apiType },
         });
 
-        (dataL && !loadingL) ?
-          setAlertState({ variant: 'success', message: dataL.apiLogin.msg })
-          :
-          setAlertState({ variant: 'danger', message: dataL.apiLogin.msg });
+        if (response.data.apiLogin.status === true) {
+          setAlertState({ variant: 'success', message: 'Login success.' })
+        } else {
+          setAlertState({ variant: 'danger', message: 'Login failed. ' + response.data.apiLogin.msg })
+        }
 
         if (errorL) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorL.message }) };
 
@@ -133,14 +137,15 @@ const SingleAPI = () => {
         apiType = (action === 'livelogout') ? 'live' : '';
         apiType = (action === 'testlogout') ? 'test' : '';
 
-        await apiLogout({
+        response = await apiLogout({
           variables: { userId, apiType },
         });
 
-        (dataO && !loadingO) ?
-          setAlertState({ variant: 'success', message: dataO.apiLogout.msg })
-          :
-          setAlertState({ variant: 'danger', message: dataO.apiLogout.msg });
+        if (response.data.apiLogout.status === true) {
+          setAlertState({ variant: 'success', message: 'Logout success.' })
+        } else {
+          setAlertState({ variant: 'danger', message: 'Logout failed. ' + response.data.apiLogout.msg })
+        }
 
         if (errorO) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorO.message }) };
 
@@ -152,14 +157,15 @@ const SingleAPI = () => {
         apiType = (action === 'livedisable') ? 'live' : '';
         apiType = (action === 'testdisable') ? 'test' : '';
 
-        await disableApi({
+        response = await disableApi({
           variables: { userId, apiType },
         });
 
-        (dataD && !loadingD) ?
-          setAlertState({ variant: 'success', message: dataD.disableAPI.msg })
-          :
-          setAlertState({ variant: 'danger', message: dataD.disableAPI.msg });
+        if (response.data.disableApi.status === true) {
+          setAlertState({ variant: 'success', message: 'API Disabled.' })
+        } else {
+          setAlertState({ variant: 'danger', message: 'API disable failed. ' + response.data.disableApi.msg })
+        }
 
         if (errorD) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorD.message }) };
 
@@ -170,14 +176,15 @@ const SingleAPI = () => {
         apiType = (action === 'liveenable') ? 'live' : '';
         apiType = (action === 'testenable') ? 'test' : '';
 
-        await enableApi({
+        response = await enableApi({
           variables: { userId, apiType },
         });
 
-        (dataE && !loadingE) ?
-          setAlertState({ variant: 'success', message: dataE.enableAPI.msg })
-          :
-          setAlertState({ variant: 'danger', message: dataE.enableAPI.msg });
+        if (response.data.enableApi.status === true) {
+          setAlertState({ variant: 'success', message: 'API Enabled.' })
+        } else {
+          setAlertState({ variant: 'danger', message: 'API enable failed. ' + response.data.enableApi.msg })
+        }
 
         if (errorE) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorE.message }) };
 
@@ -189,12 +196,14 @@ const SingleAPI = () => {
         apiType = (action === 'livetest') ? 'live' : '';
         apiType = (action === 'testtest') ? 'test' : '';
 
-        await testApi({
+        response = await testApi({
           variables: { userId, apiType }
         });
 
-        if (dataT && !loadingT) {
+        if (response.data.testApi.status === true) {
           setAlertState({ variant: 'success', message: 'Keepalive sent.' })
+        } else {
+          setAlertState({ variant: 'danger', message: 'Keepalive failed. ' + response.data.testApi.msg })
         }
 
         if (errorT) { setAlertState({ variant: 'danger', message: 'Something happened with the request: ' + errorT.message }) };

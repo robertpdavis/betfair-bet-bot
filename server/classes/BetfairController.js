@@ -868,7 +868,7 @@ class BetfairController {
       if (res[0]) {
 
         //Update API status
-        let data = (apiSettings.apiMode === 'Test') ? { $set: { testApiStatus: true, lastTestKeepAlive: new Date().toJSON(), lastTestMessage: 'Keepalive Success' } } : { $set: { liveApiStatus: true, lastLiveKeepAlive: new Date().toJSON(), lastLiveMessage: 'Keepalive Sucess' } }
+        let data = (apiSettings.apiMode === 'Test') ? { $set: { testApiStatus: true, lastTestKeepAlive: new Date().toJSON(), lastTestStatus: new Date().toJSON(), lastTestMessage: 'Keepalive Success' } } : { $set: { liveApiStatus: true, lastLiveKeepAlive: new Date().toJSON(), lastLiveStatus: new Date().toJSON(), lastLiveMessage: 'Keepalive Sucess' } }
         const result = await Apisetting.findOneAndUpdate(
           { userId: userId },
           data,

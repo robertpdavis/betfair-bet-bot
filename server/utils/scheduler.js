@@ -1,6 +1,7 @@
+const { NoFragmentCyclesRule } = require('graphql');
 const BetfairController = require('../classes/BetfairController');
 const bfController = new BetfairController;
-const { User, System } = require('../models');
+const { User, System, Config } = require('../models');
 
 //Set interval
 const interval = 1000; //Every second
@@ -27,12 +28,24 @@ async function scheduler() {
   setInterval(controller, interval);
   console.log('Scheduler started....');
 
-  //For debugging
-  const showConsole = true;
-
   async function controller() {
 
     const timeNow = Date.now();
+
+    //For debugging----
+    const result = await Config.find();
+    const configs = {};
+    result.map((configItem) => {
+      configs[configItem.configKey] = configItem.configValue
+    })
+
+    if (configs.scheduleDebug === 'true') {
+      showConsole = true;
+    } else {
+      showConsole = false;
+    }
+    //------
+
 
     //Place bets
     if (timers.placeBets <= timeNow) {

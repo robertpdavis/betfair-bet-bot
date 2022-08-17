@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Auth from '../utils/auth';
+import MarketTable from '../components/MarketTable';
 import SystemLinks from '../components/SystemLinks';
 import { useQuery } from '@apollo/client';
-import { Navigate } from 'react-router-dom';
-import { QUERY_SYSTEMS } from '../utils/queries';
+import { Navigate, useParams } from 'react-router-dom';
+import { QUERY_SYSTEMS, QUERY_EVENTS } from '../utils/queries';
 import '../App.css';
 
 
-const Events = () => {
+const EventList = () => {
+
+  let { systemId } = useParams();
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -20,9 +23,16 @@ const Events = () => {
       variables: { userId },
     });
 
+  const { loading: loadingE, data: dataE } = useQuery(QUERY_EVENTS,
+    {
+      variables: { systemId },
+    });
+
+
+
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
-  if (loadingS) {
+  if (loadingS || loadingE) {
     return <div>Loading...</div>;
   }
   return (
@@ -34,8 +44,9 @@ const Events = () => {
         <div className="row">
           <SystemLinks systemData={dataS} linkType='eventList' isActive={true} />
           <div className="pb-3 pt-3">
-            <h6>Select system to view events.</h6>
+            <h6>Upcoming events for: <b>System {dataS.systems[0].systemId}-{dataS.systems[0].title}</b></h6>
           </div>
+          <MarketTable eventData={dataE} />
         </div>
       </section>
     </main>
@@ -43,4 +54,4 @@ const Events = () => {
 
 }
 
-export default Events;
+export default EventList;

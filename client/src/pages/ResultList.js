@@ -1,20 +1,15 @@
 import React, { useEffect, useMemo } from 'react';
 import Auth from '../utils/auth';
-import MarketTable from '../components/MarketTable';
+import ResultTable from '../components/ResultTable';
 import SystemLinks from '../components/SystemLinks';
 import { useQuery } from '@apollo/client';
 import { Navigate, useParams } from 'react-router-dom';
-import { QUERY_SYSTEMS, QUERY_EVENTS } from '../utils/queries';
-import '../App.css';
+import { QUERY_SYSTEMS, QUERY_RESULTS } from '../utils/queries';
 
 
-const Event = () => {
+function ResultList() {
 
   let { systemId } = useParams();
-
-  if (!systemId) {
-
-  }
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -27,42 +22,34 @@ const Event = () => {
       variables: { userId },
     });
 
-  const { loading: loadingT, data: dataT } = useQuery(QUERY_SYSTEMS,
+  const { loading: loadingR, data: dataR } = useQuery(QUERY_RESULTS,
     {
       variables: { systemId },
+      pollInterval: 5000,
     });
-
-
-
-  const { loading: loadingE, data: dataE } = useQuery(QUERY_EVENTS,
-    {
-      variables: { systemId },
-    });
-
 
 
   if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
 
-  if (loadingS || loadingE) {
+  if (loadingS || loadingR) {
     return <div>Loading...</div>;
   }
   return (
     <main>
       <section className="container my-2">
         <div className="page-header">
-          System Events
+          System Results
         </div>
         <div className="row">
-          <SystemLinks systemData={dataS} linkType='event' isActive={true} />
+          <SystemLinks systemData={dataS} linkType='resultList' isActive={false} />
           <div className="pb-3 pt-3">
-            <h6>Upcoming events for system {dataS.systems[0].systemId}-{dataS.systems[0].title}</h6>
+            <h6>Bets placed and results for: <b>System {dataS.systems[0].systemId}-{dataS.systems[0].title}</b></h6>
           </div>
-          <MarketTable eventData={dataE} />
+          <ResultTable resultData={dataR} />
         </div>
       </section>
     </main>
-  )
+  );
+};
 
-}
-
-export default Event;
+export default ResultList;

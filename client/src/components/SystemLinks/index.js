@@ -17,7 +17,7 @@ function SystemLinks({ systemData, linkType, isActive }) {
             let link = "/" + linkType + "/" + item._id
             return (
               <div className="d-inline me-3" key={item.systemId}>
-                <Link className="d-inline btn btn-info" to={link}>{item.title}</Link>
+                <Link className="d-inline btn btn-info" to={link}>{item.systemId + '.' + item.title}</Link>
               </div>
             )
           }
@@ -34,14 +34,14 @@ function SystemLinks({ systemData, linkType, isActive }) {
             let link = "/" + linkType + "/" + item._id
             return (
               <div className="d-inline me-3" key={item.systemId}>
-                <Link className="d-inline btn btn-info" to={link}>{item.title}</Link>
+                <Link className="d-inline btn btn-info" to={link}>{item.systemId + '.' + item.title}</Link>
               </div>
             )
           } else {
             let link = "/" + linkType + "/" + item._id
             return (
               <div className="d-inline me-3" key={item.systemId}>
-                <Link className="d-inline btn btn-secondary" to={link}>{item.title}</Link>
+                <Link className="d-inline btn btn-secondary" to={link}>{item.systemId + '.' + item.title}</Link>
               </div>
             )
           }
