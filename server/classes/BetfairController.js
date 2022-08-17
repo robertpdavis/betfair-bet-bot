@@ -416,7 +416,7 @@ class BetfairController {
     let timeIn = new Date().toJSON()//From now
     let timeOut = new Date()
     //--------override for testing
-    system['timeSecsRace'] = 1800;
+    // system['timeSecsRace'] = 1800;
     //----------------------------
     timeOut = new Date(timeOut.getTime() + (system['timeSecsRace'] * 1000)).toJSON();
     const markets = await Market.find({ $and: [{ systemId: system._id }, { marketTime: { $gte: timeIn, $lte: timeOut } }] });
@@ -553,7 +553,7 @@ class BetfairController {
               //TO DO log if database update failed
 
               const eventBets = await Result.find({ $and: [{ systemId: system._id }, { eventId: marketData[0].eventId }] });
-              eventBets.length < 1 ? system['totalEvents'] = system['totalEvents'] + 1 : system['totalEvents'];
+              eventBets.length < 1 ? system['totalEvents'] = system['totalEvents'] + 1 : "";
 
               system['totalBets'] = system['totalBets'] + 1;
               system['unsettledBets'] = system['unsettledBets'] + 1;
