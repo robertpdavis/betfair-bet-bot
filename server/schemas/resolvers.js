@@ -278,8 +278,6 @@ const resolvers = {
 
           const loginResult = await betfairController.apiLogin(context.user._id);
 
-          console.log(loginResult)
-
           //If successful, update the database and status
           if (loginResult[0] === true) {
             if (apiType === 'live') {

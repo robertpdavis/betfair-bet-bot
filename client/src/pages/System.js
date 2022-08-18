@@ -110,7 +110,7 @@ const SingleSystem = () => {
           (event.target.textContent === 'Start System') ? toggle = 'start' : toggle = 'stop'
 
           if (toggle === 'start') {
-            setAlertState({ variant: 'success', message: 'Starting system...Updating system events...' });
+            setAlertState({ variant: 'success', message: 'Starting system. Updating system events. May take 20 -30 seconds...' });
           }
 
           const toggleData = await toggleSystem({
