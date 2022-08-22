@@ -1,13 +1,15 @@
 
+let bets = [];
 
-const bets = [];
-let scenario = "";
-let stakingPlan = "";
 
 function processBets(system, marketData, runnerData, results) {
 
+  bets = [];
+  let scenario = "";
+  let stakingPlan = "";
   const backPrices = [];
   const layPrices = [];
+  let placeBet = false;
 
   scenario = system.scenario[0];
   stakingPlan = system.stakingPlan[0];
@@ -23,32 +25,33 @@ function processBets(system, marketData, runnerData, results) {
   backPrices.sort(function (a, b) { return a[1] - b[1]; });
   layPrices.sort(function (a, b) { return a[1] - b[1]; });
 
-  //Process scenario------------------------------------------------------------------
+  //Process scenario & staking plan------------------------------------------------------------------
   if (scenario.scenarioId !== '') {
     switch (scenario.scenarioId) {
       //Default - back the favourite
       case 1:
-        scn1_backthefav(system, marketData, runnerData, results, backPrices, layPrices);
+        placeBet = scn1_backthefav(system, marketData, runnerData, results, backPrices, layPrices);
         break;
     }
   } else {
     return false;
   }
 
+  if (placeBet === true) {
+    //Process staking plan--------------------------------------------------------------
+    if (stakingPlan.stakingId !== '') {
+      switch (stakingPlan.stakingId) {
 
-  //Process staking plan--------------------------------------------------------------
-  if (stakingPlan.stakingId !== '') {
-    switch (stakingPlan.stakingId) {
+        case 1:
+          stk1_fixedStake(system, marketData, runnerData, results, backPrices, layPrices);
 
-      case 1:
-        stk1_fixedStake(system, marketData, runnerData, results, backPrices, layPrices);
-
-        break;
+          break;
+      }
+    } else {
+      return false;
     }
-  } else {
-    return false;
-  }
 
+  }
 
   return bets;
 }
@@ -61,10 +64,10 @@ function scn1_backthefav(system, marketData, runnerData, results, backPrices, la
 
   const scenarioParams = JSON.parse(system.scenarioParams);
 
-  let betId = 0;
-
   //Check if marketType matches racingBetType
   if (marketData[0].marketType === system.racingBetType) {
+
+    let betId = 0;
 
     //Get the favorite selection and odds
     if (system['betType'] === "Back") {
@@ -86,9 +89,11 @@ function scn1_backthefav(system, marketData, runnerData, results, backPrices, la
       (runner['selectionId'] === bets[betId]['selectionId']) ? bets[betId]['selectionName'] = runner['runnerName'] : "";
     });
 
+    return true;
+
   }
 
-  return true;
+  return false;
 }
 
 

@@ -50,6 +50,7 @@ export const QUERY_SYSTEMS = gql`
       scenarioParams
       stakingParams
       mode
+      apiMode
       betType
       racingBetType
       setWallet
@@ -156,6 +157,7 @@ export const QUERY_SINGLE_SYSTEM = gql`
       scenarioParams
       stakingParams
       mode
+      apiMode
       betType
       racingBetType
       setWallet

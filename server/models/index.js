@@ -9,5 +9,6 @@ const Scenario = require('./Scenario');
 const Staking = require('./Staking');
 const System = require('./System');
 const User = require('./User');
+const Transaction = require('./Transaction');
 
-module.exports = { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User };
+module.exports = { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User, Transaction };

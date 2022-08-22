@@ -2,12 +2,14 @@ import React from 'react';
 import Auth from '../utils/auth';
 import SystemLinks from '../components/SystemLinks';
 import { useQuery } from '@apollo/client';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { QUERY_SYSTEMS } from '../utils/queries';
 import '../App.css';
 
 
 const Events = () => {
+
+  let navigate = useNavigate();
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -20,7 +22,7 @@ const Events = () => {
       variables: { userId },
     });
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   if (loadingS) {
     return <div>Loading...</div>;

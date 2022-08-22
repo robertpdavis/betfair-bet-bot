@@ -3,13 +3,15 @@ import Auth from '../utils/auth';
 import SystemTable from '../components/SystemTable';
 import ButtonToolbar from '../components/ButtonToolbar';
 import { useQuery, useMutation } from '@apollo/client';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { QUERY_SYSTEMS } from '../utils/queries';
 import { CREATE_SYSTEM } from '../utils/mutations';
 import Alert from '../components/Alert';
 import '../App.css';
 
 const Systems = () => {
+
+  let navigate = useNavigate();
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -43,7 +45,7 @@ const Systems = () => {
   //New system mutation
   const [createSystem, { error: errorC, data: dataC }] = useMutation(CREATE_SYSTEM);
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   //Button functions
   const handleBtnClick = async (event) => {

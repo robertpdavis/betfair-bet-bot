@@ -1,10 +1,14 @@
 import React from 'react';
 import ResultForm from '../components/ResultForm';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { QUERY_SINGLE_RESULT } from '../utils/queries';
+import Auth from '../utils/auth';
 
 const SingleResult = () => {
+
+  let navigate = useNavigate();
+
   // Use `useParams()` to retrieve value of the route parameter `:profileId`
   const { resultId } = useParams();
 
@@ -13,9 +17,9 @@ const SingleResult = () => {
     variables: { resultId: resultId },
   });
 
-  const result = data?.result || {};
+  if (!Auth.loggedIn()) { navigate("login") };
 
-  console.log(result)
+  const result = data?.result || {};
 
   if (loading) {
     return <div>Loading...</div>;

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { QUERY_USER, QUERY_SYSTEMS, QUERY_RESULTS, QUERY_SYSTEM_AG } from '../utils/queries';
 
 const Dashboard = () => {
 
+  let navigate = useNavigate();
 
   let userId = '';
   let username = ''
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const { loading: loadingU, data: dataU } = useQuery(QUERY_USER,
     {
       variables: { username },
+      pollInterval: 5000,
     });
 
   const userData = dataU?.user || {};
@@ -47,7 +49,7 @@ const Dashboard = () => {
 
   const agData = dataA?.systemAg || {};
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
 
   if (loadingS || loadingR) {

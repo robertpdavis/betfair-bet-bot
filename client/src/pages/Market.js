@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { QUERY_SINGLE_MARKET } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
@@ -7,6 +7,9 @@ import RunnerTable from '../components/RunnerTable';
 
 
 const SingleMarket = () => {
+
+  let navigate = useNavigate();
+
   const { marketId } = useParams();
 
   const type = 'marketUpdate'
@@ -15,7 +18,7 @@ const SingleMarket = () => {
     pollInterval: 5000,
   });
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   const market = data?.market || {};
   const runners = market.runners;

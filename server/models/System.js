@@ -29,7 +29,14 @@ const systemSchema = new Schema({
     required: true,
     default: false
   },
-  mode: String,
+  mode: {
+    type: String,
+    default: "Simulated",
+  },
+  apiMode: {
+    type: String,
+    default: "test",
+  },
   scenario: [
     {
       type: Schema.Types.ObjectId,

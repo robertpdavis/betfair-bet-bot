@@ -1,5 +1,5 @@
 
-
+//Function to create event/market filter to find markets to bet on
 function buildFilter(system, config) {
 
   //Object to loop through system filter options
@@ -65,6 +65,7 @@ function buildFilter(system, config) {
   return filter;
 }
 
+//Check if system limits have been reached before betting
 function systemStatsCheck(system) {
   const sysStatus = {};
   let chkStatus = 0;
@@ -94,6 +95,7 @@ function systemStatsCheck(system) {
   return [chkStatus, msg];
 }
 
+//Check if system market limits have been reached
 function marketStatsCheck(system, marketData, type = "Post") {
   const mktStatus = [];
   let chkStatus = 0;
@@ -105,16 +107,14 @@ function marketStatsCheck(system, marketData, type = "Post") {
       mktStatus["status"] = (marketData['status'] !== "OPEN") ? true : false;
     }
 
-    mktStatus["marketType"] = (system['isRacingEvent'] === true) ? (marketData['marketType'] !== system['racingBetType']) ? true : false : false;
     //TO DO: Add in race numbers,distances, class filters
 
   } else if (type == "Post") {
     //Checks stats against limits/settings post market update
     mktStatus["status"] = (marketData[0]['status'] !== "OPEN") ? true : false;
-    mktStatus["marketType"] = (system['isRacingEvent'] === true) ? (marketData[0]['marketType'] !== system['racingBetType']) ? true : false : false;
-    mktStatus["maxRunners"] = (system['maxRunners'] !== 0) ? (marketData[0]['numberOfActiveRunners'] > $system['maxRunners']) ? true : false : false;
-    mktStatus["minRunners"] = (system['minRunners'] !== 0) ? (marketData[0]['numberOfActiveRunners'] < $system['minRunners']) ? true : false : false;
-    mktStatus["minMatched"] = (system['minMatched'] !== 0) ? (marketData[0]['totalMatched'] < $system['minMatched']) ? true : false : false;
+    mktStatus["maxRunners"] = (system['maxRunners'] !== 0) ? (marketData[0]['numberOfActiveRunners'] > system['maxRunners']) ? true : false : false;
+    mktStatus["minRunners"] = (system['minRunners'] !== 0) ? (marketData[0]['numberOfActiveRunners'] < system['minRunners']) ? true : false : false;
+    mktStatus["minMatched"] = (system['minMatched'] !== 0) ? (marketData[0]['totalMatched'] < system['minMatched']) ? true : false : false;
   }
 
   for (const key in mktStatus) {

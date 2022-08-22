@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Auth from "../utils/auth";
 import { useQuery, useMutation } from '@apollo/client';
 import Alert from '../components/Alert';
@@ -7,6 +7,8 @@ import { QUERY_SINGLE_API } from '../utils/queries';
 import { UPDATE_API, ENABLE_API, DISABLE_API, TEST_API, API_LOGIN, API_LOGOUT } from '../utils/mutations';
 
 const SingleAPI = () => {
+
+  let navigate = useNavigate();
 
   //Set initial states for the update, alerts and buttons
   const [formState, setFormState] = useState('');
@@ -75,7 +77,7 @@ const SingleAPI = () => {
 
 
   //Now we can check if user should be here. If not, route to login.
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   //Updating our formState when changes made
   const handleChange = async (event) => {

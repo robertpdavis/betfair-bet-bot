@@ -3,12 +3,14 @@ import Auth from '../utils/auth';
 import MarketTable from '../components/MarketTable';
 import SystemLinks from '../components/SystemLinks';
 import { useQuery } from '@apollo/client';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { QUERY_SYSTEMS, QUERY_EVENTS } from '../utils/queries';
 import '../App.css';
 
 
 const EventList = () => {
+
+  let navigate = useNavigate();
 
   let { systemId } = useParams();
 
@@ -30,7 +32,7 @@ const EventList = () => {
 
 
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   if (loadingS || loadingE) {
     return <div>Loading...</div>;

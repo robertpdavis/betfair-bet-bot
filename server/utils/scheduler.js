@@ -9,7 +9,7 @@ const interval = 1000; //Every second
 //In milliseconds
 const intervals = {
   placeBets: 15000,//Every 15 seconds
-  betUpdate: 30000,//Every 30 seconds
+  betUpdate: 15000,//Every 15 seconds - in between placebets
   keepalive: 3600000,//Every 1 hour
   eventUpdate: 14400000//Every 4 hours
 }
@@ -17,7 +17,7 @@ const intervals = {
 //Setup intial timers
 const timers = {
   placeBets: Date.now() + intervals.placeBets,
-  betUpdate: Date.now() + intervals.betUpdate,
+  betUpdate: Date.now() + intervals.betUpdate + 7000,
   keepalive: Date.now() + intervals.keepalive,
   eventUpdate: Date.now() + intervals.eventUpdate
 }
