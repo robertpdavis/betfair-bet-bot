@@ -1,14 +1,16 @@
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../App.css'
 import Auth from '../../utils/auth';
 
 const Header = () => {
 
+  let navigate = useNavigate();
+
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
-    return <Navigate to="/login" />
+    navigate("login");
   };
 
   return (
@@ -20,11 +22,11 @@ const Header = () => {
             <div className="d-inline">
               <h6 className="d-inline">Welcome {Auth.getProfile().data.firstName}!</h6>
               <div className="d-inline float-end">
-                <button className=" d-inline btn btn-sm btn-info mb-2 me-3"><Link to="/account">
-                  Account
+                <Link to="/account">
+                  <button className=" d-inline btn btn-sm btn-info mb-2 me-3">
+                    Account
+                  </button>
                 </Link>
-                </button>
-
                 <button className=" d-inline btn btn-sm btn-secondary mb-2" onClick={logout}>
                   Logout
                 </button>

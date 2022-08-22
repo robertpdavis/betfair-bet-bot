@@ -214,6 +214,7 @@ const resolvers = {
           let msg = '';
 
           const result = await betfairController.apiKeepAlive(userId)
+          console.log(result)
 
           //If successful, update the database and status
           if (result[0] === true) {
@@ -370,35 +371,65 @@ const resolvers = {
 
           const betfairController = new BetfairController;
 
+          const userId = context.user._id;
           const systemId = args.systemId;
           const toggle = args.toggle;
+          const apiType = args.apiType;
+          let status = '';
+          let msg = '';
 
           if (toggle === 'start') {
+            //Do pre-start checks
+            //Check API is up
+            const result = await betfairController.apiKeepAlive(userId)
+
+            //If failed, update the database and respond
+            if (result[0] === false) {
+
+              if (apiType === 'live') {
+                data = { liveAPIStatus: false, lastTestKeepAlive: new Date().toJSON(), lastLiveMessage: 'User: API Test Failed. Check API settings.' };
+              } else {
+                data = { testAPIStatus: false, lastTestKeepAlive: new Date().toJSON(), testLiveMessage: 'User: API Test Failed. Check API settings.' };
+              }
+
+              const updateResult = await Apisetting.findByIdAndUpdate(
+                userId,
+                { $set: { data } },
+                { runValidators: true, new: true }
+              );
+              console.log(result)
+              status = false;
+              msg = apiType.toUpperCase() + ' API Test Failed. Check API settings.';
+              return { status, msg };
+            }
+
             //Update the events for the system
             const setSession = await betfairController.setSession(context.user._id);
             const eventUpdate = await betfairController.eventUpdate(systemId)
 
-            //Update the system status
-            if (eventUpdate[0]) {
-              const system = await System.findByIdAndUpdate(
-                systemId,
-                { $set: { isActive: true, lastStarted: new Date().toJSON(), statusDesc: 'User: System Start' } },
-                { runValidators: true, new: true }
-              );
-
-              const isActive = system.isActive;
-              const lastStopped = system.lastStopped;
-              const lastStarted = system.lastStarted;
-              const statusDesc = system.statusDesc;
-
-              //TO DO LOG
-              console.log('System started: ' + systemId + ' Time: ' + new Date().toJSON());
-
-              return { isActive, lastStopped, lastStarted, statusDesc };
-            } else {
+            //Check event update completed
+            if (eventUpdate[0] === false) {
               //TO DO LOG
               console.log('System start failed. Time: ' + new Date().toJSON());
+              status = false;
+              msg = eventUpdate[1];
+              return { status, msg };
             }
+
+            //Update the system status
+            const system = await System.findByIdAndUpdate(
+              systemId,
+              { $set: { isActive: true, lastStarted: new Date().toJSON(), statusDesc: 'User: System Start' } },
+              { runValidators: true, new: true }
+            );
+
+            //TO DO LOG
+            console.log('System started: ' + systemId + ' Time: ' + new Date().toJSON());
+
+            status = true;
+            msg = 'System started';
+            return { status, msg };
+
           } else if (toggle === 'stop') {
             //Update the system status
 
@@ -406,17 +437,14 @@ const resolvers = {
               systemId,
               { $set: { isActive: false, lastStopped: new Date().toJSON(), statusDesc: 'User: System Stop' } },
               { runValidators: true, new: true }
-            );
-
-            const isActive = system.isActive;
-            const lastStopped = system.lastStopped;
-            const lastStarted = system.lastStarted;
-            const statusDesc = system.statusDesc;
+            );;
 
             //TO DO LOG
             console.log('System stopped: ' + systemId + ' Time: ' + new Date().toJSON());
 
-            return { isActive, lastStopped, lastStarted, statusDesc };
+            status = true;
+            msg = 'System stopped';
+            return { status, msg };
           }
         } else {
           throw new AuthenticationError('Not logged in');
@@ -439,11 +467,11 @@ const resolvers = {
 
           if (systemUpdate) {
             const status = true;
-            const msg = 'System updated'
+            const msg = 'System updated';
             return { status, msg }
           } else {
             const status = false;
-            const msg = 'System update failed'
+            const msg = 'System update failed';
             return { status, msg }
           }
         } else {

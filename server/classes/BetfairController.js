@@ -1,4 +1,4 @@
-const { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User } = require('../models');
+const { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User, Transaction } = require('../models');
 const Betfairapi = require('./Betfairapi');
 const { buildFilter, systemStatsCheck, marketStatsCheck } = require('../utils/bfHelpers');
 const { processBets } = require('../utils/betSystems');
@@ -386,13 +386,17 @@ class BetfairController {
     if (!user || user === "") return [false, "No user provided"];
 
     const betsPlaced = [];
+    const transactions = [];
     let wallet = 0;
+    let walletType = '';
 
     //Select which wallet to use
     if (system['mode'] === "Live") {
       wallet = user['wallet'];
+      walletType = 'Live';
     } else {
       wallet = user['virtualWallet'];
+      walletType = 'Virtual';
     }
 
     //Do system prebet Stats Chk
@@ -465,7 +469,6 @@ class BetfairController {
           //Place the bets
           const bets = processBets(system, marketData, runnerData, results)
 
-
           for (let index = 0; index < bets.length; index++) {
             const bet = bets[index];
 
@@ -498,13 +501,14 @@ class BetfairController {
             } else {
               //Simulated
               bet['betPlaced'] = new Date().toJSON();
-              //Set id timestamp
+              //Set id as timestamp
               bet['betId'] = new Date().getTime();
               betPlaced = true;
             }
 
             wallet = wallet - bet['liability'];
-            bet['wallet'] = wallet;
+
+            transactions.push({ systemId: system._id, transactionType: "Debit", transactionDesc: "Place bet. Bet Id:" + bet['betId'], walletType: walletType, amt: -bet['liability'], balance: wallet })
 
             //Save in database if bet placed
             if (betPlaced) {
@@ -552,6 +556,7 @@ class BetfairController {
               const newBet = Result.create(data)
               //TO DO log if database update failed
 
+              //Check if new event and add to events stats
               const eventBets = await Result.find({ $and: [{ systemId: system._id }, { eventId: marketData[0].eventId }] });
               eventBets.length < 1 ? system['totalEvents'] = system['totalEvents'] + 1 : "";
 
@@ -604,6 +609,9 @@ class BetfairController {
       }
     }
 
+    //Add bet transactions to DB
+    const newTransaction = await Transaction.create(transactions);
+
     return [true, betsPlaced];
   }
 
@@ -613,16 +621,22 @@ class BetfairController {
     if (!user || user === "") return [false, "No user provided"];
 
     let wallet = 0;
+    let walletType = '';
+    let transactions = [];
 
     //Get active bets for system
     const activeBets = await Result.find({ $and: [{ systemId: system._id }, { $or: [{ betOutcome: null }, { betStatus: 'Open' }] }] });
     if (activeBets.length === 0) return [true, 'No active bets for system. System Id:' + system._id];
 
+    system['unsettledBets'] = activeBets.length;
+
     //Select which wallet to use
     if (system['mode'] === "Live") {
       wallet = user['wallet'];
+      walletType = 'Live';
     } else {
       wallet = user['virtualWallet'];
+      walletType = 'Virtual';
     }
 
     for (let index = 0; index < activeBets.length; index++) {
@@ -665,16 +679,16 @@ class BetfairController {
               bet['profitLoss'] = Math.round(bet['sizeSettled'] * bet['priceMatched'] / 100 - bet['sizeSettled']);
               bet['returned'] = Math.round(bet['sizeSettled'] * bet['priceMatched'] / 100);
               wallet = wallet + bet['returned'];
-              bet['wallet'] = wallet;
               system['totalConsecWinners'] = system['totalConsecWinners'] + 1;
               system['totalConsecLosers'] = 0;
 
-              bet['commission'] = Math.round(bet['commissionperc'] / 100 * bet['profitLoss']);
+              transactions.push({ systemId: system._id, transactionType: "Credit", transactionDesc: "Winning Bet:" + bet['betId'], walletType: walletType, amt: bet['returned'], balance: wallet });
 
+              bet['commission'] = Math.round(bet['commissionperc'] / 100 * bet['profitLoss']);
               if (system['includeCommission']) {
                 bet['profitLoss'] = bet['profitLoss'] - bet['commission'];
                 wallet = wallet - bet['commission'];
-                bet['wallet'] = bet['wallet'] - bet['commission'];
+                transactions.push({ systemId: system._id, transactionType: "Debit", transactionDesc: "Winning Bet Commission:" + bet['betId'], walletType: walletType, amt: -bet['commission'], balance: wallet });
               }
 
               system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
@@ -687,6 +701,7 @@ class BetfairController {
               bet['returned'] = 0;
               system['totalConsecLosers'] = system['totalConsecLosers'] + 1;
               system['totalConsecWinners'] = 0;
+              bet['commission'] = 0;
             }
           }
 
@@ -700,6 +715,7 @@ class BetfairController {
               bet['returned'] = 0;
               system['totalConsecLosers'] = system['totalConsecLosers'] + 1;
               system['totalConsecWinners'] = 0;
+              bet['commission'] = 0;
 
             } else {
 
@@ -709,16 +725,17 @@ class BetfairController {
               system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
               bet['returned'] = (bet['sizeSettled'] + bet['liability']);
               wallet = wallet + bet['returned'];
-              bet['wallet'] = wallet;
               system['totalConsecWinners'] = system['totalConsecWinners'] + 1;
               system['totalConsecLosers'] = 0;
+
+              transactions.push({ systemId: system._id, transactionType: "Credit", transactionDesc: "Winning Bet:" + bet['betId'], walletType: walletType, amt: bet['returned'], balance: wallet });
 
               bet['commission'] = Math.round(bet['commissionperc'] / 100 * bet['profitLoss']);
               if (system['includeCommission']) {
                 bet['profitLoss'] = bet['profitLoss'] - bet['commission'];
                 system['profitLoss'] = system['profitLoss'] + bet['profitLoss']
                 wallet = wallet - bet['commission'];
-                bet['wallet'] = bet['wallet'] - bet['commission'];
+                transactions.push({ systemId: system._id, transactionType: "Debit", transactionDesc: "Winning Bet Commission:" + bet['betId'], walletType: walletType, amt: -bet['commission'], balance: wallet });
               }
             }
           }
@@ -728,8 +745,9 @@ class BetfairController {
             bet['betOutcome'] = "Void";
             bet['returned'] = bet['liability'];
             wallet = wallet + bet['returned'];
-            bet['wallet'] = wallet;
             bet['profitLoss'] = 0;
+            bet['commission'] = 0;
+            transactions.push({ systemId: system._id, transactionType: "Credit", transactionDesc: "Void Bet:" + bet['betId'], walletType: walletType, amt: bet['returned'], balance: wallet });
           }
 
           //Close bet
@@ -802,6 +820,13 @@ class BetfairController {
       )
       //TO DO log if database update failed
 
+
+
+    }
+
+    //Add bet transactions to DB
+    if (transactions.length > 0) {
+      const newTransaction = await Transaction.create(transactions);
     }
 
     return [true, 'Bet Update Success'];
@@ -865,7 +890,7 @@ class BetfairController {
       const res = await this.api.keepAlive(apiSettings);
 
 
-      if (res[0]) {
+      if (res[0] === true) {
 
         //Update API status
         let data = (apiSettings.apiMode === 'Test') ? { $set: { testApiStatus: true, lastTestKeepAlive: new Date().toJSON(), lastTestStatus: new Date().toJSON(), lastTestMessage: 'Keepalive Success' } } : { $set: { liveApiStatus: true, lastLiveKeepAlive: new Date().toJSON(), lastLiveStatus: new Date().toJSON(), lastLiveMessage: 'Keepalive Sucess' } }
@@ -882,17 +907,9 @@ class BetfairController {
       } else {
 
         //Try to login
-        const res = await this.api.login(userId);
+        const res = await this.apiLogin(userId);
 
-        if (res[0]) {
-
-          //Save the session to the database and update API status
-          let data = (apiSettings.apiMode === 'Test') ? { $set: { testSessionId: res[1], testApiStatus: true, lastTestStatus: new Date().toJSON(), lastTestLogin: new Date().toJSON(), lastTestMessage: 'Login Sucess' } } : { $set: { liveSessionId: res[1], liveApiStatus: true, lastLiveStatus: new Date().toJSON(), lastLiveLogin: new Date().toJSON(), lastLiveMessage: 'Login Sucess' } }
-          let result = await Apisetting.findOneAndUpdate(
-            { userId: userId },
-            data,
-            { runValidators: true, new: true }
-          );
+        if (res[0] === true) {
 
           return [true, "Success"]
 

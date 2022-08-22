@@ -1,9 +1,11 @@
 import React from 'react';
 import Auth from '../utils/auth';
-import { Navigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 const Support = () => {
+
+  let navigate = useNavigate();
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -11,7 +13,7 @@ const Support = () => {
     userId = user.data._id;
   }
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   return (
     <main>
@@ -48,7 +50,7 @@ const Support = () => {
               Get a copy of the guide <a href="https://docs.developer.betfair.com/pages/viewpage.action?pageId=4392320">here.</a>
             </p>
             <p>
-              <button className="btn btn sm btn-warning"><Link to='/Usage'>App User Guide</Link></button>
+              <button className="btn btn sm btn-warning"><Link to='/usage'>App User Guide</Link></button>
             </p>
           </div>
         </div>

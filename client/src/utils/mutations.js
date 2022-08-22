@@ -105,12 +105,10 @@ export const API_LOGOUT = gql`
 `;
 
 export const TOGGLE_SYSTEM = gql`
-  mutation toggleSystem($systemId: ID!, $toggle: String!) {
-    toggleSystem(systemId: $systemId, toggle: $toggle) {
-      isActive
-      lastStopped
-      lastStarted
-      statusDesc
+  mutation toggleSystem($systemId: ID!, $toggle: String!, $apiType: String!) {
+    toggleSystem(systemId: $systemId, toggle: $toggle, apiType: $apiType) {
+      status
+      msg
     }
   }
 `;
@@ -135,6 +133,7 @@ export const UPDATE_SYSTEM = gql`
     $scenarioParams: String
     $stakingParams: String
     $mode: String
+    $apiMode: String
     $betType: String
     $racingBetType: String
     $setWallet: Int
@@ -212,6 +211,7 @@ export const UPDATE_SYSTEM = gql`
     scenarioParams: $scenarioParams,
     stakingParams: $stakingParams,
     mode: $mode,
+    apiMode: $apiMode,
     betType: $betType,
     racingBetType: $racingBetType,
     setWallet: $setWallet,

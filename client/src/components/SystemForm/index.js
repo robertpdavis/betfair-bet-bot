@@ -345,7 +345,7 @@ const SystemForm = (props) => {
                   <label className="form-label" id="sysform_stakingParams_ordertype-lbl" htmlFor="stakingParams-ordertype" title="Order types are Limit Limit On Close or Market On Close">Order Type For Placed Bets<span className="star">&#160;*</span></label>
                   <select className="form-control w-75" id="sysform_stakingParams_ordertype" name="stakingParamsordertypee" value={formState.stakingParamsordertype} defaultValue={stakingParams.orderType} required aria-required="true" onChange={handleChange}>
                     <option value="Limit">Limit Order</option>
-                    <option value="LimitOnCLose">Lmit On Close Order</option>
+                    <option value="LimitOnCLose">Limit On Close Order</option>
                     <option value="MarketOnClose">Market On Close Order</option>
                   </select>
                 </div>

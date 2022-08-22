@@ -1,10 +1,12 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const Usage = () => {
+
+  let navigate = useNavigate();
 
   let userId = '';
   if (Auth.loggedIn()) {
@@ -12,7 +14,7 @@ const Usage = () => {
     userId = user.data._id;
   }
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   return (
     <main>

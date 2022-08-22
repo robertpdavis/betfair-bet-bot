@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Auth from '../utils/auth';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { QUERY_SINGLE_SYSTEM, QUERY_EVENT_TYPES } from '../utils/queries';
 import { TOGGLE_SYSTEM, RESET_SYSTEM, UPDATE_SYSTEM, COPY_SYSTEM } from '../utils/mutations';
@@ -10,6 +10,8 @@ import Alert from '../components/Alert';
 import '../App.css';
 
 const SingleSystem = () => {
+
+  let navigate = useNavigate();
 
   //Elevated state for form changes
   const [formState, setFormState] = useState('');
@@ -35,11 +37,26 @@ const SingleSystem = () => {
 
 
   //System start/stop mutation
-  const [toggleSystem, { error: errorT, data: dataT }] = useMutation(TOGGLE_SYSTEM);
+  const [toggleSystem, { error: errorT, data: dataT }] = useMutation(TOGGLE_SYSTEM,
+    {
+      refetchQueries: [
+        'getSingleSystem'
+      ],
+    });
   //Reset system stats mutation
-  const [resetSystem, { error: errorR, data: dataR }] = useMutation(RESET_SYSTEM);
+  const [resetSystem, { error: errorR, data: dataR }] = useMutation(RESET_SYSTEM,
+    {
+      refetchQueries: [
+        'getSingleSystem'
+      ],
+    });
   //Update system from formState
-  const [updateSystem, { error: errorU, data: dataU }] = useMutation(UPDATE_SYSTEM);
+  const [updateSystem, { error: errorU, data: dataU }] = useMutation(UPDATE_SYSTEM,
+    {
+      refetchQueries: [
+        'getSingleSystem'
+      ],
+    });
   //Update system from formState
   const [copySystem, { error: errorC, data: dataC }] = useMutation(COPY_SYSTEM);
   //Initial button toolbar settings
@@ -52,40 +69,33 @@ const SingleSystem = () => {
         state: 'disabled'
       },
       {
-        name: 'archive',
-        title: 'Archive',
-        class: 'btn btn-sm btn-secondary me-3',
-        state: 'disabled'
-      },
-      {
         name: 'reset',
         title: 'Reset Stats',
         class: 'btn btn-sm btn-warning me-3',
         state: 'disabled'
       },
       {
-        name: 'copy',
-        title: 'Copy System',
-        class: 'btn btn-sm btn-secondary me-3',
-        state: 'disabled'
-      },
-      {
         name: 'startstop',
         title: 'Stop System',
-        class: 'btn btn-sm btn-success me3',
+        class: 'btn btn-sm btn-success me-3',
+        state: 'enabled'
+      },
+      {
+        name: 'testfilter',
+        title: 'Test Filter',
+        class: 'btn btn-sm btn-secondary me-3',
         state: 'enabled'
       }
-
     ]
 
   if (systemData.isActive) {
-    buttonSettings[4].title = 'Stop System';
-    buttonSettings[4].class = 'btn btn-sm btn-danger me3';
-    buttonSettings[2].state = 'disabled';
+    buttonSettings[2].title = 'Stop System';
+    buttonSettings[2].class = 'btn btn-sm btn-danger me-3';
+    buttonSettings[1].state = 'disabled';
   } else {
-    buttonSettings[4].title = 'Start System';
-    buttonSettings[4].class = 'btn btn-sm btn-success me3';
-    buttonSettings[2].state = 'enabled';
+    buttonSettings[2].title = 'Start System';
+    buttonSettings[2].class = 'btn btn-sm btn-success me-3';
+    buttonSettings[1].state = 'enabled';
   }
 
   // Set the button status first and subsequent renders
@@ -95,7 +105,7 @@ const SingleSystem = () => {
   }, [systemData])
 
   //Check if user should be here, if not send to login
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   //Handle mutations
   const handleBtnClick = async (event) => {
@@ -103,6 +113,7 @@ const SingleSystem = () => {
     const action = event.target.name;
 
     try {
+      let response = '';
 
       switch (action) {
         case 'startstop':
@@ -110,65 +121,64 @@ const SingleSystem = () => {
           (event.target.textContent === 'Start System') ? toggle = 'start' : toggle = 'stop'
 
           if (toggle === 'start') {
-            setAlertState({ variant: 'success', message: 'Starting system. Updating system events. May take 20 -30 seconds...' });
+            setAlertState({ variant: 'success', message: 'Starting system. Updating system events. May take a little while...' });
           }
-
-          const toggleData = await toggleSystem({
-            variables: { systemId, toggle },
+          const apiType = systemData.apiMode;
+          response = await toggleSystem({
+            variables: { systemId, toggle, apiType },
           });
 
-          if (toggleData) {
-
-            if (toggle === 'start') {
-              buttonState[4].title = 'Stop System';
-              buttonState[4].class = 'btn btn-sm btn-danger me3';
-              buttonState[2].state = 'disabled';
-            } else {
-              buttonState[4].title = 'Start System';
-              buttonState[4].class = 'btn btn-sm btn-success me3';
-              buttonState[2].state = 'enabled';
-            }
+          if (response.data.toggleSystem.status === true) {
             setAlertState({ show: false });
+            if (toggle === 'start') {
+              buttonState[2].title = 'Stop System';
+              buttonState[2].class = 'btn btn-sm btn-danger me-3';
+              buttonState[1].state = 'disabled';
+            } else {
+              buttonState[2].title = 'Start System';
+              buttonState[2].class = 'btn btn-sm btn-success me-3';
+              buttonState[1].state = 'enabled';
+            }
             setBtnState(buttonState);
+          } else {
+            setAlertState({ variant: 'danger', message: 'System ' + toggle + ' failed. ' + response.data.toggleSystem.msg })
           }
-
           break;
 
         case 'save':
 
           formState['_id'] = systemId;
+          //To do presave checks and set data
+          //TO DO
 
-          const updateData = await updateSystem({
+          response = await updateSystem({
             variables: { ...formState },
           });
 
-          if (updateData) {
-
+          if (response.data.updateSystem.status === true) {
             setAlertState({ variant: 'success', message: 'The system was updated.' })
-
+          } else {
+            setAlertState({ variant: 'danger', message: 'System update failed. ' + response.data.updateSystem.msg })
           }
-
-
-          break;
-
-        case 'copy':
-          const copyData = await copySystem({
-            variables: { systemId },
-          });
-
           break;
 
         case 'reset':
 
-          const resetData = await resetSystem({
+          response = await resetSystem({
             variables: { systemId },
           });
 
-          if (resetData) {
-
-            setAlertState({ variant: 'success', message: 'The stats have been reset for this system.' })
-
+          if (response.data.resetSystem.status === true) {
+            setAlertState({ variant: 'success', message: 'The system stats were reset.' })
+          } else {
+            setAlertState({ variant: 'danger', message: 'System stats reset failed. ' + response.data.resetSystem.msg })
           }
+
+          break;
+
+        case 'testfilter':
+
+          //TO DO
 
           break;
 
@@ -176,9 +186,8 @@ const SingleSystem = () => {
           break;
       }
 
-
     } catch (e) {
-      console.error(e);
+      throw (e);
     }
 
   }

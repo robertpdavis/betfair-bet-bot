@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { QUERY_USER } from '../utils/queries';
 import { UPDATE_USER } from '../utils/mutations';
@@ -8,6 +8,8 @@ import { UPDATE_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 const Account = () => {
+
+  let navigate = useNavigate();
 
   const [formState, setFormState] = useState('');
   const [updateUser, { error: error, data: dataM, loading: loadingM }] = useMutation(UPDATE_USER);
@@ -28,7 +30,7 @@ const Account = () => {
   const user = data?.user || {};
 
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   // update state based on form input changes
   const handleChange = (event) => {

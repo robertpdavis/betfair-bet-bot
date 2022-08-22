@@ -1,13 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import Auth from '../utils/auth';
 import ResultTable from '../components/ResultTable';
 import SystemLinks from '../components/SystemLinks';
 import { useQuery } from '@apollo/client';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { QUERY_SYSTEMS, QUERY_RESULTS } from '../utils/queries';
 
 
 function ResultList() {
+
+  let navigate = useNavigate();
 
   let { systemId } = useParams();
 
@@ -29,7 +31,7 @@ function ResultList() {
     });
 
 
-  if (!Auth.loggedIn()) { return <Navigate to="/login" /> };
+  if (!Auth.loggedIn()) { navigate("login") };
 
   if (loadingS || loadingR) {
     return <div>Loading...</div>;

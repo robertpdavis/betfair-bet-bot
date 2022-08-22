@@ -175,6 +175,7 @@ scalar Date
     scenarioParams: String
     stakingParams: String
     mode: String
+    apiMode: String
     betType: String
     racingBetType: String
     setWallet: Int
@@ -305,13 +306,6 @@ scalar Date
     lastLiveMessage: String
   }
 
-  type ToggleSystem {
-    isActive: Boolean
-    lastStopped: Date 
-    lastStarted: Date 
-    statusDesc: String
-  }
-
   type Response {
     status: Boolean
     msg: String
@@ -355,7 +349,7 @@ scalar Date
     enableApi(userId: ID!, apiType: String!): Response
     disableApi(userId: ID!, apiType: String!): Response
     testApi(userId: ID!, apiType: String!): Response
-    toggleSystem(systemId: ID!, toggle: String): ToggleSystem
+    toggleSystem(systemId: ID!, toggle: String, apiType: String): Response
     updateSystem(
     _id: ID!
     title: String
@@ -366,6 +360,7 @@ scalar Date
     scenarioParams: String
     stakingParams: String
     mode: String
+    apiMode: String
     betType: String
     racingBetType: String
     setWallet: Int
