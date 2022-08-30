@@ -47,22 +47,23 @@ NOTE: There is a scheduler.js file in the Server/Utils that uses a setInterval t
 * Event update every 4 hours
 * API keepalive every hour
 * PlaceBets every 15 seconds
-* Bet update every 30 seconds
+* Bet update every 15 seconds (alternate to placebets)
 
 The following mongoDb database schemas are used:
 * Apisettings - holds the Betfair API settings and status data
 * Condfig - holds global system config values
 * Event - holds all system event data
-* EvenTypes - a list of current Betfair event types
+* EventTypes - a list of current Betfair event types
 * Market - holds all the market data for each event
 * Result - holds all bet and bet result data
 * Runner - holds all the market runner data
 * Scenario - holds the template scenarios data
 * Staking Plan - holds the template staking plan data
 * System - holds all sytem configuration and statistical data
+* Transaction - all account/wallet transactions
 * User
 
-### NOTE: App is currently deployed on Heroku: https://betfair-betbot.herokuapp.com/ but won't operate with the Betfair API due to geo restrictions. A new server site located in AU to be set up.
+### NOTE: App is currently deployed on AWS EC2 instance: http://ec2-54-206-10-245.ap-southeast-2.compute.amazonaws.com
 
 
 ## Usage
@@ -102,7 +103,7 @@ MIT License
 Please contact me at: robertpdavis@optusnet.com.au
 
 ## Tests
-No tests are included.
+No tests are currently included.
 
 ## Questions
 * Github: [robertpdavis](https://github.com/robertpdavis)
