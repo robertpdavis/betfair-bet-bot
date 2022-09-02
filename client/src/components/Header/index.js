@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <header className="container align-center">
       <div className="row">
-        <h3 className="d-inline">Betfair Bet Bot</h3>
+        <Link to="/" className="nolink"><h3 className="d-inline">Betfair Bet Bot</h3></Link>
         {Auth.loggedIn() ? (
           <>
             <div className="d-inline">

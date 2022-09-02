@@ -333,7 +333,7 @@ scalar Date
     results(systemId: ID, userId: ID): [Result]
     result(id: ID!): Result
     apisetting(userId: ID!): Apisetting
-    eventTypes: EventType
+    eventTypes: [EventType]
   }
 
   type Mutation {

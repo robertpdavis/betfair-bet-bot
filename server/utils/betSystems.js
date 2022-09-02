@@ -106,10 +106,10 @@ function stk1_fixedStake(system, marketData, runnerData, results, backPrices, la
 
   bets.forEach(bet => {
 
-    bet['size'] = stakingParams.stake;
+    bet['size'] = stakingParams[0].value;
 
-    bet['orderType'] = stakingParams.orderType;
-    bet['persistence'] = stakingParams.persistance;
+    bet['orderType'] = stakingParams[2].value;
+    bet['persistence'] = stakingParams[3].value;
   });
 
   return true;

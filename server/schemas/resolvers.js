@@ -97,13 +97,13 @@ const resolvers = {
       const user = await User.findOne({ username });
 
       if (!user) {
-        throw new AuthenticationError('No user found with this username');
+        throw new AuthenticationError('Username or password error');
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw new AuthenticationError('Username or password error');
       }
 
       const updateUser = await User.findByIdAndUpdate(

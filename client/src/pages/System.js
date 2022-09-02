@@ -35,7 +35,6 @@ const SingleSystem = () => {
   const { loading: loadingE, data: dataE } = useQuery(QUERY_EVENT_TYPES);
   const eventTypes = dataE?.eventTypes || {};
 
-
   //System start/stop mutation
   const [toggleSystem, { error: errorT, data: dataT }] = useMutation(TOGGLE_SYSTEM,
     {
@@ -237,7 +236,7 @@ const SingleSystem = () => {
           </div>
         </div>
         <div className="row">
-          <SystemForm systemData={systemData} evenTypes={eventTypes} formState={formState} handleFormChange={handleFormChange} formType={formType} />
+          <SystemForm systemData={systemData} eventTypes={eventTypes} formState={formState} handleFormChange={handleFormChange} formType={formType} />
         </div>
       </section>
     </main>

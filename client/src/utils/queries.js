@@ -539,11 +539,12 @@ export const QUERY_SINGLE_API = gql`
 `;
 
 export const QUERY_EVENT_TYPES = gql`
-{
+query getEventTypes {
     eventTypes{
       _id
       eventTypeId
       name
+      used
     }
   }
 `;

@@ -58,6 +58,16 @@ header h3 {
   font-weight: bold;
 }
 
+.nolink {
+  color: var(--header-font);
+  text-decoration: none;
+}
+
+.nolink:hover {
+  color: var(--header-font);
+  text-decoration: none;
+}
+
 .nav-link-padding {
   padding-top: 0rem;
   padding-bottom: 0rem;

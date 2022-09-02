@@ -35,7 +35,7 @@ const Login = (props) => {
 
     // clear form values
     setFormState({
-      email: '',
+      username: '',
       password: '',
     });
   };
@@ -57,9 +57,10 @@ const Login = (props) => {
                   className="form-input"
                   placeholder="Your username"
                   name="username"
-                  type="username"
+                  type="text"
                   value={formState.username}
                   onChange={handleChange}
+                  required
                 />
                 <input
                   className="form-input"
@@ -68,6 +69,7 @@ const Login = (props) => {
                   type="password"
                   value={formState.password}
                   onChange={handleChange}
+                  required
                 />
                 <button
                   className="btn btn-block btn-primary"

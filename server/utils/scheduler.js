@@ -1,7 +1,7 @@
 const { NoFragmentCyclesRule } = require('graphql');
 const BetfairController = require('../classes/BetfairController');
 const bfController = new BetfairController;
-const { User, System, Config } = require('../models');
+const { User, System, Config, EventType } = require('../models');
 
 //Set interval
 const interval = 1000; //Every second
@@ -11,7 +11,8 @@ const intervals = {
   placeBets: 15000,//Every 15 seconds
   betUpdate: 15000,//Every 15 seconds - in between placebets
   keepalive: 3600000,//Every 1 hour
-  eventUpdate: 14400000//Every 4 hours
+  eventUpdate: 14400000,//Every 4 hours
+  eventType: 86400000//Every 24 hours
 }
 
 //Setup intial timers
@@ -19,7 +20,8 @@ const timers = {
   placeBets: Date.now() + intervals.placeBets,
   betUpdate: Date.now() + intervals.betUpdate + 7000,
   keepalive: Date.now() + intervals.keepalive,
-  eventUpdate: Date.now() + intervals.eventUpdate
+  eventUpdate: Date.now() + intervals.eventUpdate,
+  eventType: Date.now() + intervals.eventType
 }
 
 async function scheduler() {
@@ -140,6 +142,24 @@ async function scheduler() {
                 await bfController.eventUpdate(system._id);
             }
           }
+        }
+      }
+    }
+
+    //Event Type Update
+    if (timers.eventType <= timeNow) {
+      //Reset timer
+      timers.eventType = timeNow + intervals.eventType;
+
+      //Get all users
+      const users = await User.find({});
+      if (users.length > 0) {
+        for (let ui = 0; ui < users.length; ui++) {
+          const user = users[ui];
+          await bfController.setSession(user._id);
+          showConsole ? console.log('Event type update:' + new Date().toJSON()) : '';
+          showConsole ? console.log(await bfController.getEventTypes()) :
+            await bfController.getEventTypes();
         }
       }
     }

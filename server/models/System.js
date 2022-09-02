@@ -171,13 +171,19 @@ const systemSchema = new Schema({
     required: true,
     default: 0
   },
-  betStartingPrice: Boolean,
+  betStartingPrice: {
+    type: Boolean,
+    default: false
+  },
   unsettledLimit: {
     type: Number,
     required: true,
     default: 0
   },
-  includeCommission: Boolean,
+  includeCommission: {
+    type: Boolean,
+    default: false
+  },
   timeSecsRace: {
     type: Number,
     required: true,
@@ -253,13 +259,22 @@ const systemSchema = new Schema({
   competitionIds: String,
   marketIds: String,
   venues: String,
-  bspOnly: Boolean,
+  bspOnly: {
+    type: Boolean,
+    default: false
+  },
   turnInPlayEnabled: Boolean,
-  inPlayOnly: Boolean,
+  inPlayOnly: {
+    type: Boolean,
+    default: false
+  },
   marketBettingTypes: String,
   marketCountries: String,
   marketTypeCodes: String,
-  customTime: Boolean,
+  customTime: {
+    type: Boolean,
+    default: false
+  },
   marketFromTime: Date,
   marketToTime: Date,
   withOrders: String,
