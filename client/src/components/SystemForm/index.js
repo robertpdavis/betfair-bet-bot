@@ -303,8 +303,8 @@ const SystemForm = (props) => {
                     }
                     return (
                       <div className="col-auto mb-3" key={param.name}>
-                        <label className="form-label" id={param.name + '-lbl'} htmlFor={param.name} title={param.desc}>{param.label}</label>
-                        <input className="form-control w-75" type={param.type} name={param.name} id={'scenarioparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
+                        <label className="form-label" id={param.name + '-lbl'} htmlFor={'scenarioparams-' + param.name} title={param.desc}>{param.label}</label>
+                        <input className="form-control w-75" type={param.type} name={'scenarioparams-' + param.name} id={'scenarioparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
                       </div>
                     );
                   } else {
@@ -340,8 +340,8 @@ const SystemForm = (props) => {
                     }
                     return (
                       <div className="col-auto mb-3" key={param.name}>
-                        <label className="form-label" id={param.name + '-lbl'} htmlFor={param.name} title={param.desc}>{param.label}</label>
-                        <input className="form-control w-75" type={param.type} name={param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
+                        <label className="form-label" id={param.name + '-lbl'} htmlFor={'stakingparams-' + param.name} title={param.desc}>{param.label}</label>
+                        <input className="form-control w-75" type={param.type} name={'stakingparams-' + param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
                       </div>
                     );
                   } else if (param.type === 'select') {
@@ -353,8 +353,8 @@ const SystemForm = (props) => {
                     }
                     return (
                       <div className="col-auto mb-3" key={param.name}>
-                        <label className="form-label" id={param.name + '-lbl'} htmlFor={param.name} title={param.desc}>{param.label}</label>
-                        <select className="form-control w-75" name={param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange}>
+                        <label className="form-label" id={param.name + '-lbl'} htmlFor={'stakingparams-' + param.name} title={param.desc}>{param.label}</label>
+                        <select className="form-control w-75" name={'stakingparams-' + param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange}>
                           {options}
                         </select>
                       </div>

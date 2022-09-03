@@ -146,9 +146,35 @@ const SingleSystem = () => {
 
         case 'save':
 
+          //Check if system is active first
+          if (systemData.isActive === true) {
+            setAlertState({ variant: 'danger', message: 'The system is currently active. Stop system to update.' });
+            return;
+          }
+
           formState['_id'] = systemId;
-          //To do presave checks and set data
-          //TO DO
+
+          //Check if scenario of staking params changed and update JSON strings for saving
+          let scenarioParams = JSON.parse(systemData.scenarioParams);
+          let stakingParams = JSON.parse(systemData.stakingParams);
+          let scenUpdate = false;
+          let stakUpdate = false;
+
+          scenarioParams.map((param) => {
+            if ('scenarioparams-' + param.name in formState) {
+              param.value = formState['scenarioparams-' + param.name];
+              scenUpdate = true;
+            }
+          })
+          stakingParams.map((param) => {
+            if ('stakingparams-' + param.name in formState) {
+              param.value = formState['stakingparams-' + param.name];
+              stakUpdate = true;
+            }
+          })
+
+          if (scenUpdate === true) { formState['scenarioParams'] = JSON.stringify(scenarioParams) };
+          if (stakUpdate === true) { formState['stakingParams'] = JSON.stringify(stakingParams) };
 
           response = await updateSystem({
             variables: { ...formState },
@@ -191,7 +217,11 @@ const SingleSystem = () => {
 
   }
   const handleFormChange = async (event) => {
-    const { name, value } = event.target;
+    let { name, value, type, checked } = event.target;
+
+    if (type === 'checkbox') {
+      value = checked;
+    }
 
     setFormState({
       ...formState,

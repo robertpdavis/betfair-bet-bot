@@ -456,8 +456,15 @@ const resolvers = {
     updateSystem: async (parent, args, context) => {
       try {
         if (context.user) {
-          //TO DO check if system active first
           const systemId = args._id
+
+          //Check if system active
+          const system = await System.findById(systemId);
+          if (system.isActive === true) {
+            const status = false;
+            const msg = 'The system is currently active. Stop system to update.';
+            return { status, msg }
+          }
 
           const systemUpdate = await System.findByIdAndUpdate(
             systemId,
