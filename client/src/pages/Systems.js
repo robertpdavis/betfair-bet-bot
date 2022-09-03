@@ -51,6 +51,8 @@ const Systems = () => {
   const [buttonState, setBtnState] = useState(buttonSettings);
   //State to control the alert banner
   const [alertState, setAlertState] = useState({ show: false });
+  //State to hold table component selected row
+  const [systemSelection, setSelection] = useState('');
 
   //New system mutation
   const [createSystem, { error: errorN, data: dataN }] = useMutation(CREATE_SYSTEM,
@@ -104,9 +106,15 @@ const Systems = () => {
         case 'copy':
 
           //Get the system Id to copy
-          const systemId = "62eb347990124e7362af8001";
+          let systemId = '';
+          if (systemSelection !== '') {
+            systemId = systemSelection.original._id;
+          }
 
-          console.log('here')
+          if (systemId === '') {
+            setAlertState({ variant: 'danger', message: 'Select a system to copy from.' });
+            return
+          }
 
           response = await copySystem({
             variables: { userId, systemId },
@@ -130,6 +138,9 @@ const Systems = () => {
 
   }
 
+  const handleRow = async (data) => {
+    console.log('system', data)
+  }
 
   const handleAlertClick = async (option) => {
     setAlertState({ show: false });
@@ -155,7 +166,7 @@ const Systems = () => {
         </div>
         <div className="row">
           {systemData.length > 0 ?
-            <SystemTable systemData={systemData} />
+            <SystemTable systemData={systemData} setSelection={setSelection} />
             :
             <div>
               <h4>You currently have no betting systems set up.</h4>

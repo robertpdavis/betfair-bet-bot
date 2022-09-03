@@ -3,7 +3,7 @@ import { useTable, useFilters, useGlobalFilter, useSortBy, usePagination, useRow
 import { Link } from "react-router-dom";;
 
 
-function SystemTable({ systemData }) {
+function SystemTable({ systemData, setSelection }) {
 
   const columns = useMemo(
     () => [
@@ -125,6 +125,14 @@ function SystemTable({ systemData }) {
       ])
     }
   );
+
+  React.useEffect(() => {
+    if (selectedFlatRows[0]) {
+      setSelection(selectedFlatRows[0])
+    } else {
+      setSelection('')
+    }
+  }, [selectedRowIds])
 
   return (
     <div className="table-responsive">
