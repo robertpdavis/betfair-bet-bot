@@ -120,7 +120,7 @@ const SingleSystem = () => {
           (event.target.textContent === 'Start System') ? toggle = 'start' : toggle = 'stop'
 
           if (toggle === 'start') {
-            setAlertState({ variant: 'success', message: 'Starting system. Updating system events. May take a little while...' });
+            setAlertState({ variant: 'success', message: 'Starting system. Updating system events. This may take a little while ...' });
           }
           const apiType = systemData.apiMode;
           response = await toggleSystem({
@@ -218,9 +218,18 @@ const SingleSystem = () => {
   }
   const handleFormChange = async (event) => {
     let { name, value, type, checked } = event.target;
+    let isCurrency = event.target.getAttribute("data-iscurrency");
 
     if (type === 'checkbox') {
       value = checked;
+    }
+
+    if (type === 'number') {
+      value = parseInt(value);
+    }
+
+    if (isCurrency === "true") {
+      value = parseInt((value * 100).toFixed(0));
     }
 
     setFormState({

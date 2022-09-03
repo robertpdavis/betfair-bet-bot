@@ -428,8 +428,10 @@ scalar Date
     statusDesc: String
     ordering: Int
     ): Response
+    createSystem(userId: String!): Response
     resetSystem(systemId: ID!): Response
-    copySystem(systemId: ID!): Response
+    copySystem(userId: ID!, systemId: ID!): Response
+    archiveSystem(userId: ID!, systemId: ID!): Response
   }
 `;
 

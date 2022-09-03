@@ -1,6 +1,7 @@
 const { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
+const { getDefaultSystem } = require('../utils/bfHelpers');
 const BetfairController = require('../classes/BetfairController');
 
 const resolvers = {
@@ -488,11 +489,52 @@ const resolvers = {
         throw (e);
       }
     },
+    createSystem: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+          const userId = context.user._id;
+          //Workout the next user system id
+          const lastSystem = await System.findOne({ userId: userId }).sort('-systemId');
+          const nextSystemId = parseInt(lastSystem.systemId) + 1;
+
+          const newSystem = { ...getDefaultSystem() };
+
+          newSystem.userId = userId;
+          newSystem.systemId = nextSystemId;
+
+          const result = await System.create(newSystem);
+
+          if (result) {
+            const status = true;
+            const msg = 'System created.'
+            return { status, msg }
+          } else {
+            const status = false;
+            const msg = 'System create failed'
+            return { status, msg }
+          }
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+
     resetSystem: async (parent, args, context) => {
       try {
         if (context.user) {
-          //TO DO check if system active first
+
           const systemId = args.systemId
+
+          //Check if system active
+          const system = await System.findById(systemId);
+          if (system.isActive === true) {
+            const status = false;
+            const msg = 'The system is currently active. Stop system to reset stats.';
+            return { status, msg }
+          }
 
           const data = {
             totalEvents: 0,
@@ -513,8 +555,6 @@ const resolvers = {
             { runValidators: true, new: true }
           );
 
-
-
           if (systemUpdate) {
             const status = true;
             const msg = 'System stats reset'
@@ -522,6 +562,106 @@ const resolvers = {
           } else {
             const status = false;
             const msg = 'System reset failed'
+            return { status, msg }
+          }
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+
+    copySystem: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+          const userId = context.user._id;
+
+          const systemId = args.systemId
+
+          //Workout the next user system id
+          const lastSystem = await System.findOne({ userId: userId }).sort('-systemId');
+          const nextSystemId = parseInt(lastSystem.systemId) + 1;
+
+          //Get system to copy
+          const system = await System.findById(systemId);
+
+          const newSystem = { ...system.toObject() };
+
+          //Update fields not to copy
+          delete newSystem['_id'];
+          delete newSystem['createdAt'];
+          delete newSystem['updatedAt'];
+
+          newSystem.title = "Enter name for system"
+          newSystem.description = "Enter a description for the system"
+          newSystem.systemId = nextSystemId;
+          newSystem.ordering = nextSystemId;
+          newSystem.isActive = false;
+          newSystem.mode = 'Simulated';
+          newSystem.totalEvents = 0;
+          newSystem.totalMarkets = 0;
+          newSystem.totalBets = 0;
+          newSystem.profitLoss = 0;
+          newSystem.totalLosers = 0;
+          newSystem.totalWinners = 0;
+          newSystem.totalConsecLosers = 0;
+          newSystem.totalConsecWinners = 0;
+          newSystem.maxBet = 0;
+          newSystem.unsettledBets = 0;
+          newSystem.statusDesc = "System created.";
+          newSystem.lastStarted = '';
+          newSystem.lastStopped = '';
+          newSystem.lastEventUpdate = '';
+          newSystem.apiMode = 'test';
+
+          const result = await System.create(newSystem);
+
+          if (result) {
+            const status = true;
+            const msg = 'System copied'
+            return { status, msg }
+          } else {
+            const status = false;
+            const msg = 'System copy failed'
+            return { status, msg }
+          }
+        } else {
+          throw new AuthenticationError('Not logged in');
+        }
+      } catch (e) {
+        throw (e);
+      }
+    },
+
+    archiveSystem: async (parent, args, context) => {
+      try {
+        if (context.user) {
+
+          const systemId = args.systemId
+
+          //Check if system active
+          const system = await System.findById(systemId);
+          if (system.isActive === true) {
+            const status = false;
+            const msg = 'The system is currently active. Stop system to archive.';
+            return { status, msg }
+          }
+
+          const systemUpdate = await System.findByIdAndUpdate(
+            systemId,
+            { $set: { isArchived: true } },
+            { runValidators: true, new: true }
+          );
+
+          if (systemUpdate) {
+            const status = true;
+            const msg = 'System archived'
+            return { status, msg }
+          } else {
+            const status = false;
+            const msg = 'System archive failed'
             return { status, msg }
           }
         } else {

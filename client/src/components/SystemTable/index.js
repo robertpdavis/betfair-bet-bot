@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { useTable } from "react-table";
+import React, { useMemo, Checkbox } from "react";
+import { useTable, useFilters, useGlobalFilter, useSortBy, usePagination, useRowSelect } from "react-table";
 import { Link } from "react-router-dom";;
 
 
@@ -9,7 +9,7 @@ function SystemTable({ systemData }) {
     () => [
       {
         Header: "Id",
-        accessor: "systemId"
+        accessor: "systemId",
       },
       {
         Header: "System Name",
@@ -67,9 +67,26 @@ function SystemTable({ systemData }) {
         profitLoss: (item.profitLoss / 100).toFixed(2),
         totalLosers: item.totalLosers,
       }
-    )))
+    )),
+    []
+  );
 
-  const tableInstance = useTable({ columns, data })
+  const IndeterminateCheckbox = React.forwardRef(
+    ({ indeterminate, ...rest }, ref) => {
+      const defaultRef = React.useRef()
+      const resolvedRef = ref || defaultRef
+
+      React.useEffect(() => {
+        resolvedRef.current.indeterminate = indeterminate
+      }, [resolvedRef, indeterminate])
+
+      return (
+        <>
+          <input type="checkbox" ref={resolvedRef} {...rest} />
+        </>
+      )
+    }
+  )
 
   const {
     getTableProps,
@@ -77,7 +94,37 @@ function SystemTable({ systemData }) {
     headerGroups,
     rows,
     prepareRow,
-  } = tableInstance
+    selectedFlatRows,
+    state: { selectedRowIds },
+  } = useTable({
+    columns,
+    data
+  },
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Add a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
+  );
 
   return (
     <div className="table-responsive">
@@ -92,7 +139,7 @@ function SystemTable({ systemData }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
+          {rows.slice(0, 10).map((row, i) => {
             let link = "/system/" + data[i]._id
             prepareRow(row);
             return (
@@ -117,6 +164,5 @@ function SystemTable({ systemData }) {
     </div>
   );
 }
-
 
 export default SystemTable;

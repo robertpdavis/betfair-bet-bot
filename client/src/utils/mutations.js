@@ -114,8 +114,8 @@ export const TOGGLE_SYSTEM = gql`
 `;
 
 export const CREATE_SYSTEM = gql`
-  mutation updateSystem($userId: ID!, $data: String!) {
-    updateSystem(userId: $userId, data: $data) {
+  mutation createSystem($userId: String!) {
+    createSystem(userId: $userId) {
       status
       msg
     }
@@ -295,8 +295,17 @@ export const RESET_SYSTEM = gql`
 `;
 
 export const COPY_SYSTEM = gql`
-  mutation copySystem($systemId: ID!) {
-    copySystem(systemId: $systemId) {
+  mutation copySystem($userId: ID!, $systemId: ID!) {
+    copySystem(userId: $userId, systemId: $systemId) {
+      status
+      msg
+    }
+  }
+`;
+
+export const ARCHIVE_SYSTEM = gql`
+  mutation archiveSystem($userId: ID!, $systemId: ID!) {
+    archiveSystem(userId: $userId, systemId: $systemId) {
       status
       msg
     }
