@@ -98,11 +98,11 @@ const SystemForm = (props) => {
               <div className="col-6">
                 <div className="col-auto mb-3">
                   <label className="form-label" id="profitLoss-lbl" htmlFor="profitLoss" title="Total profit/loss of system">Profit/Loss</label>
-                  <input className="form-control w-75" type="number" name="profitLoss" id="profitLoss" defaultValue={formData.profitLoss / 100} readOnly />
+                  <input className="form-control w-75" type="currency" name="profitLoss" id="profitLoss" defaultValue={formData.profitLoss / 100} readOnly />
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="maxBet-lbl" htmlFor="maxBet" title="Maximum bet amount made">Max Bet Made</label>
-                  <input className="form-control w-75" type="number" name="maxBet" id="maxBet" defaultValue={formData.maxBet / 100} readOnly />
+                  <input className="form-control w-75" type="currency" name="maxBet" id="maxBet" defaultValue={formData.maxBet / 100} readOnly />
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="unsettledBets-lbl" htmlFor="unsettledBets" title="Bets yet to be settled">Unsettled Bets</label>
@@ -150,11 +150,11 @@ const SystemForm = (props) => {
               <div className="col-6">
                 <div className="col-auto mb-3">
                   <label className="form-label" id="stopLoss-lbl" htmlFor="stopLoss" title="System will stop if loss reaches this. 0 = off.">Loss Stop</label>
-                  <input className="form-control w-75" type="number" name="stopLoss" id="stopLoss" defaultValue={formData.stopLoss} onChange={handleChange} />
+                  <input className="form-control w-75" type="number" data-iscurrency="true" name="stopLoss" id="stopLoss" defaultValue={(formData.stopLoss / 100).toFixed(2)} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="stopProfit-lbl" htmlFor="stopProfit" title="System will stop if profit reaches this. 0 = off.">Profit Stop</label>
-                  <input className="form-control w-75" type="number" name="stopProfit" id="stopProfit" defaultValue={formData.stopProfit} onChange={handleChange} />
+                  <input className="form-control w-75" type="number" data-iscurrency="true" name="stopProfit" id="stopProfit" defaultValue={(formData.stopProfit / 100).toFixed(2)} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="maxRunners-lbl" htmlFor="maxRunners" title="Bet will be placed on races with &lt;= this number of runners. 0 = off.">Max Runners</label>
@@ -236,15 +236,15 @@ const SystemForm = (props) => {
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="minOdds-lbl" htmlFor="minOdds" title="Bet will be placed on odds &gt;= this. 0 = off.">Minimum Odds</label>
-                  <input className="form-control w-75" type="number" name="minOdds" id="minOdds" defaultValue={formData.minOdds} onChange={handleChange} />
+                  <input className="form-control w-75" type="number" data-iscurrency="true" name="minOdds" id="minOdds" defaultValue={(formData.minOdds / 100).toFixed(2)} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="maxOdds-lbl" htmlFor="maxOdds" title="Bet will be placed on odds &lt;= this. 0 = off.">Maximum Odds</label>
-                  <input className="form-control w-75" type="number" name="maxOdds" id="maxOdds" defaultValue={formData.maxOdds} onChange={handleChange} />
+                  <input className="form-control w-75" type="number" data-iscurrency="true" name="maxOdds" id="maxOdds" defaultValue={(formData.maxOdds / 100).toFixed(2)} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="maxLiability-lbl" htmlFor="maxLiability" title="Bet will not be placed if liability exceeds this. 0 = off.">Maximum Liability</label>
-                  <input className="form-control w-75" type="number" name="maxLiability" id="maxLiability" defaultValue={formData.maxLiability} onChange={handleChange} />
+                  <input className="form-control w-75" type="number" data-iscurrency="true" name="maxLiability" id="maxLiability" defaultValue={(formData.maxLiability / 100).toFixed(2)} onChange={handleChange} />
                 </div>
               </div>
               <div className="col-6">
@@ -257,16 +257,16 @@ const SystemForm = (props) => {
                   <input className="form-control w-75" type="number" name="minBookLayBets" id="minBookLayBets" defaultValue={formData.minMatched} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
-                  <label className="form-label" id="minBookLayBets-lbl" htmlFor="minBookLayBets" title="0 = off.">Race Numbers</label>
-                  <input className="form-control w-75" type="number" name="minBookLayBets" id="minBookLayBets" defaultValue={formData.raceNumbers} onChange={handleChange} />
+                  <label className="form-label" id="raceNumbers-lbl" htmlFor="raceNumbers" title="0 = off.">Race Numbers</label>
+                  <input className="form-control w-75" type="number" name="raceNumbers" id="raceNumbers" defaultValue={formData.raceNumbers} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
-                  <label className="form-label" id="minBookLayBets-lbl" htmlFor="minBookLayBets" title="0 = off.">Race Disances</label>
-                  <input className="form-control w-75" type="number" name="minBookLayBets" id="minBookLayBets" defaultValue={formData.raceDistance} onChange={handleChange} />
+                  <label className="form-label" id="raceDistance-lbl" htmlFor="raceDistance" title="0 = off.">Race Disances</label>
+                  <input className="form-control w-75" type="number" name="raceDistance" id="raceDistance" defaultValue={formData.raceDistance} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
-                  <label className="form-label" id="minBookLayBets-lbl" htmlFor="minBookLayBets" title="0 = off.">Race Classes</label>
-                  <input className="form-control w-75" type="number" name="minBookLayBets" id="minBookLayBets" defaultValue={formData.raceClass} onChange={handleChange} />
+                  <label className="form-label" id="raceClass-lbl" htmlFor="raceClass" title="0 = off.">Race Classes</label>
+                  <input className="form-control w-75" type="number" name="raceClass" id="raceClass" defaultValue={formData.raceClass} onChange={handleChange} />
                 </div>
                 <div className="col-auto mb-3">
                   <label className="form-label" id="betStartingPrice-lbl" htmlFor="betStartingPrice" title="Bet on markets where BSP available">Bet On BSP</label>
@@ -297,14 +297,16 @@ const SystemForm = (props) => {
                     }
                   }
                   if (param.type === 'text' || param.type === 'number' || param.type === 'currency') {
+                    let isCurrency = "false";
                     if (param.type === 'currency') {
-                      param.type = 'number';
                       param.value = (param.value / 100).toFixed(2);
+                      param.type = 'number';
+                      isCurrency = "true";
                     }
                     return (
                       <div className="col-auto mb-3" key={param.name}>
-                        <label className="form-label" id={param.name + '-lbl'} htmlFor={param.name} title={param.desc}>{param.label}</label>
-                        <input className="form-control w-75" type={param.type} name={param.name} id={'scenarioparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
+                        <label className="form-label" id={param.name + '-lbl'} htmlFor={'scenarioparams-' + param.name} title={param.desc}>{param.label}</label>
+                        <input className="form-control w-75" type={param.type} data-iscurrency={isCurrency} name={'scenarioparams-' + param.name} id={'scenarioparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
                       </div>
                     );
                   } else {
@@ -334,14 +336,16 @@ const SystemForm = (props) => {
                     }
                   }
                   if (param.type === 'text' || param.type === 'number' || param.type === 'currency') {
+                    let isCurrency = "false";
                     if (param.type === 'currency') {
-                      param.type = 'number';
                       param.value = (param.value / 100).toFixed(2);
+                      param.type = 'number';
+                      isCurrency = "true";
                     }
                     return (
                       <div className="col-auto mb-3" key={param.name}>
-                        <label className="form-label" id={param.name + '-lbl'} htmlFor={param.name} title={param.desc}>{param.label}</label>
-                        <input className="form-control w-75" type={param.type} name={param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
+                        <label className="form-label" id={param.name + '-lbl'} htmlFor={'stakingparams-' + param.name} title={param.desc}>{param.label}</label>
+                        <input className="form-control w-75" type={param.type} data-iscurrency={isCurrency} name={'stakingparams-' + param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange} />
                       </div>
                     );
                   } else if (param.type === 'select') {
@@ -353,8 +357,8 @@ const SystemForm = (props) => {
                     }
                     return (
                       <div className="col-auto mb-3" key={param.name}>
-                        <label className="form-label" id={param.name + '-lbl'} htmlFor={param.name} title={param.desc}>{param.label}</label>
-                        <select className="form-control w-75" name={param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange}>
+                        <label className="form-label" id={param.name + '-lbl'} htmlFor={'stakingparams-' + param.name} title={param.desc}>{param.label}</label>
+                        <select className="form-control w-75" name={'stakingparams-' + param.name} id={'stakingparams-' + param.name} {...attribtutes} defaultValue={param.value} onChange={handleChange}>
                           {options}
                         </select>
                       </div>

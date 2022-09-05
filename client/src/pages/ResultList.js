@@ -36,6 +36,14 @@ function ResultList() {
   if (loadingS || loadingR) {
     return <div>Loading...</div>;
   }
+
+  //Get details of selected system
+  const selectedSystem = (dataS.systems.filter((system) => {
+    if ((system._id) === systemId) {
+      return system
+    }
+  }))[0]
+
   return (
     <main>
       <section className="container my-2">
@@ -45,7 +53,7 @@ function ResultList() {
         <div className="row">
           <SystemLinks systemData={dataS} linkType='resultList' isActive={false} />
           <div className="pb-3 pt-3">
-            <h6>Bets placed and results for: <b>System {dataS.systems[0].systemId}-{dataS.systems[0].title}</b></h6>
+            <h6>Bets placed and results for: <b>System {selectedSystem.systemId}-{selectedSystem.title}</b></h6>
           </div>
           <ResultTable resultData={dataR} />
         </div>

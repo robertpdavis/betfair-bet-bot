@@ -35,6 +35,8 @@ const Events = () => {
         </div>
         <div className="row">
           <SystemLinks systemData={dataS} linkType='eventList' isActive={true} />
+        </div>
+        <div className="row">
           <div className="pb-3 pt-3">
             <h6>Select system to view events.</h6>
           </div>

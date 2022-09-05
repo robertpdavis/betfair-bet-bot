@@ -167,6 +167,7 @@ scalar Date
     userId: ID
     systemId: Int
     isActive: Boolean
+    isArchived: Boolean
     title: String
     description: String
     isRacingEvent: Boolean
@@ -324,7 +325,7 @@ scalar Date
 
   type Query {
     user(username: String!): User
-    systems(userId: ID!, isActive: Boolean, sortName: String, sortType: Int): [System]
+    systems(userId: ID!, isActive: Boolean, sortName: String, sortType: Int, showArchived: Boolean): [System]
     system(id: ID!): System
     systemAg(userId: ID!): SysAg
     events(systemId: ID!): [Event]
@@ -428,8 +429,10 @@ scalar Date
     statusDesc: String
     ordering: Int
     ): Response
+    createSystem(userId: String!): Response
     resetSystem(systemId: ID!): Response
-    copySystem(systemId: ID!): Response
+    copySystem(userId: ID!, systemId: ID!): Response
+    archiveSystem(userId: ID!, systemId: ID!, toggle: String!): Response
   }
 `;
 
