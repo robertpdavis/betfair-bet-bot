@@ -153,6 +153,7 @@ const Dashboard = () => {
               <table className="table table-sm text-center dashboard-table">
                 <thead>
                   <tr>
+                    <th>Sys. Id</th>
                     <th>Bet Placed</th>
                     <th>Event Name</th>
                     <th>Market Name</th>
@@ -172,6 +173,7 @@ const Dashboard = () => {
                   {resultData.slice(0, 4).map((row, i) => {
                     return (
                       <tr key={i}>
+                        <td>{row.systemId[0].systemId}</td>
                         <td>{new Date(row.betPlaced).toLocaleString()}</td>
                         <td>{row.eventName}</td>
                         <td>{row.marketName}</td>

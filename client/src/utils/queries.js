@@ -394,7 +394,7 @@ export const QUERY_SINGLE_RUNNER = gql`
     runner(id: $runnerId) {
       _id
       systemId
-      marketId
+      marketId 
       selectionId
       runnerName
       handicap
@@ -420,11 +420,14 @@ export const QUERY_SINGLE_RUNNER = gql`
 `;
 
 export const QUERY_RESULTS = gql`
-  query getResults ($systemId: ID, $userId: ID,) {
-    results(systemId: $systemId, userId: $userId) {
+  query getResults ($systemId: ID, $userId: ID, $showSystem: Boolean) {
+    results(systemId: $systemId, userId: $userId, showSystem: $showSystem ) {
       _id
       userId
-      systemId
+      systemId {
+        _id,
+        systemId
+      }
       betId
       customerRef
       betPlaced

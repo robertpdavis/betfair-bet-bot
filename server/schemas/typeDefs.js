@@ -123,7 +123,7 @@ scalar Date
 
   type Result {
     _id: ID
-    systemId: ID
+    systemId: [System]
     userId: ID
     betId: String
     customerRef: String
@@ -331,7 +331,7 @@ scalar Date
     events(systemId: ID!): [Event]
     market(marketId: String!, type: String): Market
     runner(id: ID!): Runner
-    results(systemId: ID, userId: ID): [Result]
+    results(systemId: ID, userId: ID, showSystem: Boolean): [Result]
     result(id: ID!): Result
     apisetting(userId: ID!): Apisetting
     eventTypes: [EventType]

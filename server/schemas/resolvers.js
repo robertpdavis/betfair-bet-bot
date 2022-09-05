@@ -73,7 +73,7 @@ const resolvers = {
     },
     results: async (parent, { systemId, userId }) => {
       const params = systemId ? { systemId } : userId ? { userId } : {};
-      return await Result.find(params).sort({ createdAt: -1 });
+      return await Result.find(params).populate('systemId').sort({ createdAt: -1 });
     },
     result: async (parent, args) => {
       return await Result.findById(args.id);
