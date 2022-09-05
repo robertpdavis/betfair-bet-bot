@@ -303,9 +303,9 @@ export const COPY_SYSTEM = gql`
   }
 `;
 
-export const ARCHIVE_SYSTEM = gql`
-  mutation archiveSystem($userId: ID!, $systemId: ID!) {
-    archiveSystem(userId: $userId, systemId: $systemId) {
+export const TOGGLE_ARCHIVE_SYSTEM = gql`
+  mutation archiveSystem($userId: ID!, $systemId: ID!, $toggle: String!) {
+    archiveSystem(userId: $userId, systemId: $systemId, toggle:$toggle) {
       status
       msg
     }

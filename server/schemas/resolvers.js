@@ -12,13 +12,11 @@ const resolvers = {
       }
       throw new AuthenticationError('Not logged in');
     },
-    systems: async (parent, { userId, isActive, sortName, sortType }) => {
-      let qry = ''
-      if (isActive === true || isActive === false) {
-        qry = { userId: userId, isActive: isActive }
-      } else {
-        qry = { userId: userId }
-      }
+    systems: async (parent, { userId, isActive, sortName, sortType, showArchived }) => {
+      let qry = { userId: userId }
+
+      isActive === true ? qry.isActive = true : '';
+      showArchived === false ? qry.isArchived = false : '';
 
       const sort = {}
       sort[sortName] = sortType;
@@ -502,6 +500,7 @@ const resolvers = {
 
           newSystem.userId = userId;
           newSystem.systemId = nextSystemId;
+          newSystem.statusDesc = 'System created';
 
           const result = await System.create(newSystem);
 
@@ -547,6 +546,7 @@ const resolvers = {
             totalConsecWinners: 0,
             maxBet: 0,
             unsettledBets: 0,
+            statusDesc: 'System reset'
           }
 
           const systemUpdate = await System.findByIdAndUpdate(
@@ -615,6 +615,7 @@ const resolvers = {
           newSystem.lastStopped = '';
           newSystem.lastEventUpdate = '';
           newSystem.apiMode = 'test';
+          newSystem.statusDesc = 'System copied';
 
           const result = await System.create(newSystem);
 
@@ -639,31 +640,55 @@ const resolvers = {
       try {
         if (context.user) {
 
-          const systemId = args.systemId
+          const systemId = args.systemId;
+          const toggle = args.toggle;
 
-          //Check if system active
-          const system = await System.findById(systemId);
-          if (system.isActive === true) {
-            const status = false;
-            const msg = 'The system is currently active. Stop system to archive.';
-            return { status, msg }
-          }
+          if (toggle === 'archive') {
+            //Check if system active and if already archived
+            const system = await System.findById(systemId);
+            if (system.isActive === true) {
+              const status = false;
+              const msg = 'The system is currently active. Stop system to archive.';
+              return { status, msg }
+            }
+            if (system.isArchived === true) {
+              const status = false;
+              const msg = 'The system is already archived.';
+              return { status, msg }
+            }
+            const systemUpdate = await System.findByIdAndUpdate(
+              systemId,
+              { $set: { isArchived: true, statusDesc: 'System archived.' } },
+              { runValidators: true, new: true }
+            );
 
-          const systemUpdate = await System.findByIdAndUpdate(
-            systemId,
-            { $set: { isArchived: true } },
-            { runValidators: true, new: true }
-          );
-
-          if (systemUpdate) {
-            const status = true;
-            const msg = 'System archived'
-            return { status, msg }
+            if (systemUpdate) {
+              const status = true;
+              const msg = 'System archived'
+              return { status, msg }
+            } else {
+              const status = false;
+              const msg = 'System archive failed'
+              return { status, msg }
+            }
           } else {
-            const status = false;
-            const msg = 'System archive failed'
-            return { status, msg }
+            const systemUpdate = await System.findByIdAndUpdate(
+              systemId,
+              { $set: { isArchived: false, statusDesc: 'System unarchived.' } },
+              { runValidators: true, new: true }
+            );
+
+            if (systemUpdate) {
+              const status = true;
+              const msg = 'System unarchived'
+              return { status, msg }
+            } else {
+              const status = false;
+              const msg = 'System unarchive failed'
+              return { status, msg }
+            }
           }
+
         } else {
           throw new AuthenticationError('Not logged in');
         }

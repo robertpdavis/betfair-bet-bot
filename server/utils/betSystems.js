@@ -65,7 +65,7 @@ function scn1_backthefav(system, marketData, runnerData, results, backPrices, la
   const scenarioParams = JSON.parse(system.scenarioParams);
 
   //Check if marketType matches racingBetType
-  if (marketData[0].marketType === system.racingBetType) {
+  if (marketData.marketType === system.racingBetType) {
 
     let betId = 0;
 

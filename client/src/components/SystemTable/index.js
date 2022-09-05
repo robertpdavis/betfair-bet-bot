@@ -127,8 +127,8 @@ function SystemTable({ systemData, setSelection }) {
   );
 
   React.useEffect(() => {
-    if (selectedFlatRows[0]) {
-      setSelection(selectedFlatRows[0])
+    if (selectedFlatRows) {
+      setSelection(selectedFlatRows)
     } else {
       setSelection('')
     }

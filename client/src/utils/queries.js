@@ -20,12 +20,13 @@ export const QUERY_USER = gql`
 `;
 
 export const QUERY_SYSTEMS = gql`
-  query getSystems ($userId: ID!, $isActive: Boolean,  $sortName: String, $sortType: Int) {
-    systems(userId: $userId, isActive: $isActive , sortName: $sortName, sortType:$sortType) {
+  query getSystems ($userId: ID!, $isActive: Boolean,  $sortName: String, $sortType: Int, $showArchived: Boolean) {
+    systems(userId: $userId, isActive: $isActive, sortName: $sortName, sortType: $sortType, showArchived: $showArchived) {
       _id
       userId
       systemId
       isActive
+      isArchived
       title
       description
       isRacingEvent
@@ -131,6 +132,7 @@ export const QUERY_SINGLE_SYSTEM = gql`
       userId
       systemId
       isActive
+      isArchived
       title
       description
       isRacingEvent

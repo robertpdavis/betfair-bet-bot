@@ -5,7 +5,7 @@ import ButtonToolbar from '../components/ButtonToolbar';
 import { useQuery, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { QUERY_SYSTEMS } from '../utils/queries';
-import { CREATE_SYSTEM, COPY_SYSTEM, ARCHIVE_SYSTEM } from '../utils/mutations';
+import { CREATE_SYSTEM, COPY_SYSTEM, TOGGLE_ARCHIVE_SYSTEM } from '../utils/mutations';
 import Alert from '../components/Alert';
 import '../App.css';
 
@@ -19,9 +19,12 @@ const Systems = () => {
     userId = user.data._id;
   }
 
+  //State to hold showarchived state
+  const [showArchived, setShowArchived] = useState(false);
+
   const { loading, data } = useQuery(QUERY_SYSTEMS,
     {
-      variables: { userId },
+      variables: { userId, showArchived },
       pollInterval: 5000,
     });
 
@@ -33,17 +36,17 @@ const Systems = () => {
       {
         name: 'new',
         title: 'New System',
-        class: 'btn btn-sm btn-success me-3'
+        class: 'btn btn-sm btn-success'
       },
       {
         name: 'copy',
         title: 'Copy System',
-        class: 'btn btn-sm btn-primary me-3'
+        class: 'btn btn-sm btn-primary'
       },
       {
         name: 'archive',
         title: 'Archive System',
-        class: 'btn btn-sm btn-secondary me-3'
+        class: 'btn btn-sm btn-secondary'
       }
     ]
 
@@ -71,7 +74,7 @@ const Systems = () => {
     });
 
   //Archive system mutation
-  const [archiveSystem, { error: errorA, data: dataA }] = useMutation(ARCHIVE_SYSTEM,
+  const [archiveSystem, { error: errorA, data: dataA }] = useMutation(TOGGLE_ARCHIVE_SYSTEM,
     {
       refetchQueries: [
         'getSystems'
@@ -86,6 +89,7 @@ const Systems = () => {
     const action = event.target.name;
 
     try {
+      let systemId = '';
       let response = '';
       switch (action) {
         //Create new system mutation
@@ -105,10 +109,15 @@ const Systems = () => {
         //Copy system mutation
         case 'copy':
 
+          //Check if only 1 item has been selected
+          if (systemSelection.length > 1) {
+            setAlertState({ variant: 'danger', message: 'Select only 1 item from the list' });
+            return
+          }
+
           //Get the system Id to copy
-          let systemId = '';
-          if (systemSelection !== '') {
-            systemId = systemSelection.original._id;
+          if (systemSelection.length > 0) {
+            systemId = systemSelection[0].original._id;
           }
 
           if (systemId === '') {
@@ -128,6 +137,39 @@ const Systems = () => {
 
           break;
 
+        //Archive system mutation
+        case 'archive':
+
+          //Check if only 1 item has been selected
+          if (systemSelection.length > 1) {
+            setAlertState({ variant: 'danger', message: 'Select only 1 item from the list' });
+            return
+          }
+
+          //Get the system Id to copy
+          let systemId = '';
+          if (systemSelection.length > 0) {
+            systemId = systemSelection[0].original._id;
+          }
+
+          if (systemId === '') {
+            setAlertState({ variant: 'danger', message: 'Select a system to archive.' });
+            return
+          }
+
+          const toggle = 'archive';
+
+          response = await archiveSystem({
+            variables: { userId, systemId, toggle },
+          });
+
+          if (response.data.archiveSystem.status === true) {
+            setAlertState({ variant: 'success', message: response.data.archiveSystem.msg });
+          } else {
+            setAlertState({ variant: 'danger', message: response.data.archiveSystem.msg });
+          }
+
+          break;
         default:
           break;
       }
@@ -138,9 +180,11 @@ const Systems = () => {
 
   }
 
-  const handleRow = async (data) => {
-    console.log('system', data)
-  }
+  const handleArchiveClick = async (event) => {
+    event.preventDefault();
+    let { checked } = event.target;
+    setShowArchived(checked);
+  };
 
   const handleAlertClick = async (option) => {
     setAlertState({ show: false });
@@ -160,8 +204,14 @@ const Systems = () => {
           <Alert alertState={alertState} handleAlertClick={handleAlertClick} />
         </div>
         <div className="row">
-          <div className="col-6">
+          <div className="col-12 col-lg-6">
             <ButtonToolbar buttonState={buttonState} handleBtnClick={handleBtnClick} />
+          </div>
+          <div className="col-12 col-lg-6">
+            <form>
+              <label className="form-label" id="showarchive-lbl" htmlFor="showarchive" title="Show archived systems">Show archived systems</label>
+              <input className="form-check-input ms-3" type="checkbox" name="showarchive" id="showarchive" defaultChecked={showArchived === true ? true : false} onChange={handleArchiveClick} />
+            </form>
           </div>
         </div>
         <div className="row">

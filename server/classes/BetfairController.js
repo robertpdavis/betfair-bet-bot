@@ -407,7 +407,7 @@ class BetfairController {
       //Stop system with message---------------------------------
 
       const systemUpdate = await System.findByIdAndUpdate(
-        systemId,
+        system._id,
         { $set: { isActive: false, lastStopped: new Date().toJSON(), statusDesc: sysStatus[1] } },
         { runValidators: true, new: true }
       )
@@ -450,7 +450,7 @@ class BetfairController {
           continue;
         }
 
-        const marketData = await Market.find({ $and: [{ systemId: system._id }, { marketId: market.marketId }] });
+        const marketData = await Market.findOne({ $and: [{ systemId: system._id }, { marketId: market.marketId }] });
         if (!marketData) return [false, "Failed to get market data"];
         const runnerData = await Runner.find({ $and: [{ systemId: system._id }, { marketId: market.marketId }] });
         if (!runnerData) return [false, "Failed to get runner data"];
@@ -466,6 +466,8 @@ class BetfairController {
           //Get all results since system last started for using in bet scenario
           const results = await Result.find({ $and: [{ systemId: system._id }, { datePlaced: { $gte: system['lastStarted'] } }] });
 
+
+
           //Place the bets
           const bets = processBets(system, marketData, runnerData, results)
 
@@ -478,7 +480,7 @@ class BetfairController {
             bet['orderStatus'] = "Executible";
             bet['racingBetType'] = system['racingBetType'];
             bet['betStatus'] = "Open";
-            bet['commissionperc'] = marketData[0]['marketBaseRate'];
+            bet['commissionperc'] = marketData['marketBaseRate'];
 
             //Set the bet liability
             if (system['betType'] === "Back") {
@@ -519,10 +521,10 @@ class BetfairController {
                 betId: bet['betId'],
                 customerRef: bet['customerRef'],
                 betPlaced: bet['betPlaced'],
-                eventId: marketData[0]['eventId'],
-                eventName: marketData[0]['eventName'],
-                marketId: marketData[0]['marketId'],
-                marketName: marketData[0]['marketName'],
+                eventId: marketData['eventId'],
+                eventName: marketData['eventName'],
+                marketId: marketData['marketId'],
+                marketName: marketData['marketName'],
                 selectionId: bet['selectionId'],
                 selectionName: bet['selectionName'],
                 orderType: bet['orderType'],
@@ -557,7 +559,7 @@ class BetfairController {
               //TO DO log if database update failed
 
               //Check if new event and add to events stats
-              const eventBets = await Result.find({ $and: [{ systemId: system._id }, { eventId: marketData[0].eventId }] });
+              const eventBets = await Result.find({ $and: [{ systemId: system._id }, { eventId: marketData.eventId }] });
               eventBets.length < 1 ? system['totalEvents'] = system['totalEvents'] + 1 : "";
 
               system['totalBets'] = system['totalBets'] + 1;

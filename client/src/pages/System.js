@@ -3,7 +3,7 @@ import Auth from '../utils/auth';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { QUERY_SINGLE_SYSTEM, QUERY_EVENT_TYPES } from '../utils/queries';
-import { TOGGLE_SYSTEM, RESET_SYSTEM, UPDATE_SYSTEM, COPY_SYSTEM } from '../utils/mutations';
+import { TOGGLE_SYSTEM, RESET_SYSTEM, UPDATE_SYSTEM, COPY_SYSTEM, TOGGLE_ARCHIVE_SYSTEM } from '../utils/mutations';
 import SystemForm from '../components/SystemForm';
 import ButtonToolbar from '../components/ButtonToolbar';
 import Alert from '../components/Alert';
@@ -49,17 +49,23 @@ const SingleSystem = () => {
         'getSingleSystem'
       ],
     });
-  //Update system from formState
+  //Update system mutation
   const [updateSystem, { error: errorU, data: dataU }] = useMutation(UPDATE_SYSTEM,
     {
       refetchQueries: [
         'getSingleSystem'
       ],
     });
-  //Update system from formState
-  const [copySystem, { error: errorC, data: dataC }] = useMutation(COPY_SYSTEM);
+  //Unarchive system mutation
+  const [archiveSystem, { error: errorA, data: dataA }] = useMutation(TOGGLE_ARCHIVE_SYSTEM,
+    {
+      refetchQueries: [
+        'getSingleSystem'
+      ],
+    });
+
   //Initial button toolbar settings
-  const buttonSettings =
+  let buttonSettings =
     [
       {
         name: 'save',
@@ -83,11 +89,11 @@ const SingleSystem = () => {
         name: 'testfilter',
         title: 'Test Filter',
         class: 'btn btn-sm btn-secondary me-3',
-        state: 'enabled'
+        state: 'disabled'
       }
     ]
 
-  if (systemData.isActive) {
+  if (systemData.isActive === true) {
     buttonSettings[2].title = 'Stop System';
     buttonSettings[2].class = 'btn btn-sm btn-danger me-3';
     buttonSettings[1].state = 'disabled';
@@ -95,6 +101,16 @@ const SingleSystem = () => {
     buttonSettings[2].title = 'Start System';
     buttonSettings[2].class = 'btn btn-sm btn-success me-3';
     buttonSettings[1].state = 'enabled';
+  }
+
+  if (systemData.isArchived === true) {
+    buttonSettings = [];
+    buttonSettings.push({
+      name: 'unarchive',
+      title: 'Unarchive',
+      class: 'btn btn-sm btn-secondary me-3',
+      state: 'enabled'
+    })
   }
 
   // Set the button status first and subsequent renders
@@ -113,10 +129,10 @@ const SingleSystem = () => {
 
     try {
       let response = '';
+      let toggle = '';
 
       switch (action) {
         case 'startstop':
-          let toggle = '';
           (event.target.textContent === 'Start System') ? toggle = 'start' : toggle = 'stop'
 
           if (toggle === 'start') {
@@ -207,6 +223,23 @@ const SingleSystem = () => {
 
           break;
 
+        case 'unarchive':
+
+          const userId = '';
+          toggle = 'unarchive';
+
+          response = await archiveSystem({
+            variables: { userId, systemId, toggle },
+          });
+
+          if (response.data.archiveSystem.status === true) {
+            setAlertState({ variant: 'success', message: response.data.archiveSystem.msg })
+          } else {
+            setAlertState({ variant: 'danger', message: response.data.archiveSystem.msg })
+          }
+
+          break;
+
         default:
           break;
       }
@@ -251,6 +284,8 @@ const SingleSystem = () => {
   if (loadingS || loadingE) {
     return <div>Loading...</div>;
   }
+
+
 
 
   return (
