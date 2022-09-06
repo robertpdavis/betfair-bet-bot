@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import Auth from '../../utils/auth';
-import { Navigate, renderMatches } from 'react-router-dom';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../App.css';
 

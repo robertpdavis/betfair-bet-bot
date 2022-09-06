@@ -1,4 +1,4 @@
-import React, { useMemo, Checkbox } from "react";
+import React, { useMemo, useEffect, useRef, forwardRef } from "react";
 import { useTable, useFilters, useGlobalFilter, useSortBy, usePagination, useRowSelect } from "react-table";
 import { Link } from "react-router-dom";;
 
@@ -71,12 +71,12 @@ function SystemTable({ systemData, setSelection }) {
     []
   );
 
-  const IndeterminateCheckbox = React.forwardRef(
+  const IndeterminateCheckbox = forwardRef(
     ({ indeterminate, ...rest }, ref) => {
-      const defaultRef = React.useRef()
+      const defaultRef = useRef()
       const resolvedRef = ref || defaultRef
 
-      React.useEffect(() => {
+      useEffect(() => {
         resolvedRef.current.indeterminate = indeterminate
       }, [resolvedRef, indeterminate])
 

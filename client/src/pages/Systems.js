@@ -116,6 +116,7 @@ const Systems = () => {
           }
 
           //Get the system Id to copy
+
           if (systemSelection.length > 0) {
             systemId = systemSelection[0].original._id;
           }
@@ -147,7 +148,6 @@ const Systems = () => {
           }
 
           //Get the system Id to copy
-          let systemId = '';
           if (systemSelection.length > 0) {
             systemId = systemSelection[0].original._id;
           }

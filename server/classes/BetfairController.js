@@ -642,7 +642,8 @@ class BetfairController {
     }
 
     for (let index = 0; index < activeBets.length; index++) {
-      const bet = activeBets[index];
+      let bet = '';
+      bet = activeBets[index];
 
       if (system['mode'] === 'Live') {
 
@@ -752,9 +753,11 @@ class BetfairController {
             transactions.push({ systemId: system._id, transactionType: "Credit", transactionDesc: "Void Bet:" + bet['betId'], walletType: walletType, amt: bet['returned'], balance: wallet });
           }
 
-          //Close bet
-          bet['closed'] = new Date().toJSON;
-          bet['betStatus'] = "Closed";
+          //Close bet - but only if outcome is set
+          if (bet.betOutcome !== '') {
+            bet['closed'] = new Date().toJSON;
+            bet['betStatus'] = "Closed";
+          }
 
           //Update unsettled bets
           system['unsettledBets'] = system['unsettledBets'] - 1;
