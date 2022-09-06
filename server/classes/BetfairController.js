@@ -755,7 +755,7 @@ class BetfairController {
 
           //Close bet - but only if outcome is set
           if (bet.betOutcome !== '') {
-            bet['closed'] = new Date().toJSON;
+            bet['closed'] = new Date().toJSON();
             bet['betStatus'] = "Closed";
           }
 

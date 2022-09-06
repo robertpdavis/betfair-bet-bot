@@ -22,10 +22,10 @@ const Usage = () => {
         <div className="page-header">
           Support
         </div>
-        <div className="sub-header w-75">
+        <div className="sub-header">
           Dashboard
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
               The Dashboard provides a summary of your current betting status along with details of all active betting systems and the last 4 bets placed.
@@ -33,14 +33,15 @@ const Usage = () => {
           </div>
         </div>
 
-        <div className="sub-header w-75">
+        <div className="sub-header">
           Systems
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
-              Systems is where all the action happens. This page lists all your systems and status of each one. Clicking on the name of the system.
-              Systems can be started, stopped, copied (future) and archived (future). The system stats can also be reset.
+              Systems is where all the action happens. This page lists all your systems and status of each one. A new system can be created or existing system be copied or archived. (Archived
+              systems don't appear in the list unless the show archived systems is ticked). Click on the id of the system for details.
+              Systems can be started, stopped and archived. The system stats can also be reset.
             </p>
             <p>
               There are 4 tabs for<br></br>
@@ -53,10 +54,10 @@ const Usage = () => {
           </div>
         </div>
 
-        <div className="sub-header w-75">
+        <div className="sub-header">
           Events
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
               The Events page provides all relevant event and market details for the system that the betting will be based upon. Clicking on the time will provide details
@@ -65,10 +66,10 @@ const Usage = () => {
 
           </div>
         </div>
-        <div className="sub-header w-75">
+        <div className="sub-header">
           Results
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
               The Results page provides details on all bets made for a system and their status. Clicking on the bet provides full details of the bet and status.
@@ -76,10 +77,10 @@ const Usage = () => {
 
           </div>
         </div>
-        <div className="sub-header w-75">
+        <div className="sub-header ">
           API
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
               The API page is where all the connection information required for the Betfair API and current status. Your Befair username and password is

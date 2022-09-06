@@ -53,7 +53,7 @@ const EventList = () => {
           <SystemLinks systemData={dataS} linkType='eventList' isActive={true} />
         </div>
         <div className="row">
-          <div className="pb-3 pt-3">
+          <div className="pb-3">
             <h6>Upcoming events for: <b>System {selectedSystem.systemId}-{selectedSystem.title}</b></h6>
           </div>
           <MarketTable eventData={dataE} />

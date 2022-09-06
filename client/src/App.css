@@ -101,7 +101,6 @@ footer {
   padding: 0.1rem 1rem;
   margin-bottom: 1rem;
   border-radius: .2rem;
-  width: 75%
 }
 
 .sub-header.dashboard {
@@ -124,10 +123,14 @@ footer {
   font-size: 0.9rem;
 }
 
-.dashboard-header {
-  background-color: ;
-}
-
 .runner {
   font-size: 0.8rem;
+}
+
+.api-btn {
+  width: 4.2rem;
+}
+
+.toolbar-btn {
+  width: 7rem;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Auth from '../../utils/auth';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -10,13 +10,22 @@ function Navigation() {
   let location = useLocation();
   let currentPage = location.pathname
 
+  const [isNavCollapsed, setIsNavCollapsed] = useState(true);
+
+  const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
+
+
+
   if (Auth.loggedIn()) {
 
     return (
       <section>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container-fluid">
-            <div className="collapse navbar-collapse" id="navbarNav">
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcontent" aria-controls="navbarcontent" aria-expanded={!isNavCollapsed ? true : false} aria-label="Toggle navigation" onClick={handleNavCollapse}>
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className={`${isNavCollapsed ? 'collapse' : ''} navbar-collapse`} id="navbarcontent">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <Link to="/" className={currentPage === '/' ? 'nav-link pt-0 pb-0 active' : 'nav-link pt-0 pb-0'} name="/">Dashboard</Link>

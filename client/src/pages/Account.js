@@ -67,7 +67,7 @@ const Account = () => {
           My Account
         </div>
         <div className="row">
-          <div className="col-6">
+          <div className="col-12 col-lg-6">
             <div className="sub-header">
               My Details
             </div>
@@ -87,9 +87,9 @@ const Account = () => {
               <label className="form-label" htmlFor="email" title="Email">Email</label>
               <input className="form-control w-75" type="email" id="email" name="email" value={formState.email} defaultValue={user.email} size="60" onChange={handleChange} />
             </div>
-            <button type="button" className="btn btn-sm btn-success" name="save" onClick={handleBtnClick}>Save</button>
+            <button type="button" className="btn btn-sm btn-success toolbar-btn" name="save" onClick={handleBtnClick}>Save</button>
           </div>
-          <div className="col-6">
+          <div className="col-12 col-lg-6">
           </div>
         </div>
       </section>

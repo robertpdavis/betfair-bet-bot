@@ -37,7 +37,7 @@ const Events = () => {
           <SystemLinks systemData={dataS} linkType='eventList' isActive={true} />
         </div>
         <div className="row">
-          <div className="pb-3 pt-3">
+          <div className="pb-3">
             <h6>Select system to view events.</h6>
           </div>
         </div>

@@ -236,42 +236,42 @@ const SingleAPI = () => {
           <Alert alertState={alertState} handleAlertClick={handleAlertClick} />
         </div>
         <div className="row">
-          <div className="col-6">
+          <div className="col-12 col-lg-6">
             <div className="sub-header">
               General Settings
             </div>
 
             <div className="col-auto mb-3">
               <label className="form-label" id="apiform_username-lbl" htmlFor="apiform_username" title="Username">Username</label>
-              <input className="form-control w-75" type="text" id="apiform_username" name="apiUsername" value={formState.apiUsername} defaultValue={api.apiUsername} size="30" onChange={handleChange} />
+              <input className="form-control" type="text" id="apiform_username" name="apiUsername" value={formState.apiUsername} defaultValue={api.apiUsername} size="30" onChange={handleChange} />
             </div>
             <div className="col-auto mb-3">
               <label className="form-label" id="apiform_password-lbl" htmlFor="apiform_password" title="Password">Password</label>
-              <input className="form-control w-75" type="password" id="apiform_password" name="apiPassword" value={formState.apiPassword} defaultValue={api.apiPassword} size="30" onChange={handleChange} />
+              <input className="form-control" type="password" id="apiform_password" name="apiPassword" value={formState.apiPassword} defaultValue={api.apiPassword} size="30" onChange={handleChange} />
             </div>
             <div className="col-auto mb-3">
               <label className="form-label" id="apiform_certfile-lbl" htmlFor="apiform_certfile" title="Certificate file">SSL Certificate</label>
-              <textarea className="form-control w-75" name="certfile" id="apiform_certfile" cols="50" rows="4" resize="none" value={formState.certfile} defaultValue={api.certfile} onChange={handleChange} />
+              <textarea className="form-control" name="certfile" id="apiform_certfile" cols="50" rows="4" resize="none" value={formState.certfile} defaultValue={api.certfile} onChange={handleChange} />
             </div>
             <div className="col-auto mb-3">
               <label className="form-label" id="apiform_keyfile-lbl" htmlFor="apiform_keyfile" title="Key file">Key Certificate</label>
-              <textarea className="form-control w-75" name="keyfile" id="apiform_keyfile" cols="50" rows="4" value={formState.keyfile} defaultValue={api.keyfile} onChange={handleChange} />
+              <textarea className="form-control" name="keyfile" id="apiform_keyfile" cols="50" rows="4" value={formState.keyfile} defaultValue={api.keyfile} onChange={handleChange} />
             </div>
             <div className="col-auto mb-3">
               <label className="form-label" id="sysform_betType-lbl" htmlFor="sysform_betType" title="Back or Lay betting">API Mode</label>
-              <select className="form-control w-75" id="sysform_betType" name="betType" value={formState.apiMode} defaultValue={api.apiMode} onChange={handleChange}>
+              <select className="form-control" id="sysform_betType" name="betType" value={formState.apiMode} defaultValue={api.apiMode} onChange={handleChange}>
                 <option value="test">Test</option>
                 <option value="live" disabled>Live</option>
               </select>
             </div>
-            <button type="button" className="btn btn-sm btn-success" name="savesettings" onClick={handleBtnClick}>Save Settings</button>
+            <button type="button" className="btn btn-sm btn-success mb-3" name="savesettings" onClick={handleBtnClick}>Save Settings</button>
           </div>
-          <div className="col-6">
+          <div className="col-12 col-lg-6">
             <div className="sub-header">
               Live API Settings
             </div>
 
-            <div className="card w-75 mb-3">
+            <div className="card mb-3">
               <div className="card-header">
                 <h5 className="d-inline">API STATUS:
                   {api.liveApiEnabled ?
@@ -313,10 +313,10 @@ const SingleAPI = () => {
                 </div>
               </div>
               <div className="card-footer">
-                <button className="btn btn-sm btn-success" name='livelogin' disabled onClick={handleBtnClick}>Login</button>
-                <button className="btn btn-sm btn-warning ms-3" name='livelogout' disabled onClick={handleBtnClick}>Logout</button>
-                <button className="btn btn-sm btn-warning ms-3" name='liveenable' disabled >Disable</button>
-                <button className="btn btn-sm btn-secondary ms-3" name='livetest' disabled onClick={handleBtnClick}>Test API</button>
+                <button className="btn btn-sm btn-success api-btn me-2" name='livelogin' disabled onClick={handleBtnClick}>Login</button>
+                <button className="btn btn-sm btn-warning api-btn me-2" name='livelogout' disabled onClick={handleBtnClick}>Logout</button>
+                <button className="btn btn-sm btn-warning api-btn me-2" name='liveenable' disabled >Disable</button>
+                <button className="btn btn-sm btn-secondary api-btn me-2" name='livetest' disabled onClick={handleBtnClick}>Test API</button>
               </div>
             </div>
 
@@ -324,7 +324,7 @@ const SingleAPI = () => {
               Test API Settings
             </div>
 
-            <div className="card w-75 mb-3">
+            <div className="card mb-3">
               <div className="card-header">
                 <h5 className="d-inline">API STATUS:
                   {api.testApiEnabled ?
@@ -366,10 +366,10 @@ const SingleAPI = () => {
                 </div>
               </div>
               <div className="card-footer">
-                <button className="btn btn-sm btn-success ms-3" name='testlogin' onClick={handleBtnClick}>Login</button>
-                <button className="btn btn-sm btn-warning ms-3" name='testlogout' onClick={handleBtnClick}>Logout</button>
-                <button className="btn btn-sm btn-warning ms-3" name='testenable' disabled >Disable</button>
-                <button className="btn btn-sm btn-secondary ms-3" name='testtest' onClick={handleBtnClick}>Test API</button>
+                <button className="btn btn-sm btn-success api-btn me-2" name='testlogin' onClick={handleBtnClick}>Login</button>
+                <button className="btn btn-sm btn-warning api-btn me-2" name='testlogout' onClick={handleBtnClick}>Logout</button>
+                <button className="btn btn-sm btn-warning api-btn me-2" name='testenable' disabled >Disable</button>
+                <button className="btn btn-sm btn-secondary api-btn me-2" name='testtest' onClick={handleBtnClick}>Test API</button>
               </div>
             </div>
           </div>

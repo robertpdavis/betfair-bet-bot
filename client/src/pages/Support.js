@@ -22,10 +22,10 @@ const Support = () => {
           Support
         </div>
 
-        <div className="sub-header w-75">
+        <div className="sub-header">
           New Users
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
               Congratulations in starting your system betting with us.!
@@ -55,10 +55,10 @@ const Support = () => {
           </div>
         </div>
 
-        <div className="sub-header w-75">
+        <div className="sub-header">
           Betfair API Links
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
               To understand the API in more detail, Betfair has set up a developer hub with extensive documentation on it.
@@ -75,10 +75,10 @@ const Support = () => {
           </div>
         </div>
 
-        <div className="sub-header w-75">
+        <div className="sub-header">
           Betting on Betfair
         </div>
-        <div className="card w-75 mb-3">
+        <div className="card mb-3">
           <div className="card-body">
             <p>
               It is all good and well knowing how the API works and how you can use it to bet, but what about how to bet?

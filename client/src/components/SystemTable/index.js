@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useRef, forwardRef } from "react";
-import { useTable, useFilters, useGlobalFilter, useSortBy, usePagination, useRowSelect } from "react-table";
+import { useTable, useRowSelect } from "react-table";
 import { Link } from "react-router-dom";;
 
 
@@ -57,7 +57,7 @@ function SystemTable({ systemData, setSelection }) {
         _id: item._id,
         systemId: item.systemId,
         title: item.title,
-        isActive: (item.isActive ? 'Active' : 'Disabled'),
+        isActive: (item.isActive ? 'Active' : 'Stopped'),
         mode: item.mode,
         betType: item.betType,
         totalEvents: item.totalEvents,
@@ -158,7 +158,7 @@ function SystemTable({ systemData, setSelection }) {
                   }
                   if (cell.value === 'Active') {
                     return <td {...cell.getCellProps()}><span className="badge bg-success">{cell.render("Cell")}</span></td>;
-                  } else if (cell.value === 'Disabled') {
+                  } else if (cell.value === 'Stopped') {
                     return <td {...cell.getCellProps()}><span className="badge bg-secondary">{cell.render("Cell")}</span></td>;
                   } else {
                     return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;

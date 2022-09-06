@@ -35,7 +35,7 @@ const Results = () => {
         </div>
         <div className="row">
           <SystemLinks systemData={dataS} linkType='resultList' isActive={false} />
-          <div className="pb-3 pt-3">
+          <div className="pb-3">
             <h6>Select system to view results.</h6>
           </div>
         </div>

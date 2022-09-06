@@ -12,7 +12,7 @@ const ButtonToolbar = (props) => {
   return (
     <div>
       {buttonState.map((button, i) => {
-        return <button key={i} type="button" className={button.class + ' ' + button.state + ' me-3 mb-3 mb-lg-0'} name={button.name} onClick={handleButtonClick}>{button.title}</button>
+        return <button key={i} type="button" className={button.class + ' ' + button.state + ' me-3 mb-3 mb-lg-0 toolbar-btn'} name={button.name} onClick={handleButtonClick}>{button.title}</button>
       })}
       <hr className="mt-0 mt-lg-3"></hr>
     </div>

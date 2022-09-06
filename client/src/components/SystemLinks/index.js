@@ -8,14 +8,14 @@ function SystemLinks({ systemData, linkType, isActive }) {
   if (isActive === true) {
 
     return (
-      <div>
+      <div className="col-12">
         {systemData.systems.map((item) => {
           if (item.isActive === true) {
             sysCount++
             let link = "/" + linkType + "/" + item._id
             return (
               <div className="d-inline me-3" key={item.systemId}>
-                <Link className="d-inline btn btn-info" to={link}>{item.systemId + '.' + item.title}</Link>
+                <Link className="btn btn-info mb-3" to={link}>{item.systemId + '.' + item.title}</Link>
               </div>
             )
           }
@@ -26,20 +26,20 @@ function SystemLinks({ systemData, linkType, isActive }) {
   } else {
 
     return (
-      <div>
+      <div className="col-12">
         {systemData.systems.map((item) => {
           if (item.isActive === true) {
             let link = "/" + linkType + "/" + item._id
             return (
               <div className="d-inline me-3" key={item.systemId}>
-                <Link className="d-inline btn btn-info" to={link}>{item.systemId + '.' + item.title}</Link>
+                <Link className="btn btn-info mb-3" to={link}>{item.systemId + '.' + item.title}</Link>
               </div>
             )
           } else {
             let link = "/" + linkType + "/" + item._id
             return (
               <div className="d-inline me-3" key={item.systemId}>
-                <Link className="d-inline btn btn-secondary" to={link}>{item.systemId + '.' + item.title}</Link>
+                <Link className="btn btn-secondary mb-3" to={link}>{item.systemId + '.' + item.title}</Link>
               </div>
             )
           }

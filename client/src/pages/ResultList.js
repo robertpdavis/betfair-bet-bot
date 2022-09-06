@@ -52,7 +52,7 @@ function ResultList() {
         </div>
         <div className="row">
           <SystemLinks systemData={dataS} linkType='resultList' isActive={false} />
-          <div className="pb-3 pt-3">
+          <div className="pb-3">
             <h6>Bets placed and results for: <b>System {selectedSystem.systemId}-{selectedSystem.title}</b></h6>
           </div>
           <ResultTable resultData={dataR} />
