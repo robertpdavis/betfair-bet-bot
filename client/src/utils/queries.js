@@ -471,7 +471,10 @@ export const QUERY_SINGLE_RESULT = gql`
   query getSingleResult($resultId: ID!) {
     result(id: $resultId) {
       _id
-      systemId
+      systemId{
+        _id,
+        systemId
+      }
       betId
       customerRef
       betPlaced

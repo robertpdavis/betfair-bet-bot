@@ -76,7 +76,7 @@ const resolvers = {
       return await Result.find(params).populate('systemId').sort({ createdAt: -1 });
     },
     result: async (parent, args) => {
-      return await Result.findById(args.id);
+      return await Result.findById(args.id).populate('systemId');
     },
     apisetting: async (parent, { userId }) => {
       return await Apisetting.findOne({ userId });
