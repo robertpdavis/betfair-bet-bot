@@ -134,3 +134,11 @@ footer {
 .toolbar-btn {
   width: 7rem;
 }
+
+.marketbackcol {
+  background-color: var(--color-blue-700);
+}
+
+.marketlaycol {
+  background-color: var(--color-pink-600);
+}
