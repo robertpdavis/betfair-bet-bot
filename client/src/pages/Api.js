@@ -289,12 +289,12 @@ const SingleAPI = () => {
               </div>
               <div className="card-body row">
                 <div className="col-4 text-end">
-                  <label className="form-label-sm mb-2" id="keytest-label" htmlFor="apiKeyLive">API Key:</label>
-                  <label className="form-label-sm" id="apienabled-label" htmlFor="liveApiEnabled">API Enabled:</label>
-                  <label className="form-label-sm" id="apikeepalive-label" htmlFor="lastLiveKeepAlive">Last Keepalive:</label>
-                  <label className="form-label-sm" id="apilastlogin-label" htmlFor="lastLiveLogin">Last Login:</label>
-                  <label className="form-label-sm" id="apilastlogout-label" htmlFor="lastLiveLogout">Last Logout:</label>
-                  <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastLiveMessage">Last Message:</label>
+                  <label className="form-label-sm d-block mb-2" id="keytest-label" htmlFor="apiKeyLive">API Key:</label>
+                  <label className="form-label-sm d-block " id="apienabled-label" htmlFor="liveApiEnabled">API Enabled:</label>
+                  <label className="form-label-sm d-block " id="apikeepalive-label" htmlFor="lastLiveKeepAlive">Last Keepalive:</label>
+                  <label className="form-label-sm d-block " id="apilastlogin-label" htmlFor="lastLiveLogin">Last Login:</label>
+                  <label className="form-label-sm d-block " id="apilastlogout-label" htmlFor="lastLiveLogout">Last Logout:</label>
+                  <label className="form-label-sm d-block " id="apilastmessage-label" htmlFor="lastLiveMessage">Last Message:</label>
                 </div>
                 <div className="col-8 text-start">
                   <input className="form-control-sm d-block" type="text" name="apiKeyLive" id="apiKeyLive" disabled value={formState.apiKeyLive} defaultValue={api.apiKeyLive} onChange={handleChange} />
@@ -342,12 +342,12 @@ const SingleAPI = () => {
               </div>
               <div className="card-body row">
                 <div className="col-4 text-end">
-                  <label className="form-label-sm mb-2" id="keytest-label" htmlFor="apiKeyTest">API Key:</label>
-                  <label className="form-label-sm" id="apienabled-label" htmlFor="testApiEnabled">API Enabled:</label>
-                  <label className="form-label-sm" id="apikeepalive-label" htmlFor="lastTestKeepAlive">Last Keepalive:</label>
-                  <label className="form-label-sm" id="apilastlogin-label" htmlFor="lastTestLogin">Last Login:</label>
-                  <label className="form-label-sm" id="apilastlogout-label" htmlFor="lastTestLogout">Last Logout:</label>
-                  <label className="form-label-sm" id="apilastmessage-label" htmlFor="lastTestMessage">Last Message:</label>
+                  <label className="form-label-sm d-block mb-2" id="keytest-label" htmlFor="apiKeyTest">API Key:</label>
+                  <label className="form-label-sm d-block" id="apienabled-label" htmlFor="testApiEnabled">API Enabled:</label>
+                  <label className="form-label-sm d-block" id="apikeepalive-label" htmlFor="lastTestKeepAlive">Last Keepalive:</label>
+                  <label className="form-label-sm d-block" id="apilastlogin-label" htmlFor="lastTestLogin">Last Login:</label>
+                  <label className="form-label-sm d-block" id="apilastlogout-label" htmlFor="lastTestLogout">Last Logout:</label>
+                  <label className="form-label-sm d-block " id="apilastmessage-label" htmlFor="lastTestMessage">Last Message:</label>
                 </div>
                 <div className="col-8 text-start">
                   <input className="form-control-sm d-block" type="text" name="apiKeyTest" id="apiKeyTest" value={formState.apiKeyTest} defaultValue={api.apiKeyTest} onChange={handleChange} />
