@@ -12,6 +12,7 @@ const SingleMarket = () => {
 
   const { marketId } = useParams();
 
+
   const type = 'marketUpdate'
   const { loading, data } = useQuery(QUERY_SINGLE_MARKET, {
     variables: { marketId, type },
@@ -20,15 +21,13 @@ const SingleMarket = () => {
 
   if (!Auth.loggedIn()) { navigate("login") };
 
-  const market = data?.market || {};
-  const runners = market.runners;
-
-
-  // console.log(runners)
+  const marketData = data?.market || {};
+  const runners = marketData.runners;
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
   return (
     <main>
       <section className="container my-2">
@@ -37,24 +36,27 @@ const SingleMarket = () => {
         </div>
         <div className="row market-header">
           <div className="col-4">
-            <h5>{new Date(market.marketTime).toLocaleString().substring(12, 17)}  {market.eventName}</h5>
+            <h5>{new Date(marketData.marketTime).toLocaleString().substring(12, 17)}  {marketData.eventName}</h5>
             <h6>
-              {new Date(market.marketTime).toLocaleString()}
+              {new Date(marketData.marketTime).toDateString()} | {marketData.marketName}
               <br></br>
               WIN | PLACE
             </h6>
           </div>
           <div className="col-4">
-            <div className="col-6 text-end">
-              <h6>STATUS:{market.status}</h6>
-              <h6>TOTAL MATCHED:{market.totalMatched}</h6>
-              <h6>TOTAL AVAILABLE:{market.totalAvailable}</h6>
+            <div className="col-8 text-start">
+              {marketData.status === 'OPEN' ? <h6>STATUS:&nbsp;<span className="badge bg-success">{marketData.status}</span></h6> : ''}
+              {marketData.status === 'SUSPENDED' ? <h6>STATUS:&nbsp;<span className="badge bg-warning">{marketData.status}</span></h6> : ''}
+              {marketData.status === 'CLOSED' ? <h6>STATUS:&nbsp;<span className="badge bg-secondary">{marketData.status}</span></h6> : ''}
+              {marketData.status === 'VOID' ? <h6>STATUS:&nbsp;<span className="badge bg-primary">{marketData.status}</span></h6> : ''}
+              <h6>TOTAL MATCHED:&nbsp;${(marketData.totalMatched).toFixed(2)}</h6>
+              <h6>TOTAL AVAILABLE:&nbsp;${(marketData.totalAvailable).toFixed(2)}</h6>
             </div>
           </div>
           <div className="col-4">
             <div className="form-check">
               Going Into Play
-              <input type="checkbox" className="form-check-input" disable="true"></input>
+              <input type="checkbox" className="form-check-input" checked={marketData.turnInPlayEnabled} readOnly></input>
             </div>
           </div>
         </div>

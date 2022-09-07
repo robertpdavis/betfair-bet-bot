@@ -277,7 +277,7 @@ class BetfairController {
         if (!runnerUpdate) { return [false, 'Runner update failed - Sys Id:' + system._id + ' Market Id:' + marketId + ' Selection Id:' + runner.selectionId] }
 
         await Market.findOneAndUpdate(
-          { marketId: marketId },
+          { $and: [{ marketId: marketId }, { systemId: system._id }] },
           { $addToSet: { runners: runnerUpdate._id } }
         );
 
@@ -658,6 +658,7 @@ class BetfairController {
         //Update the market and get the market data
         const marketUpdate = this.marketBookUpdate("", bet['marketId'], "");
         if (marketUpdate[0] === false) return marketUpdate;
+
 
         const marketData = await Market.findOne({ $and: [{ systemId: system._id }, { marketId: bet['marketId'] }] });
         if (!marketData) return [false, "Failed to get market data"];

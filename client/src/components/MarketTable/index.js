@@ -20,10 +20,10 @@ function MarketTable({ eventData }) {
                     //For racing markets, only show WIN markets as includin PLACE markets will double up.Place market details shown in market view.
                     if (market.marketType === "PLACE") {
                       if (m % 2) {
-                        return (<td key={m}><Link to={"/market/" + market.marketId}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
+                        return (<td key={m}><Link to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
                       }
                     } else {
-                      return (<td key={m}><Link to={"/market/" + market.marketId}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
+                      return (<td key={m}><Link to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
                     }
                   }
                   )}

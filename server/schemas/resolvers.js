@@ -52,17 +52,18 @@ const resolvers = {
       const params = systemId ? { systemId } : {};
       return await Event.find(params).populate('markets');
     },
-    market: async (parent, args, context) => {
+    market: async (parent, { marketId, type }, context) => {
 
       if (context.user) {
         const betfairController = new BetfairController;
-        const type = args.type;
 
         if (type === 'marketUpdate') {
+          const market = await Market.findById(marketId);
           const setSession = await betfairController.setSession(context.user._id);
-          const marketUpdate = await betfairController.marketBookUpdate('', args.marketId)
+          const marketUpdate = await betfairController.marketBookUpdate('', market.marketId)
         }
-        const market = await Market.findOne({ marketId: args.marketId }).populate('runners');
+
+        const market = await Market.findById(marketId).populate('runners');
 
         return market;
       }
