@@ -17,13 +17,16 @@ function MarketTable({ eventData }) {
                 <tr key={events[i].eventId}>
                   <td className="text-start w-25">{events[i].eventName}</td>
                   {events[i].markets.map((market, m) => {
-                    //For racing markets, only show WIN markets as includin PLACE markets will double up.Place market details shown in market view.
-                    if (market.marketType === "PLACE") {
-                      if (m % 2) {
+                    //For racing markets, only show WIN markets as including PLACE markets will double up.Place market details shown in market view.
+                    //Also, don't show markets that are older than 4 hours since expected start time.
+                    let timeNow = new Date()
+                    let timeFrom = new Date(timeNow.getTime() - (14400 * 1000));
+                    if (market.marketType !== "PLACE" && market.marketTime > timeFrom.toJSON()) {
+                      if (market.marketTime < timeNow.toJSON()) {
+                        return (<td key={m}><Link className="marketclosed" to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
+                      } else {
                         return (<td key={m}><Link to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
                       }
-                    } else {
-                      return (<td key={m}><Link to={"/market/" + market._id}>{new Date(market.marketTime).toLocaleString().substring(12, 17)}</Link></td>)
                     }
                   }
                   )}

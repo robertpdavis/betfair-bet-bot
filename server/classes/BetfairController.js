@@ -83,8 +83,8 @@ class BetfairController {
   async eventUpdate(systemId) {
     try {
       const startTime = new Date().getTime();
-      //Clear data older then eventTimeOut  - 24 hours ago by default
-      await this.clearMarketData(this.config.eventTimeOut);
+      //Clear data older then eventTimeOut  - 36 hours ago by default
+      await this.clearMarketData(this.config.eventTimeClear);
 
       if (systemId === undefined || systemId === '') { return [false, 'No system Id provided.'] };
 
@@ -191,7 +191,7 @@ class BetfairController {
           const details = market.marketName.trim().split(' ');
           raceNumber = details[0].slice(1, details[0].length);
           raceDistance = details[1].slice(0, -1);
-          (details[3] !== '') ? details[2] += " " + details[3] : "";
+          (details[3] !== undefined) ? details[2] += " " + details[3] : "";
           raceClass = details[2];
         }
 

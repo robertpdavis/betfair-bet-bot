@@ -142,3 +142,8 @@ footer {
 .marketlaycol {
   background-color: var(--color-pink-600);
 }
+
+.marketclosed {
+  color: var(--color-blue-classic-800);
+
+}
