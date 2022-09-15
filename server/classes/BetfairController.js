@@ -625,6 +625,7 @@ class BetfairController {
     let wallet = 0;
     let walletType = '';
     let transactions = [];
+    let responseInfo = '';
 
     //Get active bets for system
     const activeBets = await Result.find({ $and: [{ systemId: system._id }, { $or: [{ betOutcome: null }, { betStatus: 'Open' }] }] });
@@ -661,9 +662,9 @@ class BetfairController {
 
 
         const marketData = await Market.findOne({ $and: [{ systemId: system._id }, { marketId: bet['marketId'] }] });
-        if (!marketData) return [false, "Failed to get market data"];
+        if (!marketData) { responseInfo = responseInfo + "\n Sys Id:" + system._id + "Mkt Id:" + bet['marketId'] + "-Failed to get market data" };
         const runnerData = await Runner.find({ $and: [{ systemId: system._id }, { marketId: bet['marketId'] }] });
-        if (!runnerData) return [false, "Failed to get runner data"];
+        if (!marketData) { responseInfo = responseInfo + "\n Sys Id:" + system._id + "Mkt Id:" + bet['marketId'] + "-Failed to get runner data" };
 
         //Get the bet runner selection status
         let selectionStatus = '';
@@ -835,7 +836,9 @@ class BetfairController {
       const newTransaction = await Transaction.create(transactions);
     }
 
-    return [true, 'Bet Update Success'];
+    if (responseInfo === '') { responseInfo = 'Bet Update Success. Sys Id:' + system._id }
+
+    return [true, responseInfo];
 
   }
 
@@ -970,7 +973,7 @@ class BetfairController {
     }
   }
 
-  async clearMarketData(seconds = 86400) {//default -24 hours
+  async clearMarketData(seconds = 129600) {//default -36 hours
 
     let timeTo = new Date();
     timeTo = new Date(timeTo.getTime() - (seconds * 1000));
