@@ -36,7 +36,6 @@ Note: Two env vars are required to hold secrets for encrption:
 ├── client/src             // contains src standard folders and files with the addition of React pages and components folders
 ├── client/src/utils       // contains the Auth for JWT Decode and Apollo/graphQL queries and mutations
 ├── server/classes         // contains two classes to control the Betfair API and logic.
-├── server/schema          // contains the Apollo/graphQL typeDefs and Resolvers files
 ├── server/utlis           // contains additional logic helper files for the app
 ├── .gitignore             // indicates which folders and files Git should ignore 
 ├── LICENCE                // licence file      
@@ -47,7 +46,7 @@ NOTE: There is a scheduler.js file in the Server/Utils that uses a setInterval t
 * Event update every 4 hours
 * API keepalive every hour
 * PlaceBets every 15 seconds
-* Bet update every 15 seconds (alternate to placebets)
+* Bet update every 15 seconds (alternate to placebets-offset by 7 sedonds)
 
 The following mongoDb database schemas are used:
 * Apisettings - holds the Betfair API settings and status data
