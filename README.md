@@ -109,5 +109,5 @@ No tests are currently included.
 * Email: robertpdavis@optusnet.com.au
 
 ## Screenshots
-![Dashbaord screenshot](https://github.com/robertpdavis/betfair-bet-bot/blob/main/screenshots/Dashboard.png "Screenshot of Dashboard")
+![Webpage screenshot](https://github.com/robertpdavis/betfair-bet-bot/blob/main/screenshots/Dashboard.png "Screenshot of Dashboard")
 
