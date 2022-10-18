@@ -7,7 +7,7 @@ const { scheduler, tests } = require('./utils/scheduler');
 const { authMiddleware } = require('./utils/auth');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3005;
 const app = express();
 const server = new ApolloServer({
   typeDefs,

@@ -62,7 +62,7 @@ The following mongoDb database schemas are used:
 * Transaction - all account/wallet transactions
 * User
 
-### NOTE: App is currently deployed on AWS EC2 instance: http://ec2-54-206-10-245.ap-southeast-2.compute.amazonaws.com
+### NOTE: App is currently deployed on AWS at https:/betfairbetbot.robpdavis.com.au
 
 
 ## Usage
