@@ -62,9 +62,6 @@ The following mongoDb database schemas are used:
 * Transaction - all account/wallet transactions
 * User
 
-### NOTE: App is currently deployed on AWS at https:/betfairbetbot.robpdavis.com.au
-
-
 ## Usage
 
 Usage of the app can be found in the apps support page which has been copied here:
