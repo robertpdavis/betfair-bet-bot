@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const scenarioSchema = new Schema({
   scenarioId: Number,
@@ -20,6 +21,5 @@ const scenarioSchema = new Schema({
   },
 });
 
-const Scenario = model('Scenario', scenarioSchema);
+export default model('Scenario', scenarioSchema);
 
-module.exports = Scenario;

@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const marketSchema = new Schema({
   systemId: {
@@ -69,6 +70,5 @@ const marketSchema = new Schema({
   },
 });
 
-const Market = model('Market', marketSchema);
+export default model('Market', marketSchema);
 
-module.exports = Market;

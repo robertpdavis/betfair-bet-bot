@@ -1,12 +1,23 @@
-const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
-const path = require('path');
-const { typeDefs, resolvers } = require('./schemas');
-const db = require('./config/connection');
-const { scheduler, tests } = require('./utils/scheduler');
-const { authMiddleware } = require('./utils/auth');
-require('dotenv').config();
+//const express = require('express');
+import express from 'express';
+//const { ApolloServer } = require('apollo-server-express');
+import { ApolloServer } from 'apollo-server-express';
+//const path = require('path');
+import path from 'path';
+import { typeDefs, resolvers } from './schemas/index.js';
+//import { resolvers } from './schemas/resolvers.js';
+//import { typeDefs } from './schemas/typedefs.js';
+//const db = require('./config/connection');
+import db from './config/connection.js';
+//const { scheduler, tests } = require('./utils/scheduler');
+import { scheduler, tests } from './utils/scheduler.js';
+//const { authMiddleware } = require('./utils/auth');
+import { authMiddleware } from './utils/auth.js';
+import 'dotenv/config';
+import * as url from 'url';
 
+//const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const PORT = process.env.PORT || 3005;
 const app = express();
 const server = new ApolloServer({
@@ -30,7 +41,7 @@ app.get('/', (req, res) => {
 });
 
 // Create a new instance of an Apollo server with the GraphQL schema
-const startApolloServer = async (typeDefs, resolvers) => {
+const startApolloServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
 
@@ -43,7 +54,7 @@ const startApolloServer = async (typeDefs, resolvers) => {
 };
 
 // Call the async function to start the server
-startApolloServer(typeDefs, resolvers);
+startApolloServer();
 
 //Start the scheduler
 scheduler();

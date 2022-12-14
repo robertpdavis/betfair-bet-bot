@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const resultSchema = new Schema({
   systemId: [
@@ -57,6 +58,5 @@ const resultSchema = new Schema({
   },
 });
 
-const Result = model('Result', resultSchema);
+export default model('Result', resultSchema);
 
-module.exports = Result;

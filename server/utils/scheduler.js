@@ -1,7 +1,7 @@
-const { NoFragmentCyclesRule } = require('graphql');
-const BetfairController = require('../classes/BetfairController');
+import BetfairController from '../classes/BetfairController.js';
+import { User, System, Config } from '../models/index.js';
+
 const bfController = new BetfairController;
-const { User, System, Config, EventType } = require('../models');
 
 //Set interval
 const interval = 1000; //Every second
@@ -24,7 +24,9 @@ const timers = {
   eventType: Date.now() + intervals.eventType
 }
 
-async function scheduler() {
+export async function scheduler() {
+
+  let showConsole = false;
 
   //Run the controller every 5 seconds
   setInterval(controller, interval);
@@ -36,7 +38,7 @@ async function scheduler() {
 
     //For debugging----
     const result = await Config.find();
-    const configs = {};
+    let configs = {};
     result.map((configItem) => {
       configs[configItem.configKey] = configItem.configValue
     })
@@ -164,9 +166,9 @@ async function scheduler() {
       }
     }
   }
-}
+};
 
-async function tests() {
+export async function tests() {
   // bfTests.login();
   // bfTests.getAllEventTypes();
   // bfTests.getEventTypeId('Horse Racing');
@@ -185,7 +187,5 @@ async function tests() {
   // console.log(await bfController.betUpdate('62d88c0c9e80cc3ef1a55248'));
   // console.log(await bfController.placeBets('62d88c0c9e80cc3ef1a55248'));
 
-}
-
-module.exports = { scheduler, tests }
+};
 

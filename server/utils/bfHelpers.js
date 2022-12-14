@@ -205,4 +205,4 @@ function getDefaultSystem() {
   }
 }
 
-module.exports = { buildFilter, systemStatsCheck, marketStatsCheck, getDefaultSystem }
+export { buildFilter, systemStatsCheck, marketStatsCheck, getDefaultSystem }

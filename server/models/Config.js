@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const configSchema = new Schema({
   configKey: String,
@@ -6,6 +7,5 @@ const configSchema = new Schema({
 
 });
 
-const Config = model('Config', configSchema);
+export default model('Config', configSchema);
 
-module.exports = Config;

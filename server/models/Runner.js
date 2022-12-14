@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const runnerSchema = new Schema({
   systemId: {
@@ -44,6 +45,4 @@ const runnerSchema = new Schema({
   },
 });
 
-const Runner = model('Runner', runnerSchema);
-
-module.exports = Runner;
+export default model('Runner', runnerSchema);

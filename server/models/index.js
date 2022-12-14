@@ -1,14 +1,14 @@
-const Apisetting = require('./Apisetting');
-const Config = require('./Config');
-const Event = require('./Event');
-const EventType = require('./EventType');
-const Market = require('./Market');
-const Result = require('./Result');
-const Runner = require('./Runner');
-const Scenario = require('./Scenario');
-const Staking = require('./Staking');
-const System = require('./System');
-const User = require('./User');
-const Transaction = require('./Transaction');
+import Apisetting from './Apisetting.js';
+import Config from './Config.js';
+import Event from './Event.js';
+import EventType from './EventType.js';
+import Market from './Market.js';
+import Result from './Result.js';
+import Runner from './Runner.js';
+import Scenario from './Scenario.js';
+import Staking from './Staking.js';
+import System from './System.js';
+import User from './User.js';
+import Transaction from './Transaction.js';
 
-module.exports = { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User, Transaction };
+export { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User, Transaction };

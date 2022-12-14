@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const stakingSchema = new Schema({
   stakingId: Number,
@@ -20,6 +21,5 @@ const stakingSchema = new Schema({
   },
 });
 
-const Staking = model('Staking', stakingSchema);
+export default model('Staking', stakingSchema);
 
-module.exports = Staking;

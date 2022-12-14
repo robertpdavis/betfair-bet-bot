@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const transactionSchema = new Schema({
   systemId: {
@@ -17,6 +18,5 @@ const transactionSchema = new Schema({
   },
 });
 
-const Transaction = model('Transaction', transactionSchema);
+export default model('Transaction', transactionSchema);
 
-module.exports = Transaction;

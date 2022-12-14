@@ -14,6 +14,8 @@
   "author": "Rob Davis",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^5.3.0"
+    "@types/node": "^18.11.13",
+    "concurrently": "^5.3.0",
+    "typescript": "^4.9.4"
   }
 }

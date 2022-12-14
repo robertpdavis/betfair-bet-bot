@@ -1,8 +1,5 @@
-const { Schema, model } = require('mongoose');
-require('dotenv').config();
-
-//For API password, key and ssl key encryption
-var cryptoJS = require("crypto-js");
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const apiSchema = new Schema({
   userId: {
@@ -107,22 +104,6 @@ const apiSchema = new Schema({
   },
 });
 
-apiSchema.pre('save', async function (next) {
-  if (this.isNew || this.isModified('apiPassword') || this.isModified('keyfile') || this.isModified('apiKeyTest') || this.isModified('apiKeyLive')) {
-    if (this.isNew) {
-      (this.apiPassword !== '') ? cryptoJS.AES.encrypt(this.apiPassword, process.env.ENCRYPT_SECRET).toString() : "";
-      (this.keyfile !== '') ? cryptoJS.AES.encrypt(this.keyfile, process.env.ENCRYPT_SECRET).toString() : "";
-      (this.apiKeyTest !== '') ? cryptoJS.AES.encrypt(this.apiKeyTest, process.env.ENCRYPT_SECRET).toString() : "";
-      (this.apiKeyLive !== '') ? cryptoJS.AES.encrypt(this.apiKeyLive, process.env.ENCRYPT_SECRET).toString() : "";
-    }
-    (this.isModified('apiPassword')) ? cryptoJS.AES.encrypt(this.apiPassword, process.env.ENCRYPT_SECRET).toString() : "";
-    (this.isModified('keyfile')) ? cryptoJS.AES.encrypt(this.keyfile, process.env.ENCRYPT_SECRET).toString() : "";
-    (this.isModified('apiKeyTest')) ? cryptoJS.AES.encrypt(this.apiKeyTest, process.env.ENCRYPT_SECRET).toString() : "";
-    (this.isModified('apiKeyLive')) ? cryptoJS.AES.encrypt(this.apiKeyLive, process.env.ENCRYPT_SECRET).toString() : "";
-  }
-  next();
-});
-
 //TO DO - check a
 function decrypt(apiPassword) {
 
@@ -130,6 +111,5 @@ function decrypt(apiPassword) {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-const Apisettings = model('Apisettings', apiSchema);
+export default model('Apisettings', apiSchema);
 
-module.exports = Apisettings;

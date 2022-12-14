@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const eventSchema = new Schema({
   systemId: {
@@ -35,6 +36,5 @@ const eventSchema = new Schema({
   },
 });
 
-const Event = model('Event', eventSchema);
+export default model('Event', eventSchema);
 
-module.exports = Event;

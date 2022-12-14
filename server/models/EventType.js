@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const eventTypeSchema = new Schema({
   eventTypeId: {
@@ -22,6 +23,4 @@ const eventTypeSchema = new Schema({
   },
 });
 
-const EventType = model('EventType', eventTypeSchema);
-
-module.exports = EventType;
+export default model('EventType', eventTypeSchema);

@@ -116,4 +116,4 @@ function stk1_fixedStake(system, marketData, runnerData, results, backPrices, la
 
 }
 
-module.exports = { processBets }
+export { processBets }

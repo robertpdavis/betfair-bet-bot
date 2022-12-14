@@ -1,9 +1,9 @@
-const { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User, Transaction } = require('../models');
-const Betfairapi = require('./Betfairapi');
-const { buildFilter, systemStatsCheck, marketStatsCheck } = require('../utils/bfHelpers');
-const { processBets } = require('../utils/betSystems');
+import { Apisetting, Config, Event, EventType, Market, Result, Runner, System, User, Transaction } from '../models/index.js';
+import Betfairapi from './Betfairapi.js';
+import { buildFilter, systemStatsCheck, marketStatsCheck } from '../utils/bfHelpers.js';
+import { processBets } from '../utils/betSystems.js';
 
-class BetfairController {
+export default class BetfairController {
 
   constructor() {
     this.api = new Betfairapi;
@@ -983,6 +983,5 @@ class BetfairController {
     await Runner.deleteMany().where('createdAt').lt(timeTo.toJSON())
   }
 
-}
+};
 
-module.exports = BetfairController;

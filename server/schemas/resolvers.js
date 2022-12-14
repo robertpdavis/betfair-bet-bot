@@ -1,10 +1,10 @@
-const { Apisetting, Config, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User } = require('../models');
-const { AuthenticationError } = require('apollo-server-express');
-const { signToken } = require('../utils/auth');
-const { getDefaultSystem } = require('../utils/bfHelpers');
-const BetfairController = require('../classes/BetfairController');
+import { Apisetting, Event, EventType, Market, Result, Runner, System, User } from '../models/index.js';
+import { AuthenticationError } from 'apollo-server-express';
+import { signToken } from '../utils/auth.js';
+import { getDefaultSystem } from '../utils/bfHelpers.js';
+import BetfairController from '../classes/BetfairController.js';
 
-const resolvers = {
+export default {
   Query: {
     user: async (parent, { username }, context) => {
       if (context.user) {
@@ -699,5 +699,3 @@ const resolvers = {
     },
   },
 };
-
-module.exports = resolvers;

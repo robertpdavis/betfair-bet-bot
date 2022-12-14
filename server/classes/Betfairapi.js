@@ -1,10 +1,8 @@
-const path = require('path');
-const axios = require('axios');
-//Node:https and fs use for managing login SSL cert requirements
-const https = require('node:https');
-const fs = require('fs');
+import axios from 'axios';
+//Node:https used for managing login SSL cert requirements
+import https from 'node:https';
 
-class Betfairapi {
+export default class Betfairapi {
 
   constructor() {
     //Hold the session and APIKey when logging in for future requests
@@ -314,8 +312,6 @@ class Betfairapi {
     }
   }
 }
-
-module.exports = Betfairapi;
 
 
 
