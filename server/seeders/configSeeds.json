@@ -1,0 +1,50 @@
+[
+  {
+    "configKey": "minBetTimeOut",
+    "configValue": "30"
+  },
+  {
+    "configKey": "maxBetTimeOut",
+    "configValue": "3600"
+  },
+  {
+    "configKey": "eventTimeOut",
+    "configValue": "86000"
+  },
+  {
+    "configKey": "bfAPIFaultCodes",
+    "configValue": ""
+  },
+  {
+    "configKey": "sysformEvents",
+    "configValue": ""
+  },
+  {
+    "configKey": "apiBookTimeOut",
+    "configValue": "3660"
+  },
+  {
+    "configKey": "apiBookTimeIn",
+    "configValue": "900"
+  },
+  {
+    "configKey": "maxResults",
+    "configValue": "1000"
+  },
+  {
+    "configKey": "maxSystems",
+    "configValue": "5"
+  },
+  {
+    "configKey": "priceLadder_CLASSIC",
+    "configValue": ""
+  },
+  {
+    "configKey": "scheduleDebug",
+    "configValue": "true"
+  },
+  {
+    "configKey": "EventTimeClear",
+    "configValue": "129600"
+  }
+]

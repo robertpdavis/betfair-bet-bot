@@ -27,7 +27,7 @@ const SystemForm = (props) => {
     scenarioParams = JSON.parse(formData.scenarioParams);
     stakingParams = JSON.parse(formData.stakingParams);
   }
-
+  console.log(formData)
   const [key, setKey] = useState('details');
 
   const handleChange = async (event) => {

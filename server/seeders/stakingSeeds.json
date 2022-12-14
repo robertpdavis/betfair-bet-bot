@@ -1,0 +1,11 @@
+[
+  {
+    "title": "Fixed Stake (Back/Lay)",
+    "description": "Each bet is placed with the same stake as set.",
+    "back": "true",
+    "lay": "true",
+    "params": "",
+    "formName": "pln_fixedstake",
+    "stakingId": "1"
+  }
+]

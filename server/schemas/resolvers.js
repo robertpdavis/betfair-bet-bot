@@ -1,4 +1,4 @@
-import { Apisetting, Event, EventType, Market, Result, Runner, System, User } from '../models/index.js';
+import { Apisetting, Event, EventType, Market, Result, Runner, Scenario, Staking, System, User } from '../models/index.js';
 import { AuthenticationError } from 'apollo-server-express';
 import { signToken } from '../utils/auth.js';
 import { getDefaultSystem } from '../utils/bfHelpers.js';
@@ -489,19 +489,31 @@ export default {
       }
     },
     createSystem: async (parent, args, context) => {
+      let nextSystemId = 0;
       try {
         if (context.user) {
 
           const userId = context.user._id;
           //Workout the next user system id
           const lastSystem = await System.findOne({ userId: userId }).sort('-systemId');
-          const nextSystemId = parseInt(lastSystem.systemId) + 1;
+
+          if (lastSystem) {
+            nextSystemId = parseInt(lastSystem.systemId) + 1;
+          } else {
+            nextSystemId = 1;
+          }
+
+          //Get the default scenario and stakingPlan IDs
+          const defScenario = await Scenario.findOne({ scenarioId: 1 });
+          const defStaking = await Staking.findOne({ stakingId: 1 });
 
           const newSystem = { ...getDefaultSystem() };
 
           newSystem.userId = userId;
           newSystem.systemId = nextSystemId;
           newSystem.statusDesc = 'System created';
+          newSystem.scenario = defScenario._id;
+          newSystem.stakingPlan = defStaking._id;
 
           const result = await System.create(newSystem);
 
