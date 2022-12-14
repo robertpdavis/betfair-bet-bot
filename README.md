@@ -25,9 +25,15 @@ Several scripts are set up in the root package.json to manage distribution build
 
 Running install will install all the required client and server dependancies. This is a React web app.
 
-Note: Two env vars are required to hold secrets for encrption:
-*JWT_SECRET
-*ENCRYPT_SECRET
+The seeding data will create the following MongoDB documents:
+* Required config data
+* A default scenario and stakingPlan
+* A user - John Smith username: johnsmith password: password
+* API settings record ready to enter betfair details into
+
+Note: Two env vars are required to hold secret for authorisation and mongo database link (if running in the db in Mongo Atlas or elsewhere)
+* JWT_SECRET
+* MONGODB_URI
 
 ### File structure of the application:
 ```md
@@ -36,7 +42,8 @@ Note: Two env vars are required to hold secrets for encrption:
 ├── client/src             // contains src standard folders and files with the addition of React pages and components folders
 ├── client/src/utils       // contains the Auth for JWT Decode and Apollo/graphQL queries and mutations
 ├── server/classes         // contains two classes to control the Betfair API and logic.
-├── server/utlis           // contains additional logic helper files for the app
+├── server/utils           // contains additional logic helper files for the app
+├── server/seeders         // contains seed files to get started
 ├── .gitignore             // indicates which folders and files Git should ignore 
 ├── LICENCE                // licence file      
 ```
